@@ -57,7 +57,7 @@ class _EventsWidgetState extends State<EventsWidget> {
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                          flex: 2,
+                          flex: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,

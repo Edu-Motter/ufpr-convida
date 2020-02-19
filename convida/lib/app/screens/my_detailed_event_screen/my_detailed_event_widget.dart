@@ -530,7 +530,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                       ),
                     ),
                     Expanded(
-                      flex: 1,
+                      flex: (MediaQuery.of(context).orientation == Orientation.portrait) ? 1 : 2,
                       child: Container(
                         color: Colors.white,
                         child: Row(

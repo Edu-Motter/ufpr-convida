@@ -36,6 +36,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     final routeArgs =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     final eventId = routeArgs['id'];
@@ -486,11 +487,11 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                   ),
                 ),
                 Expanded(
-                  flex: 1,
+                  flex: (MediaQuery.of(context).orientation == Orientation.portrait) ? 1 : 2,
                   child: Container(
                     color: Colors.white,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
@@ -503,7 +504,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                   children: <Widget>[
                                     Icon(
                                       Icons.link,
-                                      size: 28,
+                                      size: 26,
                                     ),
                                     Text(
                                       "Link",
@@ -531,10 +532,10 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                     fav == true
                                         ? Icon(
                                             Icons.star,
-                                            size: 28,
+                                            size: 26,
                                             color: Colors.amberAccent,
                                           )
-                                        : Icon(Icons.star_border, size: 28),
+                                        : Icon(Icons.star_border, size: 26),
                                     Text(
                                       "Favoritar",
                                       maxLines: 1,
@@ -558,7 +559,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                 },
                                 child: Column(
                                   children: <Widget>[
-                                    Icon(Icons.map, size: 28),
+                                    Icon(Icons.map, size: 26),
                                     Text("Ver no mapa", maxLines: 1)
                                   ],
                                 ),
@@ -749,7 +750,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       } else if (r.statusCode == 404) {
         showError("Erro 404", "Autor não foi encontrado", context);
       } else if (r.statusCode == 500) {
-        showError("Erro 500", "Erro no servidor, favor tente novamente mais tarde", context);
+        showError("Erro 500",
+            "Erro no servidor, favor tente novamente mais tarde", context);
       } else {
         showError("Erro Desconhecido", "StatusCode: ${r.statusCode}", context);
       }
@@ -784,7 +786,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       } else if (r.statusCode == 404) {
         showError("Erro 404", "Autor não foi encontrado", context);
       } else if (r.statusCode == 500) {
-        showError("Erro 500",  "Erro no servidor, favor tente novamente mais tarde", context);
+        showError("Erro 500",
+            "Erro no servidor, favor tente novamente mais tarde", context);
       } else {
         showError("Erro Desconhecido", "StatusCode: ${r.statusCode}", context);
       }
@@ -813,16 +816,16 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                 //Pop the Dialog
                 Navigator.pop(context);
                 //Push login screen
-                Navigator.of(context).pushReplacementNamed("/login", arguments: "fav");
+                Navigator.of(context)
+                    .pushReplacementNamed("/login", arguments: "fav");
               },
             ),
             new FlatButton(
               child: new Text("Criar conta"),
               onPressed: () {
-                
-                
                 //Push sign up screen
-                Navigator.of(context).pushReplacementNamed("/signup", arguments: "fav");
+                Navigator.of(context)
+                    .pushReplacementNamed("/signup", arguments: "fav");
               },
             ),
           ],

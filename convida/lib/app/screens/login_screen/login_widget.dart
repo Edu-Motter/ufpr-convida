@@ -26,6 +26,10 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    print(queryData.orientation);
+
     String where = "";
     try {
       where = ModalRoute.of(context).settings.arguments as String;
@@ -52,11 +56,21 @@ class _LoginWidgetState extends State<LoginWidget> {
             key: _formKey,
             child: ListView(
               children: <Widget>[
-                Image.asset(
-                  //Image:
-                  "assets/logo-ufprconvida-sembordas.png",
-                  scale: 2,
-                ),
+                (queryData.orientation == Orientation.portrait)
+                    ? Image.asset(
+                        //Image:
+                        "assets/logo-ufprconvida-sembordas.png",
+                        scale: 2,
+                      )
+                    : Container(
+                        height: queryData.size.height/2,
+                        width: queryData.size.width/2,
+                        child: Image.asset(
+                          //Image:
+                          "assets/logo-ufprconvida-sembordas.png",
+                          scale: 2,
+                        ),
+                      ),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Container(
@@ -128,10 +142,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                                             "Erro no servidor, favor tente novamente mais tarde",
                                             context);
                                       } else {
-                                        showError(
-                                              "Erro Desconhecido",
-                                              "StatusCode: $statusCode",
-                                              context);
+                                        showError("Erro Desconhecido",
+                                            "StatusCode: $statusCode", context);
                                       }
                                     }
                                   },
@@ -176,7 +188,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         (where == "my-events")) {
                                       Navigator.pop(context);
                                     } else {
-                                       Navigator.pushReplacementNamed(
+                                      Navigator.pushReplacementNamed(
                                           context, '/main');
                                     }
                                   },
