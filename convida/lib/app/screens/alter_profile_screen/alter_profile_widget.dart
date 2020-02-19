@@ -1,13 +1,16 @@
 import 'dart:io';
+import 'package:convida/app/screens/alter_profile_screen/alter_profile_controller.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
+import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:convida/app/shared/validations/user_validation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:convida/app/shared/global/globals.dart' as globals;
-import 'package:convida/app/shared/models/login.dart';
+// import 'package:convida/app/shared/global/globals.dart' as globals;
+// import 'package:convida/app/shared/models/login.dart';
 import 'package:convida/app/shared/models/user.dart';
 
 class AlterProfileWidget extends StatefulWidget {
@@ -20,11 +23,12 @@ class AlterProfileWidget extends StatefulWidget {
 }
 
 class _AlterProfileWidgetState extends State<AlterProfileWidget> {
+  final profileController = AlterProfileController();
   User user;
 
   _AlterProfileWidgetState(this.user);
 
-  String _url = globals.URL;
+  // String _url = globals.URL;
   final _formKey = GlobalKey<FormState>();
   bool created = false;
 
@@ -44,29 +48,26 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
       new TextEditingController();
   final TextEditingController _userEmailController =
       new TextEditingController();
-  final TextEditingController _userPasswordController =
-      new TextEditingController();
-  final TextEditingController _userNewPasswordController =
-      new TextEditingController();
-  final TextEditingController _userPassConfirmController =
-      new TextEditingController();
 
-  RegExp _userFirstNameValidator =
-      RegExp(r"^[A-Za-zá àâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]{2,25}$");
-  RegExp _userLastNameValidator =
-      RegExp(r"^[A-Za-zá àâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]{2,25}$");
-  RegExp _userEmailValidator =
-      RegExp(r"^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$");
-  RegExp _userPasswordValidator = RegExp(r"^[a-zA-Z0-9_@$!%&-]{4,18}$");
+  // RegExp _userFirstNameValidator =
+  //     RegExp(r"^[A-Za-zá àâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]{2,25}$");
+  // RegExp _userLastNameValidator =
+  //     RegExp(r"^[A-Za-zá àâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]{2,25}$");
+  // RegExp _userEmailValidator =
+  //     RegExp(r"^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$");
+  // RegExp _userPasswordValidator = RegExp(r"^[a-zA-Z0-9_@$!%&-]{4,18}$");
 
   bool isSwitchedPassword = false;
 
   @override
   void initState() {
+    //Future Builder!
     _userGrrController.text = user.grr;
     _userFirstNameController.text = user.name;
     _userLastNameController.text = user.lastName;
     _userEmailController.text = user.email;
+
+    
 
     DateTime parsedBirth;
 
@@ -83,6 +84,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
 
   @override
   Widget build(BuildContext context) {
+    
     return WillPopScope(
       onWillPop: () {
         if (created) {
@@ -116,13 +118,40 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                       ),
                     ),
                     //User first name:
-                    userFirstName(),
+                    
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textFieldController(
+                            controller: _userFirstNameController,
+                            labelText: "Nome:",
+                            icon: Icons.person,
+                            onChanged: profileController.profile.changeName,
+                            maxLength: 25,
+                            errorText: profileController.validateName);
+                      }),
+                    ),
+
+                    //userFirstName(),
 
                     //User last name
-                    userLastName(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textFieldController(
+                            controller: _userLastNameController,
+                            labelText: "Sobrenome:",
+                            icon: Icons.navigate_next,
+                            onChanged: profileController.profile.changeLastName,
+                            maxLength: 25,
+                            errorText: profileController.validadeLastName);
+                      }),
+                    ),
+                    //userLastName(),
 
                     //User GRR:
                     userGrr(),
+
                     //User Birthday
                     Padding(
                         padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
@@ -186,7 +215,19 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                         )),
 
                     //User email:
-                    userEmail(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textFieldController(
+                            controller: _userEmailController,
+                            labelText: "E-mail:",
+                            icon: Icons.email,
+                            onChanged: profileController.profile.changeEmail,
+                            maxLength: 50,
+                            errorText: profileController.validadeEmail);
+                      }),
+                    ),
+                    //userEmail(),
 
                     //Switch
                     Padding(
@@ -214,18 +255,75 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
 
                     Container(
                       child: isSwitchedPassword == true
+                          //Switch on:
                           ? Container(
                               child: Column(
                                 children: <Widget>[
-                                  userPassword(),
-                                  userNewPassword("Nova senha:"),
-                                  userConfirmPassword("Confirme nova senha:"),
+                                  //Old Password:
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Observer(builder: (_) {
+                                      return textFieldObscure(
+                                          labelText: "Senha:",
+                                          icon: Icons.lock,
+                                          onChanged: profileController
+                                              .profile.changePassword,
+                                          maxLength: 18,
+                                          errorText: profileController
+                                              .validadePassword);
+                                    }),
+                                  ),
+
+                                  //New Password:
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Observer(builder: (_) {
+                                      return textFieldObscure(
+                                          labelText: "Nova senha:",
+                                          icon: Icons.lock,
+                                          onChanged: profileController
+                                              .profile.changeNewPassword,
+                                          maxLength: 18,
+                                          errorText: profileController
+                                              .validadeNewPassword);
+                                    }),
+                                  ),
+
+                                  //Confirm New Password:
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Observer(builder: (_) {
+                                      return textFieldObscure(
+                                          labelText: "Confirmar senha:",
+                                          icon: Icons.lock,
+                                          onChanged: profileController
+                                              .profile.changeConfirmPassword,
+                                          maxLength: 18,
+                                          errorText: profileController
+                                              .validadeNewPassword);
+                                    }),
+                                  ),
                                 ],
                               ),
                             )
-                          : userPassword(),
+                          
+                          //Switch off:  
+                          //Just the Password:  
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Observer(builder: (_) {
+                                return textFieldObscure(
+                                    labelText: "Senha:",
+                                    icon: Icons.lock,
+                                    onChanged: profileController
+                                        .profile.changePassword,
+                                    maxLength: 18,
+                                    errorText:
+                                        profileController.validadePassword);
+                              }),
+                            ),
                     ),
-                    //User password
+
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: SingleChildScrollView(
@@ -265,18 +363,18 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                     Navigator.of(context)
                                         .pushReplacementNamed("/main");
                                   } else if ((user.name ==
-                                          _userFirstNameController.text) &&
+                                          profileController.profile.name) &&
                                       (user.lastName ==
-                                          _userLastNameController.text) &&
+                                          profileController.profile.lastName) &&
                                       (user.email ==
-                                          _userEmailController.text) &&
+                                          profileController.profile.email) &&
                                       (oldDateUser == dateUser) &&
                                       (isSwitchedPassword == false)) {
                                     String error = "Sem Alterações";
                                     String desc = "Não existe nada alterado";
                                     showError(error, desc, context);
-                                  } else if (_userPasswordController.text ==
-                                      _userNewPasswordController.text) {
+                                  } else if (profileController.profile.password ==
+                                      profileController.profile.newPassword) {
                                     String error = "Senhas iguais";
                                     String desc =
                                         "A senha nova é igual a antiga";
@@ -284,10 +382,10 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                   } else if ((_formKey.currentState
                                           .validate()) &&
                                       (created == false)) {
-                                    bool correct = await passCheck();
+                                    bool correct = await profileController.passCheck(user: user, context: context);
 
                                     if (correct) {
-                                      int statusCode = await putUser();
+                                      int statusCode = await profileController.putUser(isSwitch: isSwitchedPassword, user: user, dateUser: dateUser, context: context);
                                       if ((statusCode == 200) ||
                                           (statusCode == 204)) {
                                         showSuccess(
@@ -343,162 +441,46 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
     );
   }
 
-  Future<bool> passCheck() async {
-    final _save = FlutterSecureStorage();
-    final _token = await _save.read(key: "token");
 
-    Map<String, String> mapHeaders = {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $_token"
-    };
+  // Padding userFirstName() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: TextFormField(
+  //       controller: _userFirstNameController,
+  //       autovalidate: true,
+  //       maxLength: 25,
+  //       decoration: InputDecoration(
+  //           hintText: "Nome: ",
+  //           border:
+  //               OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+  //           icon: Icon(Icons.person)),
+  //       //Validations:
+  //       validator: (value) {
+  //         return nameValidation(value, "Nome");
+  //       },
+  //     ),
+  //   );
+  // }
 
-    AccountCredentials ac = new AccountCredentials(
-        password: _userPasswordController.text, username: user.grr);
-    String acJson = jsonEncode(ac);
-    bool correct;
-
-    try {
-      correct = await http
-          .put("$_url/users/checkpass", body: acJson, headers: mapHeaders)
-          .then((http.Response response) {
-        // final int statusCode = response.statusCode;
-
-        print("-------------------------------------------------------");
-        print("Request on: $_url/users/checkpass");
-        print("Status Code: ${response.statusCode}");
-        print("Checking User Password...");
-        print("-------------------------------------------------------");
-
-        if ((response.statusCode == 200) || (response.statusCode == 201)) {
-          if (response.body == "true")
-            return true;
-          else
-            return false;
-        } else if (response.statusCode == 401) {
-          showError(
-              "Erro 401", "Não autorizado, favor logar novamente", context);
-        } else if (response.statusCode == 404) {
-          showError(
-              "Erro 404", "Evento ou usuário não foi encontrado", context);
-        } else if (response.statusCode == 500) {
-          showError("Erro 500",
-              "Erro no servidor, favor tente novamente mais tarde", context);
-        } else {
-          showError("Erro Desconhecido", "StatusCode: ${response.statusCode}",
-              context);
-        }
-      });
-    } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
-    }
-
-    return correct;
-  }
-
-  Future<int> putUser() async {
-    final _save = FlutterSecureStorage();
-    final _token = await _save.read(key: "token");
-
-    User u;
-
-    if (isSwitchedPassword) {
-      u = new User(
-          grr: user.grr,
-          name: _userFirstNameController.text,
-          lastName: _userLastNameController.text,
-          password: _userNewPasswordController.text,
-          email: _userEmailController.text,
-          birth: dateUser);
-    } else {
-      u = new User(
-          grr: user.grr,
-          name: _userFirstNameController.text,
-          lastName: _userLastNameController.text,
-          password: _userPasswordController.text,
-          email: _userEmailController.text,
-          birth: dateUser);
-    }
-
-    String userJson = json.encode(u.toJson());
-
-    Map<String, String> mapHeaders = {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $_token"
-    };
-
-    int code;
-
-    try {
-      code = await http
-          .put("$_url/users/${user.grr}", body: userJson, headers: mapHeaders)
-          .then((http.Response response) {
-        final int statusCode = response.statusCode;
-
-        print("-------------------------------------------------------");
-        print("Request on: $_url/users/${user.grr}");
-        print("Status Code: ${response.statusCode}");
-        print("Putting User Alteration...");
-        print("-------------------------------------------------------");
-
-        if (statusCode == 204) {
-          print("Usuário Alterado com sucesso!");
-          _save.write(key: "user", value: user.grr);
-          _save.write(key: "name", value: _userFirstNameController.text);
-          _save.write(key: "email", value: _userEmailController.text);
-          _save.write(key: "lastName", value: _userLastNameController.text);
-          return statusCode;
-        } else {
-          return statusCode;
-        }
-      });
-    } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
-    }
-
-    return code;
-  }
-
-  Padding userFirstName() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        controller: _userFirstNameController,
-        autovalidate: true,
-        maxLength: 25,
-        decoration: InputDecoration(
-            hintText: "Nome: ",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.person)),
-        //Validations:
-        validator: (value) {
-          return nameValidation(value, "Nome");
-        },
-      ),
-    );
-  }
-
-  Padding userLastName() {
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-            controller: _userLastNameController,
-            autovalidate: true,
-            maxLength: 25,
-            decoration: InputDecoration(
-                hintText: "Sobrenome: ",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.5)),
-                icon: Icon(
-                  Icons.navigate_next,
-                  color: Colors.white,
-                )),
-            validator: (value) {
-              return nameValidation(value, "Sobrenome");
-            }));
-  }
+  // Padding userLastName() {
+  //   return Padding(
+  //       padding: const EdgeInsets.all(8.0),
+  //       child: TextFormField(
+  //           controller: _userLastNameController,
+  //           autovalidate: true,
+  //           maxLength: 25,
+  //           decoration: InputDecoration(
+  //               hintText: "Sobrenome: ",
+  //               border: OutlineInputBorder(
+  //                   borderRadius: BorderRadius.circular(4.5)),
+  //               icon: Icon(
+  //                 Icons.navigate_next,
+  //                 color: Colors.white,
+  //               )),
+  //           validator: (value) {
+  //             return nameValidation(value, "Sobrenome");
+  //           }));
+  // }
 
   Padding userGrr() {
     return Padding(
@@ -521,83 +503,83 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
     );
   }
 
-  Padding userEmail() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-          controller: _userEmailController,
-          autovalidate: true,
-          maxLength: 50,
-          decoration: InputDecoration(
-              hintText: "Email: ",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-              icon: Icon(Icons.email)),
-          validator: (value) {
-            return emailValidation(value);
-          }),
-    );
-  }
+  // Padding userEmail() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: TextFormField(
+  //         controller: _userEmailController,
+  //         autovalidate: true,
+  //         maxLength: 50,
+  //         decoration: InputDecoration(
+  //             hintText: "Email: ",
+  //             border:
+  //                 OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+  //             icon: Icon(Icons.email)),
+  //         validator: (value) {
+  //           return emailValidation(value);
+  //         }),
+  //   );
+  // }
 
-  Padding userPassword() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        controller: _userPasswordController,
-        autovalidate: true,
-        maxLength: 18,
-        decoration: InputDecoration(
-            hintText: "Senha: ",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.lock)),
-        validator: (value) {
-          return passwordValidation(value, null);
-        },
-        obscureText: true,
-      ),
-    );
-  }
+  // Padding userPassword() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: TextFormField(
+  //       controller: _userPasswordController,
+  //       autovalidate: true,
+  //       maxLength: 18,
+  //       decoration: InputDecoration(
+  //           hintText: "Senha: ",
+  //           border:
+  //               OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+  //           icon: Icon(Icons.lock)),
+  //       validator: (value) {
+  //         return passwordValidation(value, null);
+  //       },
+  //       obscureText: true,
+  //     ),
+  //   );
+  // }
 
-  Padding userNewPassword(String hint) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        controller: _userNewPasswordController,
-        autovalidate: true,
-        maxLength: 18,
-        decoration: InputDecoration(
-            hintText: hint,
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.lock)),
-        validator: (value) {
-          return passwordValidation(value, _userPassConfirmController);
-        },
-        obscureText: true,
-      ),
-    );
-  }
+  // Padding userNewPassword(String hint) {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: TextFormField(
+  //       controller: _userNewPasswordController,
+  //       autovalidate: true,
+  //       maxLength: 18,
+  //       decoration: InputDecoration(
+  //           hintText: hint,
+  //           border:
+  //               OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+  //           icon: Icon(Icons.lock)),
+  //       validator: (value) {
+  //         return passwordValidation(value, _userPassConfirmController);
+  //       },
+  //       obscureText: true,
+  //     ),
+  //   );
+  // }
 
-  Padding userConfirmPassword(String hint) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        controller: _userPassConfirmController,
-        autovalidate: true,
-        maxLength: 18,
-        decoration: InputDecoration(
-            hintText: hint,
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.lock)),
-        validator: (value) {
-          return passwordValidation(value, _userNewPasswordController);
-        },
-        obscureText: true,
-      ),
-    );
-  }
+  // Padding userConfirmPassword(String hint) {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: TextFormField(
+  //       controller: _userPassConfirmController,
+  //       autovalidate: true,
+  //       maxLength: 18,
+  //       decoration: InputDecoration(
+  //           hintText: hint,
+  //           border:
+  //               OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+  //           icon: Icon(Icons.lock)),
+  //       validator: (value) {
+  //         return passwordValidation(value, _userNewPasswordController);
+  //       },
+  //       obscureText: true,
+  //     ),
+  //   );
+  // }
 
   Future<DateTime> _selectedDate(BuildContext context) {
     DateTime now = DateTime.now();

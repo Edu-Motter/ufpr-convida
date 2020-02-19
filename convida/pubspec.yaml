@@ -25,7 +25,6 @@ dependencies:
   cupertino_icons: ^0.1.2
   mobx: ^1.0.2
   flutter_mobx: ^1.0.1
-  build_runner: ^1.7.4
   google_maps_flutter: ^0.5.21+7
   flutter_masked_text: ^0.8.0
   http: any
@@ -38,9 +37,11 @@ dependencies:
 
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.7.4
+  build_runner: ^1.7.4
+  mobx_codegen: ^1.0.2
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.7.4
 
 flutter_icons:
   android: true
