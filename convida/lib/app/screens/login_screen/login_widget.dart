@@ -56,6 +56,7 @@ class _LoginWidgetState extends State<LoginWidget> {
             key: _formKey,
             child: ListView(
               children: <Widget>[
+                
                 (queryData.orientation == Orientation.portrait)
                     ? Image.asset(
                         //Image:
@@ -83,6 +84,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         )),
                   ),
                 ),
+                
                 //Login
                 usernameInput(),
 
