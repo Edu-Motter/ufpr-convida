@@ -42,3 +42,17 @@ textFieldController({TextEditingController controller, String labelText, IconDat
     ),
   );
 }
+
+textFieldLines({int maxLines, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+  return TextField(
+    maxLines: maxLines,
+    onChanged: onChanged,
+    maxLength: maxLength,
+    decoration: InputDecoration(
+      labelText: labelText,
+      errorText: errorText == null ? null : errorText(),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+      icon: Icon(icon),
+    ),
+  );
+}

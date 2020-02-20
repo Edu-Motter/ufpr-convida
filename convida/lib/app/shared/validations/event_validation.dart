@@ -5,7 +5,9 @@ String nameValidation(value) {
       r"^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.]{2,25}$";
   RegExp _nameValidator = RegExp(expression);
 
-  if (value.isEmpty) {
+  if (value == null) {
+    return 'Favor entre com o nome do Evento';
+  } else if (value.isEmpty) {
     return 'Favor entre com o nome do Evento';
   } else if (value.startsWith(' ')) {
     return 'Inicia com espaço';
@@ -27,7 +29,9 @@ String targetValidation(value) {
       r"^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.]{2,25}$";
   RegExp _targetValidator = RegExp(expression);
 
-  if (value.isEmpty) {
+  if (value == null) {
+    return 'Favor entre com o Público Alvo';
+  } else if (value.isEmpty) {
     return 'Favor entre com o Público Alvo';
   } else if (value.startsWith(' ')) {
     return 'Inicia com espaço';
@@ -49,7 +53,9 @@ String descriptionValidation(value) {
       r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,250})$";
   RegExp _descValidator = RegExp(expression);
 
-  if (value.isEmpty) {
+  if (value == null) {
+    return 'Favor entre com uma breve descrição';
+  } else if (value.isEmpty) {
     return 'Favor entre com uma breve descrição';
   } else if (value.startsWith(' ')) {
     return 'Inicia com espaço';
@@ -71,7 +77,9 @@ String addressValidation(value) {
       r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,50})$";
   RegExp _addressValidator = RegExp(expression);
 
-  if (value.isEmpty) {
+  if (value == null) {
+    return 'Favor entre com um Endereço';
+  } else if (value.isEmpty) {
     return 'Favor entre com um Endereço';
   } else if (value.startsWith(' ')) {
     return 'Inicia com espaço';
@@ -114,7 +122,9 @@ String linkValidation(value) {
       r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,50})$";
   RegExp _eventLinkValidator = RegExp(expression);
 
-  if (value.isEmpty) {
+  if (value == null) {
+    return 'Favor entre com o Link ou E-mail';
+  } else if (value.isEmpty) {
     return 'Favor entre com o Link ou E-mail';
   } else if (value.startsWith(' ')) {
     return 'Inicia com espaço';

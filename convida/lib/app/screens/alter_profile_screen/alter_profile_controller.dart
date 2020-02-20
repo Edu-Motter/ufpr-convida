@@ -49,6 +49,19 @@ abstract class _AlterProfileControllerBase with Store {
     return passwordValidation(profile.newPassword, profile.confirmPassword);
   }
 
+  Future<bool> getProfile({User user, BuildContext context}) async {
+    try {
+      profile.changeName(user.name);
+      profile.lastName = user.lastName;
+      profile.email = user.email;
+      print("Nome carregando: ${profile.name}");
+      return true;
+    } catch (e) {
+      showError("Erro desconhecido", "Erro: $e", context);
+      return false;
+    }
+  }
+
   Future<bool> passCheck({User user, BuildContext context}) async {
     final _save = FlutterSecureStorage();
     final _token = await _save.read(key: "token");

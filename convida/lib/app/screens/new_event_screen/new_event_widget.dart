@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:convida/app/screens/new_event_screen/new_event_controller.dart';
+import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:convida/app/shared/validations/event_validation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +23,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
   String _url = globals.URL;
   final _formKey = GlobalKey<FormState>();
   bool created = false;
+  final newEventController = NewEventController();
 
   //Date now
   var now = DateTime.now();
@@ -117,22 +121,91 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                     ),
 
                     //Event Name:
-                    eventNameInput(),
+                    //eventNameInput(),
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textField(
+                            labelText: "Nome do Evento:",
+                            icon: Icons.event_note,
+                            onChanged: newEventController.newEvent.setName,
+                            maxLength: 25,
+                            errorText: newEventController.validateName);
+                      }),
+                    ),
 
                     //Event Target:
-                    eventTargetInput(),
+                    //eventTargetInput(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textField(
+                            labelText: "Público alvo:",
+                            icon: Icons.person_pin_circle,
+                            onChanged: newEventController.newEvent.setTarget,
+                            maxLength: 25,
+                            errorText: newEventController.validateTarget);
+                      }),
+                    ),
 
                     //Event Description:
-                    eventDescInput(),
+                    //eventDescInput(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textFieldLines(
+                            maxLines: 3,
+                            labelText: "Descrição:",
+                            icon: Icons.person_pin_circle,
+                            onChanged: newEventController.newEvent.setDesc,
+                            maxLength: 250,
+                            errorText: newEventController.validateDesc);
+                      }),
+                    ),
 
                     //Event Address:
-                    eventAddressInput(),
+                    //eventAddressInput(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textField(
+                            labelText: "Endereço:",
+                            icon: Icons.location_on,
+                            onChanged: newEventController.newEvent.setAddress,
+                            maxLength: 50,
+                            errorText: newEventController.validateAddress);
+                      }),
+                    ),
 
                     //Event Addres Complement:
-                    eventComplementInput(),
+                    //eventComplementInput(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textField(
+                            labelText: "Complemento:",
+                            icon: Icons.location_city,
+                            onChanged: newEventController.newEvent.setComplement,
+                            maxLength: 50,
+                            errorText: newEventController.validateComplement);
+                      }),
+                    ),
 
                     //Event Link or Email:
-                    eventLinkInput(),
+                    //eventLinkInput(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textField(
+                            labelText: "Link ou Email:",
+                            icon: Icons.link,
+                            onChanged: newEventController.newEvent.setLink,
+                            maxLength: 50,
+                            errorText: newEventController.validateLink);
+                      }),
+                    ),
+                    
 
                     //Event Hour Start:
                     Padding(
@@ -291,6 +364,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                           setState(() {
                                             print(
                                                 "Executou um setState $newType");
+                                                //Observable, criar função set para Type!
                                             _currentType = newType;
                                           });
                                         },
@@ -417,7 +491,8 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                 ),
                                 padding: EdgeInsets.all(12),
                                 onPressed: () {
-                                  Navigator.pushReplacementNamed(context, "/main");
+                                  Navigator.pushReplacementNamed(
+                                      context, "/main");
                                 },
                                 color: Color(0xFF295492),
                                 child: Text(
