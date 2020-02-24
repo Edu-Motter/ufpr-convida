@@ -43,10 +43,10 @@ textFieldController({TextEditingController controller, String labelText, IconDat
   );
 }
 
-textFieldLines({int maxLines, String initalValue, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+textFieldLines({int maxLines, String initialValue, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
   return TextFormField(
     maxLines: maxLines,
-    initialValue: initalValue,
+    initialValue: initialValue,
     onChanged: onChanged,
     maxLength: maxLength,
     decoration: InputDecoration(
@@ -58,7 +58,7 @@ textFieldLines({int maxLines, String initalValue, String labelText, IconData ico
   );
 }
 
-textFieldInitalValue({String initialValue, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+textFieldInitialValue({String initialValue, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText, String initalValue}) {
   return TextFormField(
     initialValue: initialValue,
     onChanged: onChanged,

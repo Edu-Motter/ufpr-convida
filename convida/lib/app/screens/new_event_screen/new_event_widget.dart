@@ -103,7 +103,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
-                      return textFieldInitalValue(
+                      return textFieldInitialValue(
                           initialValue: newEventController.newEvent.name,
                           labelText: "Nome do Evento:",
                           icon: Icons.event_note,
@@ -118,7 +118,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
-                      return textFieldInitalValue(
+                      return textFieldInitialValue(
                           initialValue: newEventController.newEvent.target,
                           labelText: "Público alvo:",
                           icon: Icons.person_pin_circle,
@@ -135,7 +135,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                     child: Observer(builder: (_) {
                       return textFieldLines(
                           maxLines: 3,
-                          initalValue: newEventController.newEvent.desc,
+                          initialValue: newEventController.newEvent.desc,
                           labelText: "Descrição:",
                           icon: Icons.person_pin_circle,
                           onChanged: newEventController.newEvent.setDesc,
@@ -149,7 +149,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
-                      return textFieldInitalValue(
+                      return textFieldInitialValue(
                           initialValue: newEventController.newEvent.address,
                           labelText: "Endereço:",
                           icon: Icons.location_on,
@@ -164,7 +164,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
-                      return textFieldInitalValue(
+                      return textFieldInitialValue(
                           initialValue: newEventController.newEvent.complement,
                           labelText: "Complemento:",
                           icon: Icons.location_city,
@@ -179,7 +179,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
-                      return textFieldInitalValue(
+                      return textFieldInitialValue(
                           initialValue: newEventController.newEvent.link,
                           labelText: "Link ou Email:",
                           icon: Icons.link,
@@ -347,7 +347,9 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                                       Text(dropDownStringIten));
                                             }).toList(),
                                             onChanged: (String newType) {
-                                              _currentType = newType;
+                                              setState(() {
+                                                _currentType = newType; 
+                                              });
                                             },
                                             value: _currentType),
                                       );

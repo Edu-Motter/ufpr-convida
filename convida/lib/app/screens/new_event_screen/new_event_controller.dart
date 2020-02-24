@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:convida/app/shared/models/login.dart';
 import 'package:convida/app/shared/models/user.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/validations/event_validation.dart';

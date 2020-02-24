@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:convida/app/shared/validations/event_validation.dart';
+import 'package:convida/app/screens/alter_event_screen/alter_event_controller.dart';
+import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:convida/app/shared/global/globals.dart' as globals;
 import 'package:convida/app/shared/models/event.dart';
-import 'package:http/http.dart' as http;
-import 'package:convida/app/shared/models/user.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 
 class AlterEventWidget extends StatefulWidget {
@@ -20,9 +16,8 @@ class AlterEventWidget extends StatefulWidget {
 class _AlterEventWidgetState extends State<AlterEventWidget> {
   Event event;
   _AlterEventWidgetState(this.event);
+  final alterEventController = AlterEventController();
 
-  String _url = globals.URL;
-  final _formKey = GlobalKey<FormState>();
   bool created = false;
   final DateTime now = DateTime.now();
 
@@ -38,13 +33,6 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
   String showDateEnd = "";
   String showSubStart = "";
   String showSubEnd = "";
-
-  String postHrStart = "";
-  String postHrEnd = "";
-  String postDateEventStart = "";
-  String postDateEventEnd = "";
-  String postSubEventStart = "";
-  String postSubEventEnd = "";
 
   DateTime selectedHrEventStart = DateTime.now();
   DateTime selectedHrEventEnd = DateTime.now();
@@ -67,44 +55,28 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
   //Switch:
   bool isSwitchedSubs = false;
 
-  //Controllers:
-  final TextEditingController _eventNameController =
-      new TextEditingController();
-  final TextEditingController _eventTargetController =
-      new TextEditingController();
-  final TextEditingController _eventDescController =
-      new TextEditingController();
-  final TextEditingController _eventLinkController =
-      new TextEditingController();
-  final TextEditingController _eventAddressController =
-      new TextEditingController();
-  final TextEditingController _eventComplementController =
-      new TextEditingController();
-
-  //Validators:
-  RegExp _eventNameValidator =
-      RegExp(r"^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.]{2,25}$");
-  RegExp _eventTargetValidator =
-      RegExp(r"^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.]{2,25}$");
-  RegExp _eventDescValidator =
-      RegExp(r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,250})$");
-  //Talvez número?
-  RegExp _eventAddressValidator =
-      RegExp(r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,50})$");
-  RegExp _eventComplementValidator =
-      RegExp(r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ,.]{2,50})$");
-
-  RegExp _eventLinkValidator =
-      RegExp(r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,35})$");
+  // //Controllers:
+  // final TextEditingController _eventNameController =
+  //     new TextEditingController();
+  // final TextEditingController _eventTargetController =
+  //     new TextEditingController();
+  // final TextEditingController _eventDescController =
+  //     new TextEditingController();
+  // final TextEditingController _eventLinkController =
+  //     new TextEditingController();
+  // final TextEditingController _eventAddressController =
+  //     new TextEditingController();
+  // final TextEditingController _eventComplementController =
+  //     new TextEditingController();
 
   @override
   void initState() {
-    _eventNameController.text = event.name;
-    _eventTargetController.text = event.target;
-    _eventDescController.text = event.desc;
-    _eventLinkController.text = event.link;
-    _eventAddressController.text = event.address;
-    _eventComplementController.text = event.complement;
+    alterEventController.alterEvent.name = event.name;
+    alterEventController.alterEvent.target = event.target;
+    alterEventController.alterEvent.desc = event.desc;
+    alterEventController.alterEvent.link = event.link;
+    alterEventController.alterEvent.address = event.address;
+    alterEventController.alterEvent.complement = event.complement;
     _currentType = event.type;
 
     DateTime parsedHrStart;
@@ -117,37 +89,37 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
     if (event.hrStart != null) {
       parsedHrStart = DateTime.parse(event.hrStart);
       selectedHrEventStart = parsedHrStart;
-      postHrStart = postFormat.format(parsedHrStart);
+      alterEventController.alterEvent.hrStart = postFormat.format(parsedHrStart);
       showHrStart = hourFormat.format(parsedHrStart);
     }
     if (event.hrEnd != null) {
       parsedHrEnd = DateTime.parse(event.hrEnd);
       selectedHrEventEnd = parsedHrEnd;
-      postHrEnd = postFormat.format(parsedHrEnd);
+      alterEventController.alterEvent.hrEnd = postFormat.format(parsedHrEnd);
       showHrEnd = hourFormat.format(parsedHrEnd);
     }
     if (event.dateStart != null) {
       parsedDateStart = DateTime.parse(event.dateStart);
       selectedHrEventStart = parsedDateStart;
-      postDateEventStart = postFormat.format(parsedDateStart);
+      alterEventController.alterEvent.dateStart = postFormat.format(parsedDateStart);
       showDateStart = formatter.format(parsedDateStart);
     }
     if (event.dateEnd != null) {
       parsedDateEnd = DateTime.parse(event.dateEnd);
       selectedDateEventEnd = parsedDateEnd;
-      postDateEventEnd = postFormat.format(parsedDateEnd);
+      alterEventController.alterEvent.dateEnd = postFormat.format(parsedDateEnd);
       showDateEnd = formatter.format(parsedDateEnd);
     }
     if (event.startSub != null) {
       parsedSubStart = DateTime.parse(event.startSub);
       selectedSubEventStart = parsedSubStart;
-      postSubEventStart = postFormat.format(parsedSubStart);
+      alterEventController.alterEvent.subStart = postFormat.format(parsedSubStart);
       showSubStart = formatter.format(parsedSubStart);
     }
     if (event.endSub != null) {
       parsedSubEnd = DateTime.parse(event.endSub);
       selectedSubEventEnd = parsedSubEnd;
-      postSubEventEnd = postFormat.format(parsedSubEnd);
+      alterEventController.alterEvent.subEnd = postFormat.format(parsedSubEnd);
       showSubEnd = formatter.format(parsedSubEnd);
     }
 
@@ -167,415 +139,493 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
         return null;
       },
       child: Scaffold(
-        body: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              //Tittle
-              Padding(
-                padding: const EdgeInsets.all(10),
+        body: ListView(
+          children: <Widget>[
+            //Tittle
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                alignment: Alignment.center,
+                child: Text(
+                  "Alterando Evento",
+                  style: TextStyle(
+                      color: Color(0xFF295492), //Color(0xFF8A275D),
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
+            //Event Name:
+            //eventNameInput(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Observer(builder: (_) {
+                return textFieldInitialValue(
+                    initialValue: alterEventController.alterEvent.name,
+                    labelText: "Nome do Evento:",
+                    icon: Icons.event_note,
+                    onChanged: alterEventController.alterEvent.setName,
+                    maxLength: 25,
+                    errorText: alterEventController.validateName);
+              }),
+            ),
+            //Event Target
+            //eventTargetInput(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Observer(builder: (_) {
+                return textFieldInitialValue(
+                    initialValue: alterEventController.alterEvent.target,
+                    labelText: "Público alvo:",
+                    icon: Icons.person_pin_circle,
+                    onChanged: alterEventController.alterEvent.setTarget,
+                    maxLength: 25,
+                    errorText: alterEventController.validateTarget);
+              }),
+            ),
+            //Event Description
+            //eventDescInput(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Observer(builder: (_) {
+                return textFieldLines(
+                    maxLines: 3,
+                    initialValue: alterEventController.alterEvent.desc,
+                    labelText: "Descrição:",
+                    icon: Icons.note,
+                    onChanged: alterEventController.alterEvent.setDesc,
+                    maxLength: 250,
+                    errorText: alterEventController.validateDesc);
+              }),
+            ),
+            //eventAddressInput(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Observer(builder: (_) {
+                return textFieldInitialValue(
+                    initialValue: alterEventController.alterEvent.address,
+                    labelText: "Endereço:",
+                    icon: Icons.location_on,
+                    onChanged: alterEventController.alterEvent.setAddress,
+                    maxLength: 50,
+                    errorText: alterEventController.validateAddress);
+              }),
+            ),
+            //eventComplementInput(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Observer(builder: (_) {
+                return textFieldInitialValue(
+                    initialValue: alterEventController.alterEvent.complement,
+                    labelText: "Complemento:",
+                    icon: Icons.location_city,
+                    onChanged: alterEventController.alterEvent.setComplement,
+                    maxLength: 50,
+                    errorText: alterEventController.validateComplement);
+              }),
+            ),
+            //Event Link or Email:
+            //eventLinkInput(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Observer(builder: (_) {
+                return textFieldInitialValue(
+                    initialValue: alterEventController.alterEvent.link,
+                    labelText: "Link ou Email:",
+                    icon: Icons.location_city,
+                    onChanged: alterEventController.alterEvent.setLink,
+                    maxLength: 50,
+                    errorText: alterEventController.validateLink);
+              }),
+            ),
+            //Event Hour Start:
+            Padding(
+                padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
                 child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Alterando Evento",
-                    style: TextStyle(
-                        color: Color(0xFF295492), //Color(0xFF8A275D),
-                        fontSize: 32.0,
-                        fontWeight: FontWeight.bold),
+                  decoration: containerDecoration(),
+                  child: InkWell(
+                    onTap: () async {
+                      final selectedTime =
+                          await _selectedTime(context, selectedHrEventStart);
+                      if (selectedTime == null) return 0;
+
+                      setState(() {
+                        print("${selectedTime.hour} : ${selectedTime.minute}");
+
+                        this.selectedHrEventStart = DateTime(
+                            now.year,
+                            now.month,
+                            now.day,
+                            selectedTime.hour,
+                            selectedTime.minute);
+                        alterEventController.alterEvent.hrStart = postFormat.format(selectedHrEventStart);
+                        showHrStart = hourFormat.format(selectedHrEventStart);
+                        print("Formato data post: ${alterEventController.alterEvent.hrStart}");
+                      });
+                      return 0;
+                    },
+                    child: eventHourStartOutput(),
                   ),
-                ),
-              ),
+                )),
 
-              //Event Name:
-              eventNameInput(),
+            //Event Hour End
+            Padding(
+                padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
+                child: Container(
+                  decoration: containerDecoration(),
+                  child: InkWell(
+                    onTap: () async {
+                      final selectedTime =
+                          await _selectedTime(context, selectedHrEventEnd);
+                      if (selectedTime == null) return 0;
 
-              //Event Target
-              eventTargetInput(),
-
-              //Event Description
-              eventDescInput(),
-
-              eventAddressInput(),
-
-              eventComplementInput(),
-
-              //Event Link or Email:
-              eventLinkInput(),
-
-              //Event Hour Start:
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                  child: Container(
-                    decoration: containerDecoration(),
-                    child: InkWell(
-                      onTap: () async {
-                        final selectedTime =
-                            await _selectedTime(context, selectedHrEventStart);
-                        if (selectedTime == null) return 0;
-
-                        setState(() {
-                          print(
-                              "${selectedTime.hour} : ${selectedTime.minute}");
-
-                          this.selectedHrEventStart = DateTime(
-                              now.year,
-                              now.month,
-                              now.day,
-                              selectedTime.hour,
-                              selectedTime.minute);
-                          postHrStart = postFormat.format(selectedHrEventStart);
-                          showHrStart = hourFormat.format(selectedHrEventStart);
-                          print("Formato data post: $postHrStart");
-                        });
-                        return 0;
-                      },
-                      child: eventHourStartOutput(),
-                    ),
-                  )),
-
-              //Event Hour End
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                  child: Container(
-                    decoration: containerDecoration(),
-                    child: InkWell(
-                      onTap: () async {
-                        final selectedTime =
-                            await _selectedTime(context, selectedHrEventEnd);
-                        if (selectedTime == null) return 0;
-
-                        setState(() {
-                          this.selectedHrEventEnd = DateTime(
-                              now.year,
-                              now.month,
-                              now.day,
-                              selectedTime.hour,
-                              selectedTime.minute);
-                          postHrEnd = postFormat.format(selectedHrEventEnd);
-                          showHrEnd = hourFormat.format(selectedHrEventEnd);
-                          print("Formato hora post: $postHrEnd");
-                        });
-                        return 0;
-                      },
-                      child: eventHourEndOutput(),
-                    ),
-                  )),
-
-              //Event Date Start:
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                  child: Container(
-                    decoration: containerDecoration(),
-                    child: InkWell(
-                      onTap: () async {
-                        final selectedDate = await _selectedDate(
-                            context, selectedDateEventStart);
-                        if (selectedDate == null) return 0;
-
-                        setState(() {
-                          this.selectedDateEventStart = DateTime(
-                              selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                              now.hour,
-                              now.minute);
-                          postDateEventStart =
-                              postFormat.format(selectedDateEventStart);
-                          showDateStart =
-                              formatter.format(selectedDateEventStart);
-                          print("Formato data post: $postDateEventStart");
-                        });
-                        return 0;
-                      },
-                      child: eventDateStartOutput(),
-                    ),
-                  )),
-
-              //Date End Event:
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                  child: Container(
-                    decoration: containerDecoration(),
-                    child: InkWell(
-                      onTap: () async {
-                        final selectedDate =
-                            await _selectedDate(context, selectedDateEventEnd);
-                        if (selectedDate == null) return 0;
-
-                        setState(() {
-                          selectedDateEventEnd = DateTime(
-                              selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                              now.hour,
-                              now.minute);
-                          //Format's:
-                          postDateEventEnd =
-                              postFormat.format(selectedDateEventEnd);
-                          showDateEnd = formatter.format(selectedDateEventEnd);
-                          print("Formato data post: $postDateEventEnd");
-                        });
-                        return 0;
-                      },
-                      child: eventDateEndOutput(),
-                    ),
-                  )),
-
-              //Event Category
-              Padding(
-                padding: const EdgeInsets.fromLTRB(47, 8.0, 8.0, 8.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: Container(
-                          decoration: containerDecorationCategory(),
-                          child: Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-                                child: new Text(
-                                  "Tipo do evento: ",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.black54),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(3, 5, 20, 5),
-                                child: DropdownButton<String>(
-                                  items: _dropDownMenuItemsTypes
-                                      .map((String dropDownStringIten) {
-                                    return DropdownMenuItem<String>(
-                                        value: dropDownStringIten,
-                                        child: Text(dropDownStringIten));
-                                  }).toList(),
-                                  onChanged: (String newType) {
-                                    setState(() {
-                                      print("Executou um setState $newType");
-                                      _currentType = newType;
-                                    });
-                                  },
-                                  value: _currentType,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
+                      setState(() {
+                        this.selectedHrEventEnd = DateTime(now.year, now.month,
+                            now.day, selectedTime.hour, selectedTime.minute);
+                        alterEventController.alterEvent.hrEnd = postFormat.format(selectedHrEventEnd);
+                        showHrEnd = hourFormat.format(selectedHrEventEnd);
+                        print("Formato hora post: ${alterEventController.alterEvent.hrEnd} ");
+                      });
+                      return 0;
+                    },
+                    child: eventHourEndOutput(),
                   ),
-                ),
-              ),
+                )),
 
-              //Event Switch Subscriptions:
-              SingleChildScrollView(
-                  scrollDirection: Axis.horizontal, child: eventSwitchSubs()),
+            //Event Date Start:
+            Padding(
+                padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
+                child: Container(
+                  decoration: containerDecoration(),
+                  child: InkWell(
+                    onTap: () async {
+                      final selectedDate =
+                          await _selectedDate(context, selectedDateEventStart);
+                      if (selectedDate == null) return 0;
 
-              Container(
-                  child: isSwitchedSubs == true
-                      ? Container(
-                          child: Column(
-                            children: <Widget>[
-                              //Subscriptions Start:
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                                  child: Container(
-                                    decoration: containerDecoration(),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        final selectedDate =
-                                            await _selectedDate(
-                                                context, selectedSubEventStart);
-                                        if (selectedDate == null) return 0;
+                      setState(() {
+                        this.selectedDateEventStart = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            now.hour,
+                            now.minute);
+                        alterEventController.alterEvent.dateStart  =
+                            postFormat.format(selectedDateEventStart);
+                        showDateStart =
+                            formatter.format(selectedDateEventStart);
+                        print("Formato data post: ${alterEventController.alterEvent.dateStart} ");
+                      });
+                      return 0;
+                    },
+                    child: eventDateStartOutput(),
+                  ),
+                )),
 
-                                        setState(() {
-                                          this.selectedSubEventStart = DateTime(
-                                            selectedDate.year,
-                                            selectedDate.month,
-                                            selectedDate.day,
-                                          );
-                                          //Format's:
-                                          postSubEventStart = postFormat
-                                              .format(selectedSubEventStart);
-                                          showSubStart = formatter
-                                              .format(selectedSubEventStart);
-                                          print(
-                                              "Formato data post: $postSubEventStart");
-                                        });
-                                        return 0;
-                                      },
-                                      child: eventSubsStartOutput(),
-                                    ),
-                                  )),
+            //Date End Event:
+            Padding(
+                padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
+                child: Container(
+                  decoration: containerDecoration(),
+                  child: InkWell(
+                    onTap: () async {
+                      final selectedDate =
+                          await _selectedDate(context, selectedDateEventEnd);
+                      if (selectedDate == null) return 0;
 
-                              //Subscriptions End:
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                                  child: Container(
-                                    decoration: containerDecoration(),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        final selectedDate =
-                                            await _selectedDate(
-                                                context, selectedSubEventEnd);
-                                        if (selectedDate == null) return 0;
+                      setState(() {
+                        selectedDateEventEnd = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            now.hour,
+                            now.minute);
+                        //Format's:
+                        alterEventController.alterEvent.dateEnd =
+                            postFormat.format(selectedDateEventEnd);
+                        showDateEnd = formatter.format(selectedDateEventEnd);
+                        print("Formato data post: ${alterEventController.alterEvent.dateEnd} ");
+                      });
+                      return 0;
+                    },
+                    child: eventDateEndOutput(),
+                  ),
+                )),
 
-                                        setState(() {
-                                          this.selectedSubEventEnd = DateTime(
-                                            selectedDate.year,
-                                            selectedDate.month,
-                                            selectedDate.day,
-                                          );
-                                          //Format's:
-                                          postSubEventEnd = postFormat
-                                              .format(selectedSubEventEnd);
-                                          showSubEnd = formatter
-                                              .format(selectedSubEventEnd);
-                                          print(
-                                              "Formato data post: $postSubEventEnd");
-                                        });
-                                        return 0;
-                                      },
-                                      child: eventSubsEndOutput(),
-                                    ),
-                                  )),
-                            ],
-                          ),
-                        )
-                      : nothingToShow()),
-
-              //Buttons:
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        padding: EdgeInsets.all(12),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          //Navigator.of(context).pushNamed("/main");
-                        },
-                        color: Color(0xFF295492),
-                        child: Text(
-                          "Cancelar",
-                          style: TextStyle(color: Colors.white, fontSize: 17.0),
+            //Event Category
+            Padding(
+              padding: const EdgeInsets.fromLTRB(47, 8.0, 8.0, 8.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Container(
+                        decoration: containerDecorationCategory(),
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                              child: new Text(
+                                "Tipo do evento: ",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(3, 5, 20, 5),
+                              child: DropdownButton<String>(
+                                items: _dropDownMenuItemsTypes
+                                    .map((String dropDownStringIten) {
+                                  return DropdownMenuItem<String>(
+                                      value: dropDownStringIten,
+                                      child: Text(dropDownStringIten));
+                                }).toList(),
+                                onChanged: (String newType) {
+                                  setState(() {
+                                    print("Executou um setState $newType");
+                                    _currentType = newType;
+                                  });
+                                },
+                                value: _currentType,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(width: 30),
-                      RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
+                    )
+                  ],
+                ),
+              ),
+            ),
+
+            //Event Switch Subscriptions:
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal, child: eventSwitchSubs()),
+
+            Container(
+                child: isSwitchedSubs == true
+                    ? Container(
+                        child: Column(
+                          children: <Widget>[
+                            //Subscriptions Start:
+                            Padding(
+                                padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
+                                child: Container(
+                                  decoration: containerDecoration(),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      final selectedDate = await _selectedDate(
+                                          context, selectedSubEventStart);
+                                      if (selectedDate == null) return 0;
+
+                                      setState(() {
+                                        this.selectedSubEventStart = DateTime(
+                                          selectedDate.year,
+                                          selectedDate.month,
+                                          selectedDate.day,
+                                        );
+                                        //Format's:
+                                        alterEventController.alterEvent.subStart  = postFormat
+                                            .format(selectedSubEventStart);
+                                        showSubStart = formatter
+                                            .format(selectedSubEventStart);
+                                        print(
+                                            "Formato data post: ${alterEventController.alterEvent.subStart}");
+                                      });
+                                      return 0;
+                                    },
+                                    child: eventSubsStartOutput(),
+                                  ),
+                                )),
+
+                            //Subscriptions End:
+                            Padding(
+                                padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
+                                child: Container(
+                                  decoration: containerDecoration(),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      final selectedDate = await _selectedDate(
+                                          context, selectedSubEventEnd);
+                                      if (selectedDate == null) return 0;
+
+                                      setState(() {
+                                        this.selectedSubEventEnd = DateTime(
+                                          selectedDate.year,
+                                          selectedDate.month,
+                                          selectedDate.day,
+                                        );
+                                        //Format's:
+                                        alterEventController.alterEvent.subEnd = postFormat
+                                            .format(selectedSubEventEnd);
+                                        showSubEnd = formatter
+                                            .format(selectedSubEventEnd);
+                                        print(
+                                            "Formato data post: ${alterEventController.alterEvent.subEnd}");
+                                      });
+                                      return 0;
+                                    },
+                                    child: eventSubsEndOutput(),
+                                  ),
+                                )),
+                          ],
                         ),
-                        padding: EdgeInsets.all(12),
-                        onPressed: () async {
-                          if (created) {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            // Navigator.of(context).popAndPushNamed("/main");
+                      )
+                    : nothingToShow()),
+
+            //Buttons:
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      padding: EdgeInsets.all(12),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        //Navigator.of(context).pushNamed("/main");
+                      },
+                      color: Color(0xFF295492),
+                      child: Text(
+                        "Cancelar",
+                        style: TextStyle(color: Colors.white, fontSize: 17.0),
+                      ),
+                    ),
+                    SizedBox(width: 30),
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      padding: EdgeInsets.all(12),
+                      onPressed: () async {
+                        if (created) {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          // Navigator.of(context).popAndPushNamed("/main");
+                        }
+                        if (created == false) {
+                          bool ok = true;
+
+                          //Data Validations:
+
+                          if (showHrStart.isEmpty) {
+                            showError(
+                                "Hora início não informada",
+                                "Favor informar hora de início do evento",
+                                context);
+                            ok = false;
                           }
-                          if ((_formKey.currentState.validate()) &&
-                              (created == false)) {
-                            bool ok = true;
+                          if (showHrEnd.isEmpty) {
+                            showError(
+                                "Hora fim não informada",
+                                "Favor informar hora de fim do evento",
+                                context);
+                            ok = false;
+                          }
+                          if (showDateStart.isEmpty) {
+                            showError(
+                                "Data início não informada",
+                                "Favor informar data de início do evento",
+                                context);
+                            ok = false;
+                          }
+                          if (showDateEnd.isEmpty) {
+                            showError(
+                                "Data fim não informada",
+                                "Favor informar data de fim do evento",
+                                context);
+                            ok = false;
+                          }
 
-                            //Data Validations:
+                          if (selectedDateEventStart
+                                  .compareTo(selectedDateEventEnd) >
+                              0) {
+                            ok = false;
+                            showError(
+                                "Data Incorreta",
+                                "A Data de Início do Evento está inválida!",
+                                context);
+                          }
 
-                            if (showHrStart.isEmpty) {
-                              showError("Hora início não informada",
-                                  "Favor informar hora de início do evento", context);
+                          //Subscritions Validations:
+                          if (isSwitchedSubs == true) {
+                            if (selectedSubEventStart
+                                    .compareTo(selectedSubEventEnd) >
+                                0) {
                               ok = false;
-                            }
-                            if (showHrEnd.isEmpty) {
-                              showError("Hora fim não informada",
-                                  "Favor informar hora de fim do evento", context);
-                              ok = false;
-                            }
-                            if (showDateStart.isEmpty) {
-                              showError("Data início não informada",
-                                  "Favor informar data de início do evento", context);
-                              ok = false;
-                            }
-                            if (showDateEnd.isEmpty) {
-                              showError("Data fim não informada",
-                                  "Favor informar data de fim do evento", context);
-                              ok = false;
+                              showError(
+                                  "Data Incorreta",
+                                  "A Data de Início das Incrições está inválida!",
+                                  context);
                             }
 
-                            if (selectedDateEventStart
+                            if (selectedSubEventStart
                                     .compareTo(selectedDateEventEnd) >
                                 0) {
                               ok = false;
-                              showError("Data Incorreta",
-                                  "A Data de Início do Evento está inválida!", context);
+                              showError(
+                                  "Data Incorreta",
+                                  "A Data de Início das Incrições está inválida!",
+                                  context);
                             }
-
-                            //Subscritions Validations:
-                            if (isSwitchedSubs == true) {
-                              if (selectedSubEventStart
-                                      .compareTo(selectedSubEventEnd) >
-                                  0) {
-                                ok = false;
-                                showError("Data Incorreta",
-                                    "A Data de Início das Incrições está inválida!", context);
-                              }
-
-                              if (selectedSubEventStart
-                                      .compareTo(selectedDateEventEnd) >
-                                  0) {
-                                ok = false;
-                                showError("Data Incorreta",
-                                    "A Data de Início das Incrições está inválida!", context);
-                              }
-                              if (selectedSubEventEnd
-                                      .compareTo(selectedDateEventEnd) >
-                                  0) {
-                                ok = false;
-                                showError("Data Incorreta",
-                                    "Data de Fim das Incrições acabam depois do Evento finalizar!", context);
-                              }
-                            }
-
-                            if (ok == true) {
-                              int statusCode = await putEvent();
-                              if ((statusCode == 200) || (statusCode == 201)) {
-                                showSuccess("Evento Alterado com sucesso!","pop",context);
-                              } else if (statusCode == 401) {
-                                showError("Erro 401",
-                                    "Não autorizado, favor logar novamente", context);
-                              } else if (statusCode == 404) {
-                                showError("Erro 404",
-                                    "Evento ou usuário não foi encontrado", context);
-                              } else if (statusCode == 500) {
-                                showError("Erro 500",
-                                    "Erro no servidor, favor tente novamente mais tarde", context);
-                              } else {
-                                showError("Erro Desconhecido",
-                                    "StatusCode: $statusCode", context);
-                              }
-                              created = true;
+                            if (selectedSubEventEnd
+                                    .compareTo(selectedDateEventEnd) >
+                                0) {
+                              ok = false;
+                              showError(
+                                  "Data Incorreta",
+                                  "Data de Fim das Incrições acabam depois do Evento finalizar!",
+                                  context);
                             }
                           }
-                        },
-                        color: Color(0xFF8A275D),
-                        child: Text(
-                          "Alterar",
-                          style: TextStyle(color: Colors.white, fontSize: 17.0),
-                        ),
+
+                          if (ok == true) {
+                            int statusCode = await alterEventController.putEvent(
+                                _currentType, isSwitchedSubs, event, context);
+                            if ((statusCode == 200) || (statusCode == 201)) {
+                              showSuccess("Evento Alterado com sucesso!", "pop",
+                                  context);
+                            } else if (statusCode == 401) {
+                              showError(
+                                  "Erro 401",
+                                  "Não autorizado, favor logar novamente",
+                                  context);
+                            } else if (statusCode == 404) {
+                              showError(
+                                  "Erro 404",
+                                  "Evento ou usuário não foi encontrado",
+                                  context);
+                            } else if (statusCode == 500) {
+                              showError(
+                                  "Erro 500",
+                                  "Erro no servidor, favor tente novamente mais tarde",
+                                  context);
+                            } else {
+                              showError("Erro Desconhecido",
+                                  "StatusCode: $statusCode", context);
+                            }
+                            created = true;
+                          }
+                        }
+                      },
+                      color: Color(0xFF8A275D),
+                      child: Text(
+                        "Alterar",
+                        style: TextStyle(color: Colors.white, fontSize: 17.0),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -658,200 +708,6 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                 )),
           ],
         ),
-      ),
-    );
-  }
-
-  Future<int> putEvent() async {
-    final _save = FlutterSecureStorage();
-    final _id = await _save.read(key: "user");
-    final _token = await _save.read(key: "token");
-    User user;
-    Map<String, String> mapHeaders = {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $_token"
-    };
-
-    try {
-      user = await http
-          .get("$_url/users/$_id", headers: mapHeaders)
-          .then((http.Response response) {
-        final int statusCode = response.statusCode;
-        if ((statusCode == 200) || (statusCode == 201)) {
-          return User.fromJson(jsonDecode(response.body));
-        } else {
-          showError("Erro no servidor", "Erro: $statusCode", context);
-        }
-      });
-    } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
-    }
-
-    if (isSwitchedSubs == false) {
-      postSubEventStart = "";
-      postSubEventEnd = "";
-    }
-
-    Event p = new Event(
-        id: event.id,
-        name: _eventNameController.text,
-        target: _eventTargetController.text,
-        desc: _eventDescController.text,
-        hrStart: postHrStart,
-        hrEnd: postHrEnd,
-        dateStart: postDateEventStart,
-        dateEnd: postDateEventEnd,
-        link: _eventLinkController.text,
-        type: _currentType,
-        address: _eventAddressController.text,
-        complement: _eventComplementController.text,
-        startSub: postSubEventStart,
-        endSub: postSubEventEnd,
-        author: user.grr,
-        lat: event.lat,
-        lng: event.lng);
-
-    String eventJson = json.encode(p.toJson());
-
-    int code;
-    try {
-      code = await http
-          .put("$_url/events/${event.id}", body: eventJson, headers: mapHeaders)
-          .then((http.Response response) {
-        final int statusCode = response.statusCode;
-        if ((statusCode == 200) || (statusCode == 201)) {
-          print("Put Event Success!");
-          return statusCode;
-        } else {
-          print("Put Evento Error: $statusCode");
-          return statusCode;
-        }
-      });
-    } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
-    }
-
-    return code;
-  }
-
-  Padding eventNameInput() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        autovalidate: true,
-        maxLength: 25,
-        controller: _eventNameController,
-        decoration: InputDecoration(
-            hintText: "Nome do evento: ",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.event_note)),
-        //Validations:
-        validator: (value) {
-          return nameValidation(value);
-        },
-      ),
-    );
-  }
-
-  Padding eventTargetInput() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        autovalidate: true,
-        maxLength: 25,
-        controller: _eventTargetController,
-        decoration: InputDecoration(
-            hintText: "Público alvo: ",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.person_pin_circle)),
-        //Validations:
-        validator: (value) {
-          return targetValidation(value);
-        },
-      ),
-    );
-  }
-
-  Padding eventDescInput() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        autovalidate: true,
-        maxLength: 250,
-        controller: _eventDescController,
-        maxLines: 3,
-        decoration: InputDecoration(
-            hintText: "Descrição: ",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.note)),
-        //Validations:
-        validator: (value) {
-          return descriptionValidation(value);
-        },
-      ),
-    );
-  }
-
-  Padding eventAddressInput() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        autovalidate: true,
-        maxLength: 50,
-        controller: _eventAddressController,
-        decoration: InputDecoration(
-            hintText: "Endereço: ",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.location_on)),
-        //Validations:
-        validator: (value) {
-          return addressValidation(value);
-        },
-      ),
-    );
-  }
-
-  Padding eventComplementInput() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        autovalidate: true,
-        maxLength: 50,
-        controller: _eventComplementController,
-        decoration: InputDecoration(
-            hintText: "Complemento: ",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.location_city)),
-        //Validations:
-        validator: (value) {
-          return complementValidation(value);
-        },
-      ),
-    );
-  }
-
-  Padding eventLinkInput() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        controller: _eventLinkController,
-        autovalidate: true,
-        maxLength: 50,
-        decoration: InputDecoration(
-            hintText: "Link ou Email: ",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
-            icon: Icon(Icons.link)),
-        //Validations:
-        validator: (value) {
-          return linkValidation(value);
-        },
       ),
     );
   }
