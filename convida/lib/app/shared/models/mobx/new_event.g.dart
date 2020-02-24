@@ -111,6 +111,125 @@ mixin _$NewEvent on _NewEventBase, Store {
     }, _$linkAtom, name: '${_$linkAtom.name}_set');
   }
 
+  final _$typeAtom = Atom(name: '_NewEventBase.type');
+
+  @override
+  String get type {
+    _$typeAtom.context.enforceReadPolicy(_$typeAtom);
+    _$typeAtom.reportObserved();
+    return super.type;
+  }
+
+  @override
+  set type(String value) {
+    _$typeAtom.context.conditionallyRunInAction(() {
+      super.type = value;
+      _$typeAtom.reportChanged();
+    }, _$typeAtom, name: '${_$typeAtom.name}_set');
+  }
+
+  final _$hrStartAtom = Atom(name: '_NewEventBase.hrStart');
+
+  @override
+  String get hrStart {
+    _$hrStartAtom.context.enforceReadPolicy(_$hrStartAtom);
+    _$hrStartAtom.reportObserved();
+    return super.hrStart;
+  }
+
+  @override
+  set hrStart(String value) {
+    _$hrStartAtom.context.conditionallyRunInAction(() {
+      super.hrStart = value;
+      _$hrStartAtom.reportChanged();
+    }, _$hrStartAtom, name: '${_$hrStartAtom.name}_set');
+  }
+
+  final _$hrEndAtom = Atom(name: '_NewEventBase.hrEnd');
+
+  @override
+  String get hrEnd {
+    _$hrEndAtom.context.enforceReadPolicy(_$hrEndAtom);
+    _$hrEndAtom.reportObserved();
+    return super.hrEnd;
+  }
+
+  @override
+  set hrEnd(String value) {
+    _$hrEndAtom.context.conditionallyRunInAction(() {
+      super.hrEnd = value;
+      _$hrEndAtom.reportChanged();
+    }, _$hrEndAtom, name: '${_$hrEndAtom.name}_set');
+  }
+
+  final _$dateStartAtom = Atom(name: '_NewEventBase.dateStart');
+
+  @override
+  String get dateStart {
+    _$dateStartAtom.context.enforceReadPolicy(_$dateStartAtom);
+    _$dateStartAtom.reportObserved();
+    return super.dateStart;
+  }
+
+  @override
+  set dateStart(String value) {
+    _$dateStartAtom.context.conditionallyRunInAction(() {
+      super.dateStart = value;
+      _$dateStartAtom.reportChanged();
+    }, _$dateStartAtom, name: '${_$dateStartAtom.name}_set');
+  }
+
+  final _$dateEndAtom = Atom(name: '_NewEventBase.dateEnd');
+
+  @override
+  String get dateEnd {
+    _$dateEndAtom.context.enforceReadPolicy(_$dateEndAtom);
+    _$dateEndAtom.reportObserved();
+    return super.dateEnd;
+  }
+
+  @override
+  set dateEnd(String value) {
+    _$dateEndAtom.context.conditionallyRunInAction(() {
+      super.dateEnd = value;
+      _$dateEndAtom.reportChanged();
+    }, _$dateEndAtom, name: '${_$dateEndAtom.name}_set');
+  }
+
+  final _$subStartAtom = Atom(name: '_NewEventBase.subStart');
+
+  @override
+  String get subStart {
+    _$subStartAtom.context.enforceReadPolicy(_$subStartAtom);
+    _$subStartAtom.reportObserved();
+    return super.subStart;
+  }
+
+  @override
+  set subStart(String value) {
+    _$subStartAtom.context.conditionallyRunInAction(() {
+      super.subStart = value;
+      _$subStartAtom.reportChanged();
+    }, _$subStartAtom, name: '${_$subStartAtom.name}_set');
+  }
+
+  final _$subEndAtom = Atom(name: '_NewEventBase.subEnd');
+
+  @override
+  String get subEnd {
+    _$subEndAtom.context.enforceReadPolicy(_$subEndAtom);
+    _$subEndAtom.reportObserved();
+    return super.subEnd;
+  }
+
+  @override
+  set subEnd(String value) {
+    _$subEndAtom.context.conditionallyRunInAction(() {
+      super.subEnd = value;
+      _$subEndAtom.reportChanged();
+    }, _$subEndAtom, name: '${_$subEndAtom.name}_set');
+  }
+
   final _$_NewEventBaseActionController =
       ActionController(name: '_NewEventBase');
 
@@ -175,9 +294,79 @@ mixin _$NewEvent on _NewEventBase, Store {
   }
 
   @override
+  dynamic setType(String value) {
+    final _$actionInfo = _$_NewEventBaseActionController.startAction();
+    try {
+      return super.setType(value);
+    } finally {
+      _$_NewEventBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setHrStart(String value) {
+    final _$actionInfo = _$_NewEventBaseActionController.startAction();
+    try {
+      return super.setHrStart(value);
+    } finally {
+      _$_NewEventBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setHrEnd(String value) {
+    final _$actionInfo = _$_NewEventBaseActionController.startAction();
+    try {
+      return super.setHrEnd(value);
+    } finally {
+      _$_NewEventBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setDateStart(String value) {
+    final _$actionInfo = _$_NewEventBaseActionController.startAction();
+    try {
+      return super.setDateStart(value);
+    } finally {
+      _$_NewEventBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setDateEnd(String value) {
+    final _$actionInfo = _$_NewEventBaseActionController.startAction();
+    try {
+      return super.setDateEnd(value);
+    } finally {
+      _$_NewEventBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setSubStart(String value) {
+    final _$actionInfo = _$_NewEventBaseActionController.startAction();
+    try {
+      return super.setSubStart(value);
+    } finally {
+      _$_NewEventBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setSubEnd(String value) {
+    final _$actionInfo = _$_NewEventBaseActionController.startAction();
+    try {
+      return super.setSubEnd(value);
+    } finally {
+      _$_NewEventBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     final string =
-        'name: ${name.toString()},target: ${target.toString()},desc: ${desc.toString()},address: ${address.toString()},complement: ${complement.toString()},link: ${link.toString()}';
+        'name: ${name.toString()},target: ${target.toString()},desc: ${desc.toString()},address: ${address.toString()},complement: ${complement.toString()},link: ${link.toString()},type: ${type.toString()},hrStart: ${hrStart.toString()},hrEnd: ${hrEnd.toString()},dateStart: ${dateStart.toString()},dateEnd: ${dateEnd.toString()},subStart: ${subStart.toString()},subEnd: ${subEnd.toString()}';
     return '{$string}';
   }
 }

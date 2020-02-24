@@ -101,7 +101,11 @@ String complementValidation(value) {
       r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ,.]{0,50})$";
   RegExp _complementValidator = RegExp(expression);
 
-  if (value.length > 50) {
+  if (value == null) {
+    return null;
+  } else if (value.isEmpty) {
+    return null;
+  } else if (value.length > 50) {
     return 'Max. 50 caracteres';
   }
   if (value.startsWith(' ')) {

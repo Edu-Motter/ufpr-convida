@@ -107,13 +107,13 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                             ),
                           ),
                         ),
+                        
                         //User first name:
-
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Observer(builder: (_) {
-                            return textFieldController(
-                                controller: _userFirstNameController,
+                            return textFieldInitalValue(
+                                initialValue: user.name,
                                 labelText: "Nome:",
                                 icon: Icons.person,
                                 onChanged:

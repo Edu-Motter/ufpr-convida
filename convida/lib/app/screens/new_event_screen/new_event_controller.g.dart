@@ -15,6 +15,20 @@ mixin _$NewEventController on _NewEventControllerBase, Store {
   bool get isValid =>
       (_$isValidComputed ??= Computed<bool>(() => super.isValid)).value;
 
+  final _$_NewEventControllerBaseActionController =
+      ActionController(name: '_NewEventControllerBase');
+
+  @override
+  String setNewType() {
+    final _$actionInfo =
+        _$_NewEventControllerBaseActionController.startAction();
+    try {
+      return super.setNewType();
+    } finally {
+      _$_NewEventControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     final string = 'isValid: ${isValid.toString()}';

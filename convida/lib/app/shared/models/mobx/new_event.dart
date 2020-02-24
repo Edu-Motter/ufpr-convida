@@ -33,4 +33,39 @@ abstract class _NewEventBase with Store {
   String link;
   @action
   setLink(String value) => link = value;
+
+  @observable
+  String type;
+  @action
+  setType(String value) => type = value;
+
+  @observable
+  String hrStart;
+  @action
+  setHrStart(String value) => hrStart = value;
+
+  @observable
+  String hrEnd;
+  @action
+  setHrEnd(String value) => hrEnd = value;
+
+  @observable
+  String dateStart;
+  @action
+  setDateStart(String value) => dateStart = value;
+
+  @observable
+  String dateEnd;
+  @action
+  setDateEnd(String value) => dateEnd = value;
+
+  @observable
+  String subStart;
+  @action
+  setSubStart(String value) => subStart = value;
+
+  @observable
+  String subEnd;
+  @action
+  setSubEnd(String value) => subEnd = value;
 }
