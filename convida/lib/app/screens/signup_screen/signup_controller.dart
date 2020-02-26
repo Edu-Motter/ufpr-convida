@@ -23,8 +23,10 @@ abstract class _SignupControllerBase with Store {
     return ((validateName() == null) &&
         (validadeLastName() == null) &&
         (validadeGrr() == null) &&
+        (validadeBirth() == null) &&
         (validadeEmail() == null) &&
-        (validadePassword() == null));
+        (validadePassword() == null) &&
+        (validadeConfirmPassword() == null));
   }
 
   String validateName() {
@@ -43,8 +45,16 @@ abstract class _SignupControllerBase with Store {
     return emailValidation(signup.email);
   }
 
+  String validadeBirth() {
+    return birthValidation(signup.birth);
+  }
+
   String validadePassword() {
     return passwordValidation(signup.password, signup.confirmPassword);
+  }
+
+  String validadeConfirmPassword() {
+    return passwordValidation(signup.confirmPassword, signup.password);
   }
 
   Future<int> checkGrr() async {

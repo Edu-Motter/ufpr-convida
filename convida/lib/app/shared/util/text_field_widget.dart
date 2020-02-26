@@ -1,9 +1,11 @@
 library my_prj.util.textfields;
 
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-textField({String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
-  return TextField(
+textField({String initialValue, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+  return TextFormField(
+    initialValue: initialValue,
     onChanged: onChanged,
     maxLength: maxLength,
     decoration: InputDecoration(
@@ -15,8 +17,9 @@ textField({String labelText, IconData icon, onChanged, int maxLength,String Func
   );
 }
 
-textFieldObscure({String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
-  return TextField(
+textFieldObscure({String initialValue, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+  return TextFormField(
+    initialValue: initialValue,
     obscureText: true,
     onChanged: onChanged,
     maxLength: maxLength,
@@ -29,8 +32,9 @@ textFieldObscure({String labelText, IconData icon, onChanged, int maxLength,Stri
   );
 }
 
-textFieldController({TextEditingController controller, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
-  return TextField(
+textFieldController({String initialValue, TextEditingController controller, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+  return TextFormField(
+    initialValue: initialValue,
     controller: controller,
     onChanged: onChanged,
     maxLength: maxLength,
@@ -61,6 +65,21 @@ textFieldLines({int maxLines, String initialValue, String labelText, IconData ic
 textFieldInitialValue({String initialValue, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText, String initalValue}) {
   return TextFormField(
     initialValue: initialValue,
+    onChanged: onChanged,
+    maxLength: maxLength,
+    decoration: InputDecoration(
+      labelText: labelText,
+      errorText: errorText == null ? null : errorText(),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+      icon: Icon(icon),
+    ),
+  );
+}
+
+textFieldMask({String initialValue, MaskTextInputFormatter maskFormatter, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+  return TextFormField(
+    initialValue: initialValue,
+    inputFormatters: [maskFormatter],
     onChanged: onChanged,
     maxLength: maxLength,
     decoration: InputDecoration(

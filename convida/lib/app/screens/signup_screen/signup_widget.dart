@@ -1,11 +1,10 @@
-
 import 'package:convida/app/screens/signup_screen/signup_controller.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class SignUpWidget extends StatefulWidget {
   @override
@@ -14,6 +13,8 @@ class SignUpWidget extends StatefulWidget {
 
 class _SignUpWidgetState extends State<SignUpWidget> {
   final signupController = SignupController();
+  var dateMask = new MaskTextInputFormatter(
+      mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
 
   bool created = false;
 
@@ -45,6 +46,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           } else
             return null;
         },
+
         child: Scaffold(
           body: Column(
             children: <Widget>[
@@ -73,6 +75,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         return textField(
                             labelText: "Nome:",
                             icon: Icons.person,
+                            initialValue: signupController.signup.name,
                             onChanged: signupController.signup.changeName,
                             maxLength: 25,
                             errorText: signupController.validateName);
@@ -86,6 +89,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         return textField(
                             labelText: "Sobrenome:",
                             icon: Icons.navigate_next,
+                            initialValue: signupController.signup.lastName,
                             onChanged: signupController.signup.changeLastName,
                             maxLength: 25,
                             errorText: signupController.validadeLastName);
@@ -99,6 +103,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         return textField(
                             labelText: "GRR:",
                             icon: Icons.navigate_next,
+                            initialValue: signupController.signup.grr,
                             onChanged: signupController.signup.changeGrr,
                             maxLength: 11,
                             errorText: signupController.validadeGrr);
@@ -107,68 +112,18 @@ class _SignUpWidgetState extends State<SignUpWidget> {
 
                     //User Birthday
                     Padding(
-                        padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.5),
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 1.0,
-                              )),
-                          child: InkWell(
-                            onTap: () async {
-                              final selectedDate =
-                                  await _selectedDate(context);
-                              if (selectedDate == null) return 0;
-
-                              setState(() {
-                                this.selectedDateUser = DateTime(
-                                    selectedDate.year,
-                                    selectedDate.month,
-                                    selectedDate.day);
-                                dateUser =
-                                    dateFormat.format(selectedDateUser);
-                                showDateUser =
-                                    formatter.format(selectedDateUser);
-                                print("Formato data post: $dateUser");
-                              });
-                              return 0;
-                            },
-                            child: new Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                                  child: new Text(
-                                    "Data de Nasc.: ",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.black54),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: new Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      //Dia
-                                      Text(
-                                        "$showDateUser",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black54),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Observer(builder: (_) {
+                        return textFieldMask(
+                            maskFormatter: dateMask,
+                            labelText: "Data de Nascimento:",
+                            icon: Icons.calendar_today,
+                            initialValue: signupController.signup.birth,
+                            onChanged: signupController.signup.changeBirth,
+                            maxLength: 10,
+                            errorText: signupController.validadeBirth);
+                      }),
+                    ),
 
                     //User email:
                     Padding(
@@ -177,6 +132,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         return textField(
                             labelText: "E-mail:",
                             icon: Icons.email,
+                            initialValue: signupController.signup.email,
                             onChanged: signupController.signup.changeEmail,
                             maxLength: 50,
                             errorText: signupController.validadeEmail);
@@ -190,6 +146,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         return textFieldObscure(
                             labelText: "Senha:",
                             icon: Icons.lock,
+                            initialValue: signupController.signup.password,
                             onChanged: signupController.signup.changePassword,
                             maxLength: 18,
                             errorText: signupController.validadePassword);
@@ -203,10 +160,13 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         return textFieldObscure(
                             labelText: "Confirme sua senha:",
                             icon: Icons.lock,
+                            initialValue:
+                                signupController.signup.confirmPassword,
                             onChanged:
                                 signupController.signup.changeConfirmPassword,
                             maxLength: 18,
-                            errorText: signupController.validadePassword);
+                            errorText:
+                                signupController.validadeConfirmPassword);
                       }),
                     ),
 
@@ -251,94 +211,114 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(24),
                                     ),
-                                    onPressed: signupController.isValid ? () async {
-                                      if (signupController.signup.grr
-                                          .startsWith("GRR")) {
-                                        signupController.signup.grr =
-                                            signupController.signup.grr
-                                                .toLowerCase();
-                                      }
+                                    onPressed: signupController.isValid
+                                        ? () async {
 
-                                      int ok = await signupController.checkGrr();
-
-                                      if (ok == 500) {
-                                        String msg = "GRR Inválido!";
-                                        String error =
-                                            "O GRR informado já foi cadastrado";
-                                        showError(msg, error, context);
-                                      }
-                                      
-                                      if (showDateUser == "") {
-                                        String msg =
-                                            "Data de nascimento não informada!";
-                                        String error =
-                                            "Favor informar sua data de nascimento";
-                                        showError(msg, error, context);
-                                      } else if (created) {
-                                        Navigator.pushReplacementNamed(
-                                            context, '/main');
-                                      } else if ((created == false) &&
-                                          (ok == 200)) {
-                                        if (signupController.signup.password
-                                                .compareTo(signupController
-                                                    .signup
-                                                    .confirmPassword) ==
-                                            0) {
-                                          int statusCode =
-                                              await signupController.postNewUser(dateUser: dateUser, context: context);
-                                          if ((statusCode == 200) ||
-                                              (statusCode == 201)) {
-                                            created = true;
-                                            int statusCodeLogin =
-                                                await signupController.postLoginUser(context: context);
-                                            if (statusCodeLogin == 201 ||
-                                                statusCodeLogin == 200) {
-                                              showSuccess(
-                                                  "Cadastrado com Sucesso!",
-                                                  "/main",
-                                                  context);
-                                            } else {
-                                              showError(
-                                                  "Erro ao logar",
-                                                  "O Cadastro foi feito sucesso, entretando deu erro ao logar",
-                                                  context);
+                                            //*GRR to LowCase
+                                            if (signupController.signup.grr
+                                                .startsWith("GRR")) {
+                                              signupController.signup.grr =
+                                                  signupController.signup.grr
+                                                      .toLowerCase();
                                             }
-                                          } else if (statusCode == 401) {
-                                            showError(
-                                                "Erro 401",
-                                                "Não autorizado, favor logar novamente",
-                                                context);
-                                          } else if (statusCode == 404) {
-                                            showError(
-                                                "Erro 404",
-                                                "Usuário não foi encontrado",
-                                                context);
-                                          } else if (statusCode == 500) {
-                                            showError(
-                                                "Erro 500",
-                                                "Erro no servidor, favor tente novamente mais tarde",
-                                                context);
-                                          } else {
-                                            showError(
-                                                "Erro Desconhecido",
-                                                "StatusCode: $statusCode",
-                                                context);
+
+                                            //*Check GRR 
+                                            int ok = await signupController
+                                                .checkGrr();
+
+                                            if (ok == 500) {
+                                              String msg = "GRR Inválido!";
+                                              String error =
+                                                  "O GRR informado já foi cadastrado";
+                                              showError(msg, error, context);
+                                            }
+
+                                            //*Check if created
+                                            if (created) {
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/main');
+                                            } else if ((created == false) &&
+                                                (ok == 200)) {
+
+                                              //* Check pass
+                                              if (signupController
+                                                      .signup.password
+                                                      .compareTo(signupController
+                                                          .signup
+                                                          .confirmPassword) ==
+                                                  0) {
+
+                                                //*Arrumar data:
+                                                DateTime dateUser = DateFormat("dd/MM/yyyy").parse(signupController.signup.birth);
+                                                String datePost = dateFormat.format(dateUser);
+
+                                                //*Post Event
+                                                int statusCode =
+                                                    await signupController
+                                                        .postNewUser(
+                                                            dateUser: datePost,
+                                                            context: context);
+
+                                                //*Check status Code
+                                                //*Sucesso
+                                                if ((statusCode == 200) ||
+                                                    (statusCode == 201)) {
+                                                  created = true;
+                                                  int statusCodeLogin =
+                                                      await signupController
+                                                          .postLoginUser(
+                                                              context: context);
+                                                  if (statusCodeLogin == 201 ||
+                                                      statusCodeLogin == 200) {
+                                                    showSuccess(
+                                                        "Cadastrado com Sucesso!",
+                                                        "/main",
+                                                        context);
+                                                  } else {
+                                                    showError(
+                                                        "Erro ao logar",
+                                                        "O Cadastro foi feito sucesso, entretando deu erro ao logar",
+                                                        context);
+                                                  }
+                                                } 
+
+                                                //*Erros:
+                                                else if (statusCode == 401) {
+                                                  showError(
+                                                      "Erro 401",
+                                                      "Não autorizado, favor logar novamente",
+                                                      context);
+                                                } else if (statusCode == 404) {
+                                                  showError(
+                                                      "Erro 404",
+                                                      "Usuário não foi encontrado",
+                                                      context);
+                                                } else if (statusCode == 500) {
+                                                  showError(
+                                                      "Erro 500",
+                                                      "Erro no servidor, favor tente novamente mais tarde",
+                                                      context);
+                                                } else {
+                                                  showError(
+                                                      "Erro Desconhecido",
+                                                      "StatusCode: $statusCode",
+                                                      context);
+                                                }
+                                              } else {
+                                                String msg = "Erro no Cadastro";
+                                                String error =
+                                                    "Ocorreu um erro ao fazer o Cadastro";
+                                                showError(msg, error, context);
+                                              }
+                                            }
                                           }
-                                        } else {
-                                          String msg = "Erro no Cadastro";
-                                          String error =
-                                              "Ocorreu um erro ao fazer o Cadastro";
-                                          showError(msg, error, context);
-                                        }
-                                      }
-                                    } : null,
+                                        : null,
                                     padding:
                                         EdgeInsets.fromLTRB(43, 12, 43, 12),
                                     child: Text('Confirmar',
                                         //Color(0xFF295492),(0xFF8A275D)
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18)),
+                                            color: Colors.white, fontSize: 18)),
                                   );
                                 },
                               ),
@@ -361,13 +341,13 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     }
   }
 
-  Future<DateTime> _selectedDate(BuildContext context) {
-    DateTime now = DateTime.now();
-    var lastDate = now.subtract(Duration(days: (12 * 365 + 3)));
-    return showDatePicker(
-        context: context,
-        initialDate: DateTime(2000),
-        firstDate: DateTime(1900),
-        lastDate: lastDate);
-  }
+  // Future<DateTime> _selectedDate(BuildContext context) {
+  //   DateTime now = DateTime.now();
+  //   var lastDate = now.subtract(Duration(days: (12 * 365 + 3)));
+  //   return showDatePicker(
+  //       context: context,
+  //       initialDate: DateTime(2000),
+  //       firstDate: DateTime(1900),
+  //       lastDate: lastDate);
+  // }
 }

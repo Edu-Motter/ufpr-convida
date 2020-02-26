@@ -1,5 +1,7 @@
 library my_prj.validations.event;
 
+import 'package:convida/app/shared/validations/date_validation.dart';
+
 String nameValidation(value, name) {
   String expression = r"^[A-Za-zá àâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]{2,25}$";
   RegExp _nameValidator = RegExp(expression);
@@ -34,10 +36,29 @@ String grrValidation(value) {
     return 'Inicia com espaço';
   } else if (value.contains('  ')) {
     return 'Contém espaços desnecessários';
+  } else if (value.length < 11) {
+    return "Favor entre com seu GRR";
   } else if (_grrValidator.hasMatch(value)) {
     return null;
   } else {
     return 'Possuí caracter inválido';
+  }
+}
+
+String birthValidation(value) {
+  if (value == null) {
+    return 'Favor entre com a Data de Nascimento';
+  } else if (value.isEmpty) {
+    return 'Favor entre com a Data de Nascimento';
+  } else if (value.length < 10) {
+    return 'Favor entre com a Data de Nascimento';
+  } else {
+    bool valid = isValidDate(value);
+    if (!valid) {
+      return "Data inválida";
+    } else {
+      return null;
+    }
   }
 }
 
@@ -55,10 +76,14 @@ String emailValidation(value) {
     return 'Contém espaços desnecessários';
   } else if (value.length > 50) {
     return 'Max. 50 caracteres';
+  } else if (!value.contains("@")) {
+    return 'Está faltando "@"';
+  } else if (!value.contains(".")) {
+    return 'Está faltando "."';
   } else if (_emailValidator.hasMatch(value)) {
     return null;
   } else
-    return 'Possuí caracter inválido';
+    return 'E-mail inválido';
 }
 
 String passwordValidation(value, password) {
