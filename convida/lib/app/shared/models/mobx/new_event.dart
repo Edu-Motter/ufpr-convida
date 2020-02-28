@@ -67,5 +67,5 @@ abstract class _NewEventBase with Store {
   @observable
   String subEnd;
   @action
-  setSubEnd(String value) => subEnd = value;
+  setSubEnd(String value) => subEnd  = value;
 }

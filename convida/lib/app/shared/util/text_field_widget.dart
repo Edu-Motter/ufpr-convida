@@ -76,10 +76,11 @@ textFieldInitialValue({String initialValue, String labelText, IconData icon, onC
   );
 }
 
-textFieldMask({String initialValue, MaskTextInputFormatter maskFormatter, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+textFieldMask({String initialValue, MaskTextInputFormatter maskFormatter, TextInputType keyboardType,String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
   return TextFormField(
     initialValue: initialValue,
     inputFormatters: [maskFormatter],
+    keyboardType: keyboardType,
     onChanged: onChanged,
     maxLength: maxLength,
     decoration: InputDecoration(
@@ -90,3 +91,18 @@ textFieldMask({String initialValue, MaskTextInputFormatter maskFormatter, String
     ),
   );
 }
+
+textFieldKeyboard({String initialValue, TextInputType keyboardType, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+  return TextFormField(
+    initialValue: initialValue,
+    keyboardType: keyboardType,
+    onChanged: onChanged,
+    maxLength: maxLength,
+    decoration: InputDecoration(
+      labelText: labelText,
+      errorText: errorText == null ? null : errorText(),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+      icon: Icon(icon),
+    ),
+  );
+  }

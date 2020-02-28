@@ -1,5 +1,9 @@
 library my_prj.validations.event;
 
+import 'package:intl/intl.dart';
+
+import 'date_validation.dart';
+
 String nameValidation(value) {
   String expression =
       r"^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.]{2,25}$";
@@ -142,5 +146,53 @@ String linkValidation(value) {
     return null;
   } else {
     return 'Possuí caracter inválido';
+  }
+}
+
+String dateValidation(value) {
+  if (value == null) {
+    return 'Favor entre com a Data';
+  } else if (value.isEmpty) {
+    return 'Favor entre com a Data';
+  } else if (value.length < 10) {
+    return 'Favor entre com a Data';
+  } else {
+    DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
+    DateTime parsedDate = dateFormat.parse(value);
+    print(parsedDate);
+    bool valid = isValidDate(value);
+    if (!valid) {
+      return "Data inválida";
+    } else if (parsedDate.compareTo(DateTime.now()) > 0) {
+      return null;
+    } else if (parsedDate.year == DateTime.now().year) {
+      if (parsedDate.month == DateTime.now().month) {
+        if (parsedDate.day == DateTime.now().day) {
+          //Today
+          return null;
+        }
+        return "Data já passou!";
+      }
+      return "Data já passou!";
+    } else {
+      return "Data já passou!";
+    }
+  }
+}
+
+String hourValidation(value, String hour) {
+  if (value == null) {
+    return 'Favor entre com a Hora de $hour';
+  } else if (value.isEmpty) {
+    return 'Favor entre com a Hora de $hour';
+  } else if (value.length < 5) {
+    return 'Favor entre com a Hora de $hour';
+  } else {
+    bool valid = isValidHour(value);
+    if (!valid) {
+      return "Hora de $hour inválida";
+    } else {
+      return null;
+    }
   }
 }

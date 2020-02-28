@@ -1,12 +1,12 @@
 import 'package:convida/app/screens/new_event_screen/new_event_controller.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
-import 'package:convida/app/shared/validations/event_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'package:convida/app/shared/util/dialogs_widget.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class NewEventWidget extends StatefulWidget {
   @override
@@ -14,18 +14,31 @@ class NewEventWidget extends StatefulWidget {
 }
 
 class _NewEventWidgetState extends State<NewEventWidget> {
-  final _formKey = GlobalKey<FormState>();
   bool created = false;
   final newEventController = NewEventController();
 
   //Date now
   var now = DateTime.now();
 
+  var hrStartMask = new MaskTextInputFormatter(
+      mask: '##:##', filter: {"#": RegExp(r'[0-9]')});
+  var hrEndMask = new MaskTextInputFormatter(
+      mask: '##:##', filter: {"#": RegExp(r'[0-9]')});
+  var dateStartMask = new MaskTextInputFormatter(
+      mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
+  var dateEndMask = new MaskTextInputFormatter(
+      mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
+  var subStartMask = new MaskTextInputFormatter(
+      mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
+  var subEndMask = new MaskTextInputFormatter(
+      mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
+
   //Event's Coords
   LatLng coords;
 
   //Dates:
-  final DateFormat formatter = new DateFormat.yMd("pt_BR");
+  final DateFormat hour = new DateFormat("HH:mm");
+  final DateFormat date = new DateFormat("dd/MM/yyyy");
   final DateFormat dateFormat = new DateFormat("yyyy-MM-ddTHH:mm:ss");
   final DateFormat hourFormat = new DateFormat.Hm();
   final DateFormat dateAndHour = new DateFormat.yMd("pt_BR").add_Hm();
@@ -98,8 +111,6 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   ),
 
                   //Event Name:
-                  //eventNameInput(),
-
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
@@ -114,7 +125,6 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   ),
 
                   //Event Target:
-                  //eventTargetInput(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
@@ -129,7 +139,6 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   ),
 
                   //Event Description:
-                  //eventDescInput(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
@@ -145,7 +154,6 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   ),
 
                   //Event Address:
-                  //eventAddressInput(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
@@ -160,7 +168,6 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   ),
 
                   //Event Addres Complement:
-                  //eventComplementInput(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
@@ -175,7 +182,6 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   ),
 
                   //Event Link or Email:
-                  //eventLinkInput(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
@@ -191,125 +197,67 @@ class _NewEventWidgetState extends State<NewEventWidget> {
 
                   //Event Hour Start:
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                      child: Container(
-                        decoration: containerDecoration(),
-                        child: InkWell(
-                          onTap: () async {
-                            final selectedTime = await _selectedTime(context);
-                            if (selectedTime == null) return 0;
+                    padding: const EdgeInsets.all(8.0),
+                    child: Observer(builder: (_) {
+                      return textFieldMask(
+                          maskFormatter: hrStartMask,
+                          keyboardType: TextInputType.datetime,
+                          labelText: "Hora de Início:",
+                          icon: Icons.watch_later,
+                          initialValue: newEventController.newEvent.hrStart,
+                          onChanged: newEventController.newEvent.setHrStart,
+                          maxLength: 5,
+                          errorText: newEventController.validadeHourStart);
+                    }),
+                  ),
 
-                            setState(() {
-                              print(
-                                  "${selectedTime.hour} : ${selectedTime.minute}");
-
-                              this.selectedHrEventStart = DateTime(
-                                  now.year,
-                                  now.month,
-                                  now.day,
-                                  selectedTime.hour,
-                                  selectedTime.minute);
-                              newEventController.newEvent.hrStart =
-                                  dateFormat.format(selectedHrEventStart);
-                              showHrStart =
-                                  hourFormat.format(selectedHrEventStart);
-                              print(
-                                  "Formato data post: ${newEventController.newEvent.hrStart}");
-                            });
-                            return 0;
-                          },
-                          child: eventHourStartOutput(),
-                        ),
-                      )),
-
-                  //Event Hour End
+                  //Event Hour End:
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                      child: Container(
-                        decoration: containerDecoration(),
-                        child: InkWell(
-                          onTap: () async {
-                            final selectedTime = await _selectedTime(context);
-                            if (selectedTime == null) return 0;
-
-                            setState(() {
-                              this.selectedHrEventEnd = DateTime(
-                                  now.year,
-                                  now.month,
-                                  now.day,
-                                  selectedTime.hour,
-                                  selectedTime.minute);
-                              newEventController.newEvent.hrEnd =
-                                  dateFormat.format(selectedHrEventEnd);
-                              showHrEnd = hourFormat.format(selectedHrEventEnd);
-                              print(
-                                  "Formato hora post: ${newEventController.newEvent.hrEnd}");
-                            });
-                            return 0;
-                          },
-                          child: eventHourEndOutput(),
-                        ),
-                      )),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Observer(builder: (_) {
+                      return textFieldMask(
+                          maskFormatter: hrEndMask,
+                          keyboardType: TextInputType.datetime,
+                          labelText: "Hora de Fim:",
+                          icon: Icons.watch_later,
+                          initialValue: newEventController.newEvent.hrEnd,
+                          onChanged: newEventController.newEvent.setHrEnd,
+                          maxLength: 5,
+                          errorText: newEventController.validadeHourEnd);
+                    }),
+                  ),
 
                   //Event Date Start:
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                      child: Container(
-                        decoration: containerDecoration(),
-                        child: InkWell(
-                          onTap: () async {
-                            final selectedDate = await _selectedDate(context);
-                            if (selectedDate == null) return 0;
-
-                            setState(() {
-                              this.selectedDateEventStart = DateTime(
-                                  selectedDate.year,
-                                  selectedDate.month,
-                                  selectedDate.day,
-                                  now.hour,
-                                  now.minute);
-                              newEventController.newEvent.dateStart =
-                                  dateFormat.format(selectedDateEventStart);
-                              showDateStart =
-                                  formatter.format(selectedDateEventStart);
-                              print(
-                                  "Formato data post: ${newEventController.newEvent.dateStart}");
-                            });
-                            return 0;
-                          },
-                          child: eventDateStartOutput(),
-                        ),
-                      )),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Observer(builder: (_) {
+                      return textFieldMask(
+                          maskFormatter: dateStartMask,
+                          keyboardType: TextInputType.datetime,
+                          labelText: "Data de Início:",
+                          icon: Icons.calendar_today,
+                          initialValue: newEventController.newEvent.dateStart,
+                          onChanged: newEventController.newEvent.setDateStart,
+                          maxLength: 10,
+                          errorText: newEventController.validadeDateStart);
+                    }),
+                  ),
 
                   //Date End Event:
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                      child: Container(
-                        decoration: containerDecoration(),
-                        child: InkWell(
-                          onTap: () async {
-                            final selectedDate = await _selectedDate(context);
-                            if (selectedDate == null) return 0;
-
-                            setState(() {
-                              this.selectedDateEventEnd = DateTime(
-                                  selectedDate.year,
-                                  selectedDate.month,
-                                  selectedDate.day,
-                                  now.hour,
-                                  now.minute);
-                              //Format's:
-                              newEventController.newEvent.dateEnd =
-                                  dateFormat.format(selectedDateEventEnd);
-                              showDateEnd =
-                                  formatter.format(selectedDateEventEnd);
-                              print("Formato data post: ${newEventController.newEvent.dateEnd}");
-                            });
-                            return 0;
-                          },
-                          child: eventDateEndOutput(),
-                        ),
-                      )),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Observer(builder: (_) {
+                      return textFieldMask(
+                          maskFormatter: dateEndMask,
+                          keyboardType: TextInputType.datetime,
+                          labelText: "Data de Fim:",
+                          icon: Icons.calendar_today,
+                          initialValue: newEventController.newEvent.dateEnd,
+                          onChanged: newEventController.newEvent.setDateEnd,
+                          maxLength: 10,
+                          errorText: newEventController.validadeDateEnd);
+                    }),
+                  ),
 
                   //Event Category
                   Padding(
@@ -348,7 +296,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                             }).toList(),
                                             onChanged: (String newType) {
                                               setState(() {
-                                                _currentType = newType; 
+                                                _currentType = newType;
                                               });
                                             },
                                             value: _currentType),
@@ -376,83 +324,41 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                 children: <Widget>[
                                   //Subscriptions Start:
                                   Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          47, 8, 8, 8),
-                                      child: Container(
-                                        decoration: containerDecoration(),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            final selectedDate =
-                                                await _selectedDate(context);
-                                            if (selectedDate == null) return 0;
-
-                                            final selectedTime =
-                                                await _selectedTime(context);
-                                            if (selectedDate == null) return 0;
-
-                                            setState(() {
-                                              this.selectedSubEventStart =
-                                                  DateTime(
-                                                      selectedDate.year,
-                                                      selectedDate.month,
-                                                      selectedDate.day,
-                                                      selectedTime.hour,
-                                                      selectedTime.minute);
-                                              //Format's:
-                                              newEventController
-                                                      .newEvent.subStart =
-                                                  dateFormat.format(
-                                                      selectedSubEventStart);
-                                              showSubStart = dateAndHour.format(
-                                                  selectedSubEventStart);
-                                              print(
-                                                  "Formato data post: ${newEventController.newEvent.subStart}");
-                                            });
-                                            return 0;
-                                          },
-                                          child: eventSubsStartOutput(),
-                                        ),
-                                      )),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Observer(builder: (_) {
+                                      return textFieldMask(
+                                          maskFormatter: subStartMask,
+                                          keyboardType: TextInputType.datetime,
+                                          labelText: "Data de Início:",
+                                          icon: Icons.calendar_today,
+                                          initialValue: newEventController
+                                              .newEvent.subStart,
+                                          onChanged: newEventController
+                                              .newEvent.setSubStart,
+                                          maxLength: 10,
+                                          errorText: newEventController
+                                              .validadeSubStart);
+                                    }),
+                                  ),
 
                                   //Subscriptions End:
                                   Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          47, 8, 8, 8),
-                                      child: Container(
-                                        decoration: containerDecoration(),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            final selectedDate =
-                                                await _selectedDate(context);
-                                            if (selectedDate == null) return 0;
-
-                                            final selectedTime =
-                                                await _selectedTime(context);
-                                            if (selectedDate == null) return 0;
-
-                                            setState(() {
-                                              this.selectedSubEventEnd =
-                                                  DateTime(
-                                                      selectedDate.year,
-                                                      selectedDate.month,
-                                                      selectedDate.day,
-                                                      selectedTime.hour,
-                                                      selectedTime.minute);
-                                              //Format's:
-                                              newEventController
-                                                      .newEvent.subEnd =
-                                                  dateFormat.format(
-                                                      selectedSubEventEnd);
-                                              showSubEnd = dateAndHour
-                                                  .format(selectedSubEventEnd);
-                                              print(
-                                                  "Formato data post: ${newEventController.newEvent.subEnd}");
-                                            });
-                                            return 0;
-                                          },
-                                          child: eventSubsEndOutput(),
-                                        ),
-                                      )),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Observer(builder: (_) {
+                                      return textFieldMask(
+                                          maskFormatter: subEndMask,
+                                          keyboardType: TextInputType.datetime,
+                                          labelText: "Data de Fim:",
+                                          icon: Icons.calendar_today,
+                                          initialValue: newEventController
+                                              .newEvent.subEnd,
+                                          onChanged: newEventController
+                                              .newEvent.setSubEnd,
+                                          maxLength: 10,
+                                          errorText: newEventController
+                                              .validadeSubEnd);
+                                    }),
+                                  ),
                                 ],
                               ),
                             )
@@ -496,89 +402,15 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                       .pushReplacementNamed("/main");
                                 }
 
-                                //Validations
-                                print("-------------Validations-------------");
                                 if (created == false) {
-                                  print("\tPassed the form validations");
-                                  bool ok = true;
+                                  String error = "";
 
-                                  //Data Validations:
-                                  if (showHrStart.isEmpty) {
+                                  error = newEventController
+                                      .datesValidations(isSwitchedSubs);
+                                  if (error != "") {
                                     showError(
-                                        "Hora início não informada",
-                                        "Favor informar hora de início do evento",
-                                        context);
-                                    ok = false;
-                                  }
-                                  if ((showHrEnd.isEmpty) && (ok == true)) {
-                                    showError(
-                                        "Hora fim não informada",
-                                        "Favor informar hora de fim do evento",
-                                        context);
-                                    ok = false;
-                                  }
-                                  if ((showDateStart.isEmpty) && (ok == true)) {
-                                    showError(
-                                        "Data início não informada",
-                                        "Favor informar data de início do evento",
-                                        context);
-                                    ok = false;
-                                  }
-                                  if ((showDateEnd.isEmpty) && (ok == true)) {
-                                    showError(
-                                        "Data fim não informada",
-                                        "Favor informar data de fim do evento",
-                                        context);
-                                    ok = false;
-                                  }
-
-                                  if ((selectedDateEventStart
-                                              .compareTo(selectedDateEventEnd) >
-                                          0) &&
-                                      (ok == true)) {
-                                    ok = false;
-                                    showError(
-                                        "Data Incorreta",
-                                        "A Data de Fim do Evento está inválida!",
-                                        context);
-                                  }
-
-                                  //Subscritions Validations:
-                                  if (isSwitchedSubs == true) {
-                                    if ((selectedSubEventStart.compareTo(
-                                                selectedSubEventEnd) >
-                                            0) &&
-                                        (ok == true)) {
-                                      ok = false;
-                                      showError(
-                                          "Data Incorreta",
-                                          "A Data de Fim das Incrições está inválida!",
-                                          context);
-                                    }
-
-                                    if ((selectedSubEventStart.compareTo(
-                                                selectedDateEventEnd) >
-                                            0) &&
-                                        (ok == true)) {
-                                      ok = false;
-                                      showError(
-                                          "Data Incorreta",
-                                          "A Data de Fim das Incrições está inválida!",
-                                          context);
-                                    }
-                                    if ((selectedSubEventEnd.compareTo(
-                                                selectedDateEventEnd) >
-                                            0) &&
-                                        (ok == true)) {
-                                      ok = false;
-                                      showError(
-                                          "Data Incorreta",
-                                          "Data de Fim das Incrições acabam depois do Evento finalizar!",
-                                          context);
-                                    }
-                                  }
-
-                                  if (ok == true) {
+                                        "Data Incorreta", "$error", context);
+                                  } else {
                                     int statusCode =
                                         await newEventController.postNewEvent(
                                             _currentType,
@@ -590,24 +422,8 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                       created = true;
                                       showSuccess("Evento criado com Sucesso!",
                                           "/main", context);
-                                    } else if (statusCode == 401) {
-                                      showError(
-                                          "Erro 401",
-                                          "Não autorizado, favor logar novamente",
-                                          context);
-                                    } else if (statusCode == 404) {
-                                      showError(
-                                          "Erro 404",
-                                          "Evento ou usuário não foi encontrado",
-                                          context);
-                                    } else if (statusCode == 500) {
-                                      showError(
-                                          "Erro 500",
-                                          "Erro no servidor, favor tente novamente mais tarde",
-                                          context);
                                     } else {
-                                      showError("Erro Desconhecido",
-                                          "StatusCode: $statusCode", context);
+                                      errorStatusCode(statusCode, context);
                                     }
                                   }
                                 }
@@ -713,125 +529,125 @@ class _NewEventWidgetState extends State<NewEventWidget> {
     );
   }
 
-  Column eventHourStartOutput() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
-          child: new Text(
-            "Horário do início: ",
-            style: TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //Dia
-              Text(
-                "$showHrStart",
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
+  // Column eventHourStartOutput() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
+  //         child: new Text(
+  //           "Horário do início: ",
+  //           style: TextStyle(fontSize: 16, color: Colors.black54),
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.all(12.0),
+  //         child: new Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             //Dia
+  //             Text(
+  //               "$showHrStart",
+  //               style: TextStyle(fontSize: 16, color: Colors.black54),
+  //             ),
+  //           ],
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
-  Column eventHourEndOutput() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
-          child: new Text(
-            "Horário de fim: ",
-            style: TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //Dia
-              Text(
-                "$showHrEnd",
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
+  // Column eventHourEndOutput() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
+  //         child: new Text(
+  //           "Horário de fim: ",
+  //           style: TextStyle(fontSize: 16, color: Colors.black54),
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.all(12.0),
+  //         child: new Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             //Dia
+  //             Text(
+  //               "$showHrEnd",
+  //               style: TextStyle(fontSize: 16, color: Colors.black54),
+  //             ),
+  //           ],
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
-  Column eventDateStartOutput() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
-          child: new Text(
-            "Data de início: ",
-            style: TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //Dia
-              Text(
-                "$showDateStart",
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
+  // Column eventDateStartOutput() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
+  //         child: new Text(
+  //           "Data de início: ",
+  //           style: TextStyle(fontSize: 16, color: Colors.black54),
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.all(12.0),
+  //         child: new Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             //Dia
+  //             Text(
+  //               "$showDateStart",
+  //               style: TextStyle(fontSize: 16, color: Colors.black54),
+  //             ),
+  //           ],
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
-  Column eventDateEndOutput() {
-    return new Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
-          child: new Text(
-            "Data de fim: ",
-            style: TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //Dia
-              Text(
-                "$showDateEnd",
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
+  // Column eventDateEndOutput() {
+  //   return new Column(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
+  //         child: new Text(
+  //           "Data de fim: ",
+  //           style: TextStyle(fontSize: 16, color: Colors.black54),
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.all(12.0),
+  //         child: new Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             //Dia
+  //             Text(
+  //               "$showDateEnd",
+  //               style: TextStyle(fontSize: 16, color: Colors.black54),
+  //             ),
+  //           ],
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
   Padding eventSwitchSubs() {
     return Padding(
@@ -853,65 +669,65 @@ class _NewEventWidgetState extends State<NewEventWidget> {
     );
   }
 
-  Column eventSubsStartOutput() {
-    return new Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
-          child: new Text(
-            "Inicio das Inscrições: ",
-            style: TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //Dia
-              Text(
-                "$showSubStart",
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
+  // Column eventSubsStartOutput() {
+  //   return new Column(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
+  //         child: new Text(
+  //           "Inicio das Inscrições: ",
+  //           style: TextStyle(fontSize: 16, color: Colors.black54),
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.all(12.0),
+  //         child: new Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             //Dia
+  //             Text(
+  //               "$showSubStart",
+  //               style: TextStyle(fontSize: 16, color: Colors.black54),
+  //             ),
+  //           ],
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
-  Column eventSubsEndOutput() {
-    return new Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
-          child: new Text(
-            "Fim das inscrições: ",
-            style: TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //Dia
-              Text(
-                "$showSubEnd",
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
+  // Column eventSubsEndOutput() {
+  //   return new Column(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: const EdgeInsets.fromLTRB(0, 10, 180, 0),
+  //         child: new Text(
+  //           "Fim das inscrições: ",
+  //           style: TextStyle(fontSize: 16, color: Colors.black54),
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.all(12.0),
+  //         child: new Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             //Dia
+  //             Text(
+  //               "$showSubEnd",
+  //               style: TextStyle(fontSize: 16, color: Colors.black54),
+  //             ),
+  //           ],
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
   Container nothingToShow() {
     return Container(
@@ -937,17 +753,17 @@ class _NewEventWidgetState extends State<NewEventWidget> {
         ));
   }
 
-  Future<DateTime> _selectedDate(BuildContext context) => showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: now,
-      lastDate: DateTime(2100));
+  // Future<DateTime> _selectedDate(BuildContext context) => showDatePicker(
+  //     context: context,
+  //     initialDate: now,
+  //     firstDate: now,
+  //     lastDate: DateTime(2100));
 
-  Future<TimeOfDay> _selectedTime(BuildContext context) {
-    final now = DateTime.now();
-    return showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
-    );
-  }
+  // Future<TimeOfDay> _selectedTime(BuildContext context) {
+  //   final now = DateTime.now();
+  //   return showTimePicker(
+  //     context: context,
+  //     initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
+  //   );
+  // }
 }

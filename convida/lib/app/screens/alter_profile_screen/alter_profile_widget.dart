@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 import 'package:convida/app/shared/models/user.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class AlterProfileWidget extends StatefulWidget {
   final User user;
@@ -22,42 +23,35 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
   _AlterProfileWidgetState(this.user);
 
   bool created = false;
+  var dateMask = new MaskTextInputFormatter(
+      mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
 
-  final DateFormat formatter = new DateFormat.yMMMMd("pt_BR");
+  final DateFormat formatter = new DateFormat("dd/MM/yyyy");
   final DateFormat postFormat = new DateFormat("yyyy-MM-ddTHH:mm:ss");
-  String showDateUser = "";
-  String dateUser;
-  String oldDateUser;
+  String initialBirth;
 
   DateTime selectedDateUser = DateTime.now();
 
   //Controllers:
   final TextEditingController _userGrrController = new TextEditingController();
-  final TextEditingController _userFirstNameController =
-      new TextEditingController();
-  final TextEditingController _userLastNameController =
-      new TextEditingController();
-  final TextEditingController _userEmailController =
-      new TextEditingController();
+  // final TextEditingController _userFirstNameController =
+  //     new TextEditingController();
+  // final TextEditingController _userLastNameController =
+  //     new TextEditingController();
+  // final TextEditingController _userEmailController =
+  //     new TextEditingController();
 
   bool isSwitchedPassword = false;
+  DateTime parsedBirth;
 
   @override
   void initState() {
     //Future Builder!
     _userGrrController.text = user.grr;
-    _userFirstNameController.text = user.name;
-    _userLastNameController.text = user.lastName;
-    _userEmailController.text = user.email;
-
-    DateTime parsedBirth;
 
     if (user.birth != null) {
       parsedBirth = DateTime.parse(user.birth);
-      selectedDateUser = parsedBirth;
-      dateUser = postFormat.format(parsedBirth);
-      oldDateUser = postFormat.format(parsedBirth);
-      showDateUser = formatter.format(parsedBirth);
+      initialBirth = formatter.format(parsedBirth);
     }
 
     super.initState();
@@ -100,138 +94,80 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                             child: Text(
                               "Perfil",
                               style: TextStyle(
-                                  color:
-                                      Color(0xFF295492), //Color(0xFF8A275D),
+                                  color: Color(0xFF295492), //Color(0xFF8A275D),
                                   fontSize: 32.0,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
-                        
-                        //User first name:
+
+                        //*User First name:
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Observer(builder: (_) {
-                            return textFieldInitialValue(
-                                initialValue: user.name,
+                            return textField(
                                 labelText: "Nome:",
                                 icon: Icons.person,
-                                onChanged:
-                                    profileController.profile.changeName,
+                                initialValue: user.name,
+                                onChanged: profileController.profile.changeName,
                                 maxLength: 25,
                                 errorText: profileController.validateName);
                           }),
                         ),
 
-                        //userFirstName(),
-
-                        //User last name
+                        //*User last name
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Observer(builder: (_) {
-                            return textFieldController(
-                                controller: _userLastNameController,
+                            return textField(
                                 labelText: "Sobrenome:",
                                 icon: Icons.navigate_next,
+                                initialValue: user.lastName,
                                 onChanged:
                                     profileController.profile.changeLastName,
                                 maxLength: 25,
-                                errorText:
-                                    profileController.validadeLastName);
+                                errorText: profileController.validadeLastName);
                           }),
                         ),
-                        //userLastName(),
 
-                        //User GRR:
+                        //*User GRR:
                         userGrr(),
 
-                        //User Birthday
-                        Padding(
-                            padding: const EdgeInsets.fromLTRB(47, 8, 8, 8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4.5),
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
-                                  )),
-                              child: InkWell(
-                                onTap: () async {
-                                  final selectedDate =
-                                      await _selectedDate(context);
-                                  if (selectedDate == null) return 0;
-
-                                  setState(() {
-                                    this.selectedDateUser = DateTime(
-                                        selectedDate.year,
-                                        selectedDate.month,
-                                        selectedDate.day);
-                                    dateUser =
-                                        postFormat.format(selectedDateUser);
-                                    showDateUser =
-                                        formatter.format(selectedDateUser);
-                                    print("Formato data post: $dateUser");
-                                  });
-                                  return 0;
-                                },
-                                child: new Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 180, 0),
-                                      child: new Text(
-                                        "Data de Nasc.: ",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black54),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: new Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          //Dia
-                                          Text(
-                                            "$showDateUser",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black54),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )),
-
-                        //User email:
+                        //*User Birthday
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Observer(builder: (_) {
-                            return textFieldController(
-                                controller: _userEmailController,
+                            return textFieldMask(
+                                maskFormatter: dateMask,
+                                labelText: "Data de Nascimento:",
+                                icon: Icons.calendar_today,
+                                initialValue: initialBirth,
+                                onChanged:
+                                    profileController.profile.changeBirth,
+                                maxLength: 10,
+                                errorText: profileController.validadeBirth);
+                          }),
+                        ),
+
+                        //*User email:
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Observer(builder: (_) {
+                            return textField(
                                 labelText: "E-mail:",
                                 icon: Icons.email,
+                                initialValue: user.email,
                                 onChanged:
                                     profileController.profile.changeEmail,
                                 maxLength: 50,
                                 errorText: profileController.validadeEmail);
                           }),
                         ),
-                        //userEmail(),
-
-                        //Switch
+                        
+                        //!Revisar as senhas:      
+                        //*Switch passwords:
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(47, 8.0, 8.0, 8.0),
+                          padding: const EdgeInsets.fromLTRB(47, 8.0, 8.0, 8.0),
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
@@ -319,8 +255,8 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                         onChanged: profileController
                                             .profile.changePassword,
                                         maxLength: 18,
-                                        errorText: profileController
-                                            .validadePassword);
+                                        errorText:
+                                            profileController.validadePassword);
                                   }),
                                 ),
                         ),
@@ -347,8 +283,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                         EdgeInsets.fromLTRB(45, 12, 45, 12),
                                     child: Text('Cancelar',
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18)),
+                                            color: Colors.white, fontSize: 18)),
                                   ),
                                 ),
                                 Padding(
@@ -359,19 +294,23 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                       borderRadius: BorderRadius.circular(24),
                                     ),
                                     onPressed: () async {
+                                      //*Arrumar data:
+                                      DateTime dateUser = DateFormat("dd/MM/yyyy").parse(profileController.profile.birth);
+                                      String datePost = postFormat.format(dateUser);
+
                                       if (created) {
                                         Navigator.of(context)
                                             .pushReplacementNamed("/main");
                                       } else if ((user.name ==
-                                              profileController
-                                                  .profile.name) &&
+                                              profileController.profile.name) &&
                                           (user.lastName ==
                                               profileController
                                                   .profile.lastName) &&
                                           (user.email ==
                                               profileController
                                                   .profile.email) &&
-                                          (oldDateUser == dateUser) &&
+                                          (user.birth ==
+                                              datePost) &&
                                           (isSwitchedPassword == false)) {
                                         String error = "Sem Alterações";
                                         String desc =
@@ -393,10 +332,9 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                         if (correct) {
                                           int statusCode =
                                               await profileController.putUser(
-                                                  isSwitch:
-                                                      isSwitchedPassword,
+                                                  isSwitch: isSwitchedPassword,
                                                   user: user,
-                                                  dateUser: dateUser,
+                                                  dateUser: datePost,
                                                   context: context);
                                           if ((statusCode == 200) ||
                                               (statusCode == 204)) {
@@ -439,8 +377,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                     child: Text('Alterar',
                                         //Color(0xFF295492),(0xFF8A275D)
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18)),
+                                            color: Colors.white, fontSize: 18)),
                                   ),
                                 ),
                               ],

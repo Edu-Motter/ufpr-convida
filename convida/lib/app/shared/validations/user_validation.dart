@@ -1,6 +1,7 @@
-library my_prj.validations.event;
+library my_prj.validations.user;
 
 import 'package:convida/app/shared/validations/date_validation.dart';
+import 'package:intl/intl.dart';
 
 String nameValidation(value, name) {
   String expression = r"^[A-Za-zá àâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]{2,25}$";
@@ -46,6 +47,8 @@ String grrValidation(value) {
 }
 
 String birthValidation(value) {
+  
+
   if (value == null) {
     return 'Favor entre com a Data de Nascimento';
   } else if (value.isEmpty) {
@@ -53,10 +56,18 @@ String birthValidation(value) {
   } else if (value.length < 10) {
     return 'Favor entre com a Data de Nascimento';
   } else {
+    DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
+    DateTime parsedDate = dateFormat.parse(value);
     bool valid = isValidDate(value);
     if (!valid) {
       return "Data inválida";
-    } else {
+    } else if (parsedDate.year < 1900) {
+      return "Data muito Antiga";
+    } else if (parsedDate.compareTo(DateTime.now()) > 0) {
+      return "Data é Futura";
+    } 
+    //Verificar se é menor de 12 anos
+      else {
       return null;
     }
   }

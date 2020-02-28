@@ -20,3 +20,19 @@ String toDateFormat(DateTime dateTime) {
   final d = dateTime.day.toString().padLeft(2, '0');
   return "$d/$m/$y";
 }
+
+isValidHour(String input) {
+  try {
+    final hour = new DateFormat("HH:mm").parse(input);
+    final originalFormat = toHourFormat(hour);
+    return input == originalFormat;
+  } catch (e) {
+    throw Exception(e);
+  }
+}
+
+String toHourFormat(DateTime dateTime) {
+  final h = dateTime.hour.toString().padLeft(2, '0');
+  final m = dateTime.minute.toString().padLeft(2, '0');
+  return "$h:$m";
+}

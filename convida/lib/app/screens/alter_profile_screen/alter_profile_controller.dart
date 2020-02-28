@@ -49,6 +49,10 @@ abstract class _AlterProfileControllerBase with Store {
     return passwordValidation(profile.newPassword, profile.confirmPassword);
   }
 
+  String validadeBirth() {
+    return birthValidation(profile.birth);
+  }
+
   Future<bool> getProfile({User user, BuildContext context,}) async {
     try {
       profile.changeName(user.name);
