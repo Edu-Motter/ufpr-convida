@@ -1,10 +1,9 @@
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/models/mobx/new_event.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:convida/app/shared/models/user.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/validations/event_validation.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +18,7 @@ abstract class _AlterEventControllerBase with Store {
   NewEvent alterEvent = NewEvent();
   String _url = globals.URL;
   
-
-
-  String validateName() { 
+  String validateName() {
     return nameValidation(alterEvent.name);
   }
 
@@ -29,69 +26,146 @@ abstract class _AlterEventControllerBase with Store {
     return targetValidation(alterEvent.target);
   }
 
-  String validateDesc(){
+  String validateDesc() {
     return descriptionValidation(alterEvent.desc);
   }
 
-  String validateAddress(){
+  String validateAddress() {
     return addressValidation(alterEvent.address);
   }
 
-  String validateComplement(){
+  String validateComplement() {
     return complementValidation(alterEvent.complement);
   }
 
-  String validateLink(){
+  String validateLink() {
     return linkValidation(alterEvent.link);
+  }
+
+  String validadeDateStart() {
+    return dateValidation(alterEvent.dateStart);
+  }
+
+  String validadeDateEnd() {
+    return dateValidation(alterEvent.dateEnd);
+  }
+
+  String validadeHourStart() {
+    return hourValidation(alterEvent.hrStart, 'início do evento');
+  }
+
+  String validadeHourEnd() {
+    return hourValidation(alterEvent.hrEnd, 'fim do evento');
+  }
+
+  String validadeSubStart() {
+    return dateValidation(alterEvent.subStart);
+  }
+
+  String validadeSubEnd() {
+    return dateValidation(alterEvent.subEnd);
+  }
+
+  String datesValidations(bool isSwitchedSubs) {
+    //*Tratar todas as datas:
+    DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
+    DateFormat hourFormat = new DateFormat("HH:mm");
+
+    DateTime parsedHrStart = hourFormat.parse(alterEvent.hrStart);
+    DateTime parsedHrEnd = hourFormat.parse(alterEvent.hrEnd);
+
+    DateTime parsedDateStart = dateFormat.parse(alterEvent.dateStart);
+    DateTime parsedDateEnd = dateFormat.parse(alterEvent.dateEnd);
+
+    DateTime parsedSubEnd;
+    DateTime parsedSubStart;
+    if (isSwitchedSubs) {
+      parsedSubEnd = dateFormat.parse(alterEvent.subStart);
+      parsedSubStart = dateFormat.parse(alterEvent.subEnd);
+    }
+
+    //Check if Date Start > Date End
+    if (parsedDateStart.compareTo(parsedDateEnd) > 0) {
+      return "A Data de Fim do evento está antes da Data de Início!";
+    }
+    //Check if Date Start == Date End, Check Hours
+    else if (parsedDateStart.day == parsedDateEnd.day) {
+      if (parsedHrStart.compareTo(parsedHrEnd) > 0) {
+        return "Evento no mesmo dia, as horas estão incorretas!";
+      }
+      return "";
+    } else if (isSwitchedSubs) {
+      //Check if Date Sub Start < Date Sub End
+      if (parsedSubStart.compareTo(parsedSubEnd) > 0) {
+        return "O Fim das inscrições está antes do Início!";
+      }
+      //?Talvez não seja boa essa validação, comparar com o fim?
+      //Check if Date Start > Date Sub End
+      if (parsedDateStart.compareTo(parsedSubStart) > 0) {
+        return "As inscrições não encerram antes do Evento iniciar!";
+      }
+
+      return "";
+    } else {
+      return "";
+    }
   }
 
   Future<int> putEvent(String type, bool isSwitchedSubs, Event event , BuildContext context) async {
     final _save = FlutterSecureStorage();
-    final _id = await _save.read(key: "user");
     final _token = await _save.read(key: "token");
-    User user;
-    
+
     Map<String, String> mapHeaders = {
       "Accept": "application/json",
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    // try {
-    //   user = await http
-    //       .get("$_url/users/$_id", headers: mapHeaders)
-    //       .then((http.Response response) {
-    //     final int statusCode = response.statusCode;
-    //     if ((statusCode == 200) || (statusCode == 201)) {
-    //       return User.fromJson(jsonDecode(response.body));
-    //     } else {
-    //       showError("Erro no servidor", "Erro: $statusCode", context);
-    //     }
-    //   });
-    // } catch (e) {
-    //   showError("Erro desconhecido", "Erro: $e", context);
-    // }
-
     if (isSwitchedSubs == false) {
       alterEvent.setSubStart("");
       alterEvent.setSubEnd("");
     }
+
+    DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
+    DateFormat hourFormat = new DateFormat("HH:mm");
+    DateFormat postFormat = new DateFormat("yyyy-MM-ddTHH:mm:ss");
+
+    DateTime parsedDateStart = dateFormat.parse(alterEvent.dateStart);
+    DateTime parsedDateEnd = dateFormat.parse(alterEvent.dateEnd);
+    DateTime parsedHrStart = hourFormat.parse(alterEvent.hrStart);
+    DateTime parsedHrEnd = hourFormat.parse(alterEvent.hrEnd);
+
+    String postDateStart = postFormat.format(parsedDateStart);
+    String postDateEnd = postFormat.format(parsedDateEnd);
+    String postHrStart = postFormat.format(parsedHrStart);
+    String postHrEnd = postFormat.format(parsedHrEnd);
+
+    String postSubStart = "";
+    String postSubEnd = "";
+
+    if (isSwitchedSubs) {
+      DateTime parsedSubStart = dateFormat.parse(alterEvent.subStart);
+      DateTime parsedSubEnd = dateFormat.parse(alterEvent.subEnd);
+      postSubStart = postFormat.format(parsedSubStart);
+      postSubEnd = postFormat.format(parsedSubEnd);
+    }
+
 
     Event p = new Event(
         id: event.id,
         name: alterEvent.name,
         target: alterEvent.target,
         desc: alterEvent.desc,
-        hrStart: alterEvent.hrStart,
-        hrEnd: alterEvent.hrEnd,
-        dateStart: alterEvent.dateStart,
-        dateEnd: alterEvent.dateEnd,
+        hrStart: postHrStart,
+        hrEnd:postHrEnd,
+        dateStart: postDateStart,
+        dateEnd: postDateEnd,
         link: alterEvent.link,
         type: type,
         address: alterEvent.address,
         complement: alterEvent.complement,
-        startSub: alterEvent.subStart,
-        endSub: alterEvent.subEnd,
+        startSub: postSubStart,
+        endSub: postSubEnd,
         author: event.author,
         lat: event.lat,
         lng: event.lng);
@@ -117,5 +191,18 @@ abstract class _AlterEventControllerBase with Store {
     }
 
     return code;
+  }
+}
+
+errorStatusCode(int statusCode, BuildContext context){
+  if (statusCode == 401) {
+    showError("Erro 401", "Não autorizado, favor logar novamente", context);
+  } else if (statusCode == 404) {
+    showError("Erro 404", "Evento ou usuário não foi encontrado", context);
+  } else if (statusCode == 500) {
+    showError("Erro 500", "Erro no servidor, favor tente novamente mais tarde",
+        context);
+  } else {
+    showError("Erro Desconhecido", "StatusCode: $statusCode", context);
   }
 }

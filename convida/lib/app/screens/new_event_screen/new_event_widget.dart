@@ -95,7 +95,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
               flex: 10,
               child: ListView(
                 children: <Widget>[
-                  //Tittle
+                  //Title
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: Container(
