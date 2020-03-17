@@ -43,11 +43,11 @@ abstract class _AlterEventControllerBase with Store {
   }
 
   String validadeDateStart() {
-    return dateValidation(alterEvent.dateStart);
+    return dateValidation(alterEvent.dateStart,"de início do evento");
   }
 
   String validadeDateEnd() {
-    return dateValidation(alterEvent.dateEnd);
+    return dateValidation(alterEvent.dateEnd,"de fim do evento");
   }
 
   String validadeHourStart() {
@@ -59,15 +59,15 @@ abstract class _AlterEventControllerBase with Store {
   }
 
   String validadeSubStart() {
-    return dateValidation(alterEvent.subStart);
+    return dateValidation(alterEvent.subStart,"de início das inscrições");
   }
 
   String validadeSubEnd() {
-    return dateValidation(alterEvent.subEnd);
+    return dateValidation(alterEvent.subEnd,"de fim das inscrições");
   }
-
-  String datesValidations(bool isSwitchedSubs) {
+String datesValidations(bool isSwitchedSubs) {
     //*Tratar todas as datas:
+
     DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
     DateFormat hourFormat = new DateFormat("HH:mm");
 
@@ -80,8 +80,8 @@ abstract class _AlterEventControllerBase with Store {
     DateTime parsedSubEnd;
     DateTime parsedSubStart;
     if (isSwitchedSubs) {
-      parsedSubEnd = dateFormat.parse(alterEvent.subStart);
-      parsedSubStart = dateFormat.parse(alterEvent.subEnd);
+      parsedSubStart = dateFormat.parse(alterEvent.subStart);
+      parsedSubEnd = dateFormat.parse(alterEvent.subEnd);
     }
 
     //Check if Date Start > Date End
@@ -95,14 +95,15 @@ abstract class _AlterEventControllerBase with Store {
       }
       return "";
     } else if (isSwitchedSubs) {
-      //Check if Date Sub Start < Date Sub End
+      //Check if Date Sub End > Sub start
       if (parsedSubStart.compareTo(parsedSubEnd) > 0) {
         return "O Fim das inscrições está antes do Início!";
       }
       //?Talvez não seja boa essa validação, comparar com o fim?
-      //Check if Date Start > Date Sub End
-      if (parsedDateStart.compareTo(parsedSubStart) > 0) {
-        return "As inscrições não encerram antes do Evento iniciar!";
+      //Check if Date End > Date Sub End
+
+      if (parsedSubEnd.compareTo(parsedDateEnd) > 0) {
+        return "As inscrições não encerram junto com o Evento!";
       }
 
       return "";
@@ -168,7 +169,8 @@ abstract class _AlterEventControllerBase with Store {
         endSub: postSubEnd,
         author: event.author,
         lat: event.lat,
-        lng: event.lng);
+        lng: event.lng,
+        active: true);
 
     String eventJson = json.encode(p.toJson());
 
@@ -182,7 +184,7 @@ abstract class _AlterEventControllerBase with Store {
           print("Put Event Success!");
           return statusCode;
         } else {
-          print("Put Evento Error: $statusCode");
+          print("Put Event Error: $statusCode");
           return statusCode;
         }
       });
@@ -192,17 +194,85 @@ abstract class _AlterEventControllerBase with Store {
 
     return code;
   }
-}
 
-errorStatusCode(int statusCode, BuildContext context){
-  if (statusCode == 401) {
-    showError("Erro 401", "Não autorizado, favor logar novamente", context);
-  } else if (statusCode == 404) {
-    showError("Erro 404", "Evento ou usuário não foi encontrado", context);
-  } else if (statusCode == 500) {
-    showError("Erro 500", "Erro no servidor, favor tente novamente mais tarde",
-        context);
-  } else {
-    showError("Erro Desconhecido", "StatusCode: $statusCode", context);
+
+   bool checkAll(BuildContext context, bool isSwitchedSubs) {
+    String error;
+
+    error = nameValidation(alterEvent.name);
+    if (error != null) {
+      showError("Nome inválido", error, context);
+      return false;
+    }
+
+    error = targetValidation(alterEvent.target);
+    if (error != null) {
+      showError("Público Alvo inválido", error, context);
+      return false;
+    }
+
+    error = descriptionValidation(alterEvent.desc);
+    if (error != null) {
+      showError("Descrição inválida", error, context);
+      return false;
+    }
+
+    error = addressValidation(alterEvent.address);
+    if (error != null) {
+      showError("Endereço inválido", error, context);
+      return false;
+    }
+
+    error = complementValidation(alterEvent.complement);
+    if (error != null) {
+      showError("Complemento inválido", error, context);
+      return false;
+    }
+
+    error = linkValidation(alterEvent.link);
+    if (error != null) {
+      showError("Link ou Email inválido", error, context);
+      return false;
+    }
+
+    error = hourValidation(alterEvent.hrStart, "início do evento");
+    if (error != null) {
+      showError("Horário inválido", error, context);
+      return false;
+    }
+
+    error = hourValidation(alterEvent.hrEnd, "fim do evento");
+    if (error != null) {
+      showError("Horário inválido", error, context);
+      return false;
+    }
+
+    error = dateValidation(alterEvent.dateStart,"de início do evento");
+    if (error != null) {
+      showError("Data inválida", error, context);
+      return false;
+    }
+
+    error = dateValidation(alterEvent.dateEnd,"de fim do evento");
+    if (error != null) {
+      showError("Data inválida", error, context);
+      return false;
+    }
+
+    if (isSwitchedSubs) {
+      error = dateValidation(alterEvent.subStart,"de início das inscrições");
+      if (error != null) {
+        showError("Data inválida", error, context);
+        return false;
+      }
+
+      error = dateValidation(alterEvent.subEnd,"de fim das inscrições");
+      if (error != null) {
+        showError("Data inválida", error, context);
+        return false;
+      }
+    }
+
+    return true;
   }
 }

@@ -25,6 +25,7 @@ class _MainWidgetState extends State<MainWidget> {
   String sportType;
   String partyType;
   String artType;
+  String faithType;
   String studyType;
   String othersType;
   String dataType;
@@ -51,6 +52,7 @@ class _MainWidgetState extends State<MainWidget> {
                 sportType: sportType,
                 partyType: partyType,
                 artType: artType,
+                faithType: faithType,
                 studyType: studyType,
                 othersType: othersType,
                 dataType: dataType),
@@ -96,6 +98,7 @@ class _MainWidgetState extends State<MainWidget> {
             sportType: sportType,
             partyType: partyType,
             artType: artType,
+            faithType: faithType,
             studyType: studyType,
             othersType: othersType,
             dataType: dataType);
@@ -157,7 +160,8 @@ class _MainWidgetState extends State<MainWidget> {
       healthType = "Saúde e Bem-estar";
       sportType = "Esporte e Lazer";
       partyType = "Festas e Comemorações";
-      artType =  "Cultura e Religião";
+      artType =  "Arte e Cultura";
+      faithType = "Fé e Espiritualidade";
       studyType = "Acadêmico e Profissional";
       othersType = "Outros";
       dataType = "all";
@@ -166,6 +170,7 @@ class _MainWidgetState extends State<MainWidget> {
       sportType = types['sportType'];
       partyType = types['partyType'];
       artType = types['artType'];
+      faithType = types['faithType'];
       studyType = types['studyType'];
       othersType = types['othersType'];
       dataType = types['dataType'];
@@ -184,6 +189,7 @@ class _MainWidgetState extends State<MainWidget> {
             sportType = "";
             partyType = "";
             artType =  "";
+            faithType = "";
             studyType = "";
             othersType = "";
             dataType = "all";
@@ -252,6 +258,7 @@ class _MainWidgetState extends State<MainWidget> {
           drawerLogin(),
           drawerSignup(),
           Divider(),
+          
           drawerAbout(),
           ListTile(
             title: Text("Fechar"),
@@ -262,6 +269,17 @@ class _MainWidgetState extends State<MainWidget> {
       ),
     );
   }
+  ListTile drawerReport() {
+    return ListTile(
+        title: Text("Denuncias"),
+        trailing: Icon(Icons.assignment_late),
+        onTap: () {
+          //Pop Drawer:
+          Navigator.of(context).pop();
+          //Push Login Screen:
+          Navigator.of(context).pushNamed("/report");
+        });
+  }
 
   ListTile drawerAbout() {
     return ListTile(
@@ -271,7 +289,8 @@ class _MainWidgetState extends State<MainWidget> {
           //Pop Drawer:
           Navigator.of(context).pop();
           //Push Login Screen:
-          Navigator.of(context).pushReplacementNamed("/about");
+          Navigator.of(context).pushNamed("/about");
+          //Navigator.of(context).pushReplacementNamed("/about");
         });
   }
 
@@ -312,6 +331,8 @@ class _MainWidgetState extends State<MainWidget> {
           //new DrawerSettings(),
           new DrawerLogout(),
           new Divider(),
+          //!Falta implementar algumas coisas
+          drawerReport(),
           drawerAbout(),
 
           //O Fechar somente fecha a barra de ferramentas

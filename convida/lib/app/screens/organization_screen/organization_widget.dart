@@ -5,6 +5,7 @@ class OrganizationWidget extends StatefulWidget {
   final String sportType;
   final String partyType;
   final String artType;
+  final String faithType;
   final String studyType;
   final String othersType;
   final String dataType;
@@ -15,6 +16,7 @@ class OrganizationWidget extends StatefulWidget {
       @required this.sportType,
       @required this.partyType,
       @required this.artType,
+      @required this.faithType,
       @required this.studyType,
       @required this.othersType,
       @required this.dataType})
@@ -22,7 +24,7 @@ class OrganizationWidget extends StatefulWidget {
 
   @override
   _OrganizationWidgetState createState() => _OrganizationWidgetState(healthType,
-      sportType, partyType, artType, studyType, othersType, dataType);
+      sportType, partyType, artType, faithType ,studyType, othersType, dataType);
 }
 
 class _OrganizationWidgetState extends State<OrganizationWidget> {
@@ -30,17 +32,19 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
   String sportType;
   String partyType;
   String artType;
+  String faithType;
   String studyType;
   String othersType;
   String dataType;
 
   _OrganizationWidgetState(this.healthType, this.sportType, this.partyType,
-      this.artType, this.studyType, this.othersType, this.dataType);
+      this.artType, this.faithType,this.studyType, this.othersType, this.dataType);
 
   Color healthColor = Colors.white;
   Color sportColor = Colors.white;
   Color partyColor = Colors.white;
   Color artColor = Colors.white;
+  Color faithColor = Colors.white;
   Color studyColor = Colors.white;
   Color othersColor = Colors.white;
 
@@ -59,8 +63,11 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
     if (partyType == 'Festas e Comemorações') {
       partyColor = Colors.deepPurpleAccent;
     }
-    if (artType == 'Cultura e Religião') {
+    if (artType == 'Arte e Cultura') {
       artColor = Colors.pink;
+    }
+    if (faithType == 'Fé e Espiritualidade') {
+      faithColor = Colors.yellow;
     }
     if (studyType == 'Acadêmico e Profissional') {
       studyColor = Colors.blueAccent;
@@ -130,7 +137,17 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
 
                           //   othersColor = Colors.white;
                           // }
-
+                          // switchColor(Color color){
+                          //   // if (color == healthColor){
+                          //   //   healthType == "X";
+                          //   //   healthColor = Colors.white;
+                          //   // } else {
+                          //   //   health = "Saúde e Bem-estar";
+                          //   //   healthType = healthName;
+                          //   //   healthColor = color;
+                          //   // } 
+                            
+                          // }
                           if (healthType == "Saúde e Bem-estar") {
                             healthType = "X";
                             healthColor = Colors.white;
@@ -234,31 +251,16 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
                       elevation: 2,
                       shadowColor: Colors.pink,
                       backgroundColor: artColor,
-                      label: Text('Cultura e Religião',
+                      label: Text('Arte e Cultura',
                           style: TextStyle(fontSize: 14)),
                       onPressed: () {
                         setState(() {
-                          // if ((type != "X") && (artColor == Colors.white)) {
-                          //   type = "Cultura e Religião";
-
-                          //   healthColor = Colors.white;
-
-                          //   sportColor = Colors.white;
-
-                          //   partyColor = Colors.white;
-
-                          //   artColor = Colors.pink;
-
-                          //   studyColor = Colors.white;
-
-                          //   othersColor = Colors.white;
-                          // }
-
-                          if (artType == "Cultura e Religião") {
+                       
+                          if (artType == "Arte e Cultura") {
                             artType = "X";
                             artColor = Colors.white;
                           } else {
-                            artType = "Cultura e Religião";
+                            artType = "Arte e Cultura";
                             artColor = Colors.pink;
                           }
                         });
@@ -270,6 +272,30 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
             ),
             Row(
               children: <Widget>[
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ActionChip(
+                      pressElevation: 2,
+                      elevation: 2,
+                      shadowColor: Colors.yellow,
+                      backgroundColor: faithColor,
+                      label: Text('Fé e Espiritualidade', style: TextStyle(fontSize: 14)),
+                      onPressed: () {
+                        setState(() {
+
+                          if (faithType == "Fé e Espiritualidade") {
+                            faithType = "X";
+                            faithColor = Colors.white;
+                          } else {
+                            faithType = "";
+                            faithColor = Colors.yellow;
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
@@ -309,8 +335,12 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
                       },
                     ),
                   ),
-                ),
-                Expanded(
+                )
+              ],
+            ),
+             Row(
+              children: <Widget>[
+               Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
                     child: ActionChip(
@@ -351,7 +381,6 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
                 )
               ],
             ),
-
             Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 0),
               child: Container(
@@ -449,6 +478,7 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
                     'sportType': sportType,
                     'partyType': partyType,
                     'artType': artType,
+                    'faithType' : faithType,
                     'studyType': studyType,
                     'othersType': othersType,
                     'dataType': dataType
@@ -472,6 +502,7 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
       'sportType': sportType,
       'partyType': partyType,
       'artType': artType,
+      'faithType' : faithType,
       'studyType': studyType,
       'othersType': othersType,
       'dataType': dataType
@@ -502,11 +533,19 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
       partyType = "X";
     }
     if (artColor != Colors.white) {
-      artType = "Cultura e Religião";
+      artType = "Arte e Cultura";
       req = true;
     } else {
       artType = "X";
     }
+
+    if (faithColor != Colors.white) {
+      faithType = "Fé e Espiritualidade";
+      req = true;
+    } else {
+      faithType = "X";
+    }
+
     if (studyColor != Colors.white) {
       studyType = "Acadêmico e Profissional";
       req = true;
@@ -525,6 +564,7 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
         (sportType == "X") &&
         (partyType == "X") &&
         (artType == "X") &&
+        (faithType == "X") &&
         (studyType == "X") &&
         (othersType == "X")) {
       healthType = " ";
@@ -534,13 +574,15 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
         (sportColor == Colors.white) &&
         (partyColor == Colors.white) &&
         (artColor == Colors.white) &&
+        (faithColor == Colors.white) &&
         (studyColor == Colors.white) &&
         (othersColor == Colors.white)) {
       
       healthType = "Saúde e Bem-estar";
       sportType = "Esporte e Lazer";
       partyType = "Festas e Comemorações";
-      artType =  "Cultura e Religião";
+      artType =  "Arte e Cultura";
+      faithType = "Fé e Espiritualidade";
       studyType = "Acadêmico e Profissional";
       othersType = "Outros";
     }

@@ -114,8 +114,11 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                                   'Festas e Comemorações') {
                                 _imageAsset = 'type-party.png';
                               } else if (values[index].type ==
-                                  'Cultura e Religião') {
+                                  'Arte e Cultura') {
                                 _imageAsset = 'type-art.png';
+                              } else if (values[index].type ==
+                                  'Fé e Espiritualidade') {
+                                _imageAsset = 'type-faith.png';
                               } else if (values[index].type ==
                                   'Acadêmico e Profissional') {
                                 _imageAsset = 'type-graduation.png';
@@ -247,7 +250,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
     var response;
-    
+
     try {
       response = await http.get("$_url/users/fav/$_id", headers: mapHeaders);
 
@@ -260,19 +263,19 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
       if ((response.statusCode == 200) || (response.statusCode == 201)) {
         final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
         return parsed.map<Event>((json) => Event.fromJson(json)).toList();
-      }
-      
-      else if (response.statusCode == 401) {
+      } else if (response.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
         return null;
       } else if (response.statusCode == 404) {
         showError("Erro 404", "Autor não foi encontrado", context);
         return null;
       } else if (response.statusCode == 500) {
-        showError("Erro 500",  "Erro no servidor, favor tente novamente mais tarde", context);
+        showError("Erro 500",
+            "Erro no servidor, favor tente novamente mais tarde", context);
         return null;
       } else {
-        showError("Erro Desconhecido", "StatusCode: ${response.statusCode}", context);
+        showError(
+            "Erro Desconhecido", "StatusCode: ${response.statusCode}", context);
         return null;
       }
     } catch (e) {

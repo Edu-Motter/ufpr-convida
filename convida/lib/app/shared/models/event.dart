@@ -17,6 +17,7 @@ class Event {
   String author;
   double lat;
   double lng;
+  bool active;
 
   Event(
       {this.id,
@@ -35,7 +36,8 @@ class Event {
         this.type,
         this.author,
         this.lat,
-        this.lng});
+        this.lng,
+        this.active});
 
   Event.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -55,6 +57,7 @@ class Event {
     author = json['author'];
     lat = json['lat'];
     lng = json['lng'];
+    active = json['active'];
   }
 
   Map<String, dynamic> toJson() {
@@ -76,12 +79,9 @@ class Event {
     data['author'] = this.author;
     data['lat'] = this.lat;
     data['lng'] = this.lng;
+    data['active'] = this.active;
     return data;
   }
-
-  emptyEvent(){
-  }
-
 }
 
 

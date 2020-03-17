@@ -47,8 +47,6 @@ String grrValidation(value) {
 }
 
 String birthValidation(value) {
-  
-
   if (value == null) {
     return 'Favor entre com a Data de Nascimento';
   } else if (value.isEmpty) {
@@ -59,15 +57,17 @@ String birthValidation(value) {
     DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
     DateTime parsedDate = dateFormat.parse(value);
     bool valid = isValidDate(value);
+    var diffDuration = DateTime.now().difference(parsedDate);
     if (!valid) {
       return "Data inválida";
     } else if (parsedDate.year < 1900) {
       return "Data muito Antiga";
     } else if (parsedDate.compareTo(DateTime.now()) > 0) {
       return "Data é Futura";
-    } 
-    //Verificar se é menor de 12 anos
-      else {
+    } else if (diffDuration < Duration(hours: 105192)) {
+      //* 105.192 hours is equals to 12 years.
+      return "Menor de 12 anos";
+    } else {
       return null;
     }
   }

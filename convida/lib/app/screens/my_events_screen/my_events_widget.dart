@@ -112,9 +112,11 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                             } else if (values[index].type ==
                                 'Festas e Comemorações') {
                               _imageAsset = 'type-party.png';
-                            } else if (values[index].type ==
-                                'Cultura e Religião') {
+                            } else if (values[index].type == 'Arte e Cultura') {
                               _imageAsset = 'type-art.png';
+                            } else if (values[index].type ==
+                                'Fé e Espiritualidade') {
+                              _imageAsset = 'type-faith.png';
                             } else if (values[index].type ==
                                 'Acadêmico e Profissional') {
                               _imageAsset = 'type-graduation.png';
@@ -268,8 +270,10 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
         showError("Erro 404", "Evento não foi encontrado", context);
         return null;
       } else if (response.statusCode == 500) {
-        showError("Erro 500",
-            "Erro no servidor, favor tente novamente mais tarde (Meus Eventos)", context);
+        showError(
+            "Erro 500",
+            "Erro no servidor, favor tente novamente mais tarde (Meus Eventos)",
+            context);
         return null;
       } else {
         showError(

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:convida/app/shared/global/globals.dart' as globals;
+import 'package:intl/intl.dart';
 
 import 'package:mobx/mobx.dart';
 part 'alter_profile_controller.g.dart';
@@ -19,7 +20,6 @@ class AlterProfileController = _AlterProfileControllerBase
 abstract class _AlterProfileControllerBase with Store {
   var profile = Profile();
   String _url = globals.URL;
-  
 
   @computed
   bool get isValid {
@@ -53,11 +53,81 @@ abstract class _AlterProfileControllerBase with Store {
     return birthValidation(profile.birth);
   }
 
-  Future<bool> getProfile({User user, BuildContext context,}) async {
+  bool checkAll(BuildContext context) {
+    String error;
+
+    //*Name
+    error = nameValidation(profile.name, "nome");
+    if (error != null) {
+      showError("Nome inválido", error, context);
+      return false;
+    }
+
+    //*LastName
+    error = nameValidation(profile.lastName, "sobrenome");
+    if (error != null) {
+      showError("Sobrenome inválido", error, context);
+      return false;
+    }
+
+
+    //*Birthday
+    error = birthValidation(profile.birth);
+    if (error != null) {
+      showError("Data de Nascimento inválida", error, context);
+      return false;
+    }
+
+    //*Email
+    error = emailValidation(profile.email);
+    if (error != null) {
+      showError("E-mail Inválido", error, context);
+      return false;
+    }
+
+    //*Password
+    error = passwordValidation(profile.password, null);
+    if (error != null) {
+      showError("Senha Inválida", error, context);
+      return false;
+    }
+
+    if (profile.newPassword != null) {
+      //*Confirm Password
+      error = passwordValidation(profile.newPassword, profile.password);
+      if (error != null) {
+        showError("Confirmações de Senha inválida", error, context);
+        return false;
+      }
+
+      //*Confirm Password
+      error = passwordValidation(profile.confirmPassword, profile.password);
+      if (error != null) {
+        showError("Confirmações de Senha inválida", error, context);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  Future<bool> getProfile({
+    User user,
+    BuildContext context,
+  }) async {
     try {
+      DateTime parsedBirth;
+      final DateFormat formatter = new DateFormat("dd/MM/yyyy");
+
       profile.changeName(user.name);
       profile.lastName = user.lastName;
       profile.email = user.email;
+
+      if (user.birth != null) {
+        parsedBirth = DateTime.parse(user.birth);
+        profile.birth = formatter.format(parsedBirth);
+      }
+
       print("Nome carregando: ${profile.name}");
       return true;
     } catch (e) {
@@ -76,8 +146,8 @@ abstract class _AlterProfileControllerBase with Store {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    AccountCredentials ac = new AccountCredentials(
-        password: profile.password, username: user.grr);
+    AccountCredentials ac =
+        new AccountCredentials(password: profile.password, username: user.grr);
     String acJson = jsonEncode(ac);
     bool correct;
 
@@ -119,12 +189,13 @@ abstract class _AlterProfileControllerBase with Store {
     return correct;
   }
 
-  Future<int> putUser({bool isSwitch, User user, String dateUser, BuildContext context}) async {
+  Future<int> putUser(
+      {bool isSwitch, User user, String dateUser, BuildContext context}) async {
     final _save = FlutterSecureStorage();
     final _token = await _save.read(key: "token");
 
     User u;
- 
+
     if (isSwitch) {
       u = new User(
           grr: user.grr,

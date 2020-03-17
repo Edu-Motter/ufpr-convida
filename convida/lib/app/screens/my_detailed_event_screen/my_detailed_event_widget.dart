@@ -64,15 +64,15 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
               _imageAsset = 'type-sport.png';
             } else if (snapshot.data.type == 'Festas e Comemorações') {
               _imageAsset = 'type-party.png';
-            } else if (snapshot.data.type == 'Cultura e Religião') {
+            } else if (snapshot.data.type == 'Arte e Cultura') {
               _imageAsset = 'type-art.png';
+            } else if (snapshot.data.type == 'Fé e Espiritualidade') {
+              _imageAsset = 'type-faith.png';
             } else if (snapshot.data.type == 'Acadêmico e Profissional') {
-              _imageAsset = 'type-graduation.png';
+              _imageAsset = 'type-graduation.png' ;
             } else {
               _imageAsset = 'type-others.png';
             }
-
-            // var column =
 
             return Scaffold(
                 backgroundColor: Colors.white,
@@ -530,7 +530,10 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                       ),
                     ),
                     Expanded(
-                      flex: (MediaQuery.of(context).orientation == Orientation.portrait) ? 1 : 2,
+                      flex: (MediaQuery.of(context).orientation ==
+                              Orientation.portrait)
+                          ? 1
+                          : 2,
                       child: Container(
                         color: Colors.white,
                         child: Row(
@@ -541,11 +544,11 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                   padding: const EdgeInsets.all(2.0),
                                   child: InkWell(
                                     onTap: () {
-                                      if ((DateTime.now().compareTo(dateEnd)) >
-                                          0) {
+                                      DateTime tomorrow = DateTime.now().add(Duration(hours: 24));
+                                      if ((tomorrow.compareTo(dateEnd)) > 0) {
                                         //If the event ended:
                                         _showError("Evento Finalizado",
-                                            "Não é possível alterar mais esse evento, pois ele já foi encerrado segundo a data informada!");
+                                            "Não é possível alterar mais esse evento, pois ele já foi encerrado!");
                                       } else {
                                         //If doesn't end, User can edit:
                                         Navigator.push(
@@ -755,7 +758,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                   Navigator.pop(context);
                   //Mudei aqui
                   //Navigator.pushReplacementNamed(context, "/main");
-                  
+
                   // Navigator.pushNamed(context, '/main');
                 } else if (statusCode == 401) {
                   showError("Erro 401", "Não autorizado, favor logar novamente",

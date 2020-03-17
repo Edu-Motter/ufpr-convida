@@ -1,5 +1,7 @@
 import 'package:convida/app/screens/alter_event_screen/alter_event_controller.dart';
+import 'package:convida/app/shared/DAO/util_requisitions.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +15,6 @@ class AlterEventWidget extends StatefulWidget {
   @override
   _AlterEventWidgetState createState() => _AlterEventWidgetState(event);
 }
-
 class _AlterEventWidgetState extends State<AlterEventWidget> {
   Event event;
   _AlterEventWidgetState(this.event);
@@ -60,7 +61,8 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
     "Saúde e Bem-estar",
     "Esporte e Lazer",
     "Festas e Comemorações",
-    "Cultura e Religião",
+    "Arte e Cultura",
+    "Fé e Espiritualidade",
     "Acadêmico e Profissional",
     "Outros",
   ];
@@ -440,26 +442,32 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                           Navigator.pop(context);
                         }
                         if (created == false) {
-                          String error = "";
+                          //* Check all Inputs
+                          bool ok = alterEventController.checkAll(
+                              context, isSwitchedSubs);
 
-                          error = alterEventController
-                              .datesValidations(isSwitchedSubs);
-                          if (error != "") {
-                            showError("Data Incorreta", "$error", context);
-                          } else {
-                            int statusCode =
-                                await alterEventController.putEvent(
-                                    _currentType,
-                                    isSwitchedSubs,
-                                    event,
-                                    context);
-                            if ((statusCode == 200) || (statusCode == 201)) {
-                              showSuccess("Evento Alterado com sucesso!", "pop",
-                                  context);
+                          if (ok) {
+                            String error = "";
+
+                            error = alterEventController
+                                .datesValidations(isSwitchedSubs);
+                            if (error != "") {
+                              showError("Data Incorreta", "$error", context);
                             } else {
-                              errorStatusCode(statusCode, context);
+                              int statusCode =
+                                  await alterEventController.putEvent(
+                                      _currentType,
+                                      isSwitchedSubs,
+                                      event,
+                                      context);
+                              if ((statusCode == 200) || (statusCode == 201)) {
+                                showSuccess("Evento Alterado com sucesso!",
+                                    "pop", context);
+                              } else {
+                                errorStatusCode(statusCode, context, "Erro ao Alterar Evento");
+                              }
+                              created = true;
                             }
-                            created = true;
                           }
                         }
                       },

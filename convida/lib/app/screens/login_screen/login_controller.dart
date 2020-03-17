@@ -26,8 +26,26 @@ abstract class _LoginControllerBase with Store {
     return passwordValidation(login.password);
   }
 
+  bool validadeLogin(BuildContext context) {
+    String ok = validateUser();
+    print(ok);
+    if (ok != null) {
+      showError("Usuário Inválido", "Favor entre com um nome de usuário válido",
+          context);
+      return false;
+    }
+    ok = validatePassword();
+    if (ok != null) {
+      showError("Senha Inválida", "Favor entre com uma senha válida", context);
+      return false;
+    }
+    return true;
+  }
+
   Future<int> postLoginUser(BuildContext context) async {
     final _save = FlutterSecureStorage();
+    //* GRR To Lower Case
+    login.user = login.user.toLowerCase();
 
     AccountCredentials l = new AccountCredentials(
       username: login.user,
@@ -70,6 +88,7 @@ abstract class _LoginControllerBase with Store {
     }
 
     final token = await _save.read(key: "token");
+    print("TOKEN: $token");
 
     Map<String, String> mapHeadersToken = {
       "Accept": "application/json",
@@ -99,6 +118,9 @@ abstract class _LoginControllerBase with Store {
           }
         });
 
+        if (user.name == null){
+          return 0;
+        }
         _save.write(key: "name", value: "${user.name}");
         _save.write(key: "email", value: "${user.email}");
         _save.write(key: "lastName", value: "${user.lastName}");
@@ -109,16 +131,5 @@ abstract class _LoginControllerBase with Store {
     return s;
   }
 
-  errorStatusCode(int statusCode, BuildContext context) {
-    if (statusCode == 401) {
-      showError("Erro 401", "Não autorizado, favor logar novamente", context);
-    } else if (statusCode == 404) {
-      showError("Erro 404", "Evento ou usuário não foi encontrado", context);
-    } else if (statusCode == 500) {
-      showError("Erro 500",
-          "Erro no servidor, favor tente novamente mais tarde", context);
-    } else {
-      showError("Erro Desconhecido", "StatusCode: $statusCode", context);
-    }
-  }
+  
 }

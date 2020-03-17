@@ -69,12 +69,14 @@ flutter:
     - assets/logo-ufprconvida.png
     - assets/logo-ufprconvida-sembordas.png
     - assets/type-art.png
+    - assets/type-faith.png
     - assets/type-graduation.png
     - assets/type-health.png
     - assets/type-others.png
     - assets/type-party.png
     - assets/type-sport.png
     - assets/type-mini-art.png
+    - assets/type-mini-faith.png
     - assets/type-mini-graduation.png
     - assets/type-mini-health.png
     - assets/type-mini-others.png

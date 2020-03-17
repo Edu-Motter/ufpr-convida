@@ -1,4 +1,5 @@
 import 'package:convida/app/screens/signup_screen/signup_controller.dart';
+import 'package:convida/app/shared/DAO/util_requisitions.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -46,7 +47,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           } else
             return null;
         },
-
         child: Scaffold(
           body: Column(
             children: <Widget>[
@@ -117,6 +117,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         return textFieldMask(
                             maskFormatter: dateMask,
                             labelText: "Data de Nascimento:",
+                            keyboardType: TextInputType.datetime,
                             icon: Icons.calendar_today,
                             initialValue: signupController.signup.birth,
                             onChanged: signupController.signup.changeBirth,
@@ -213,102 +214,97 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                     ),
                                     onPressed: signupController.isValid
                                         ? () async {
-
-                                            //*GRR to LowCase
-                                            if (signupController.signup.grr
-                                                .startsWith("GRR")) {
-                                              signupController.signup.grr =
-                                                  signupController.signup.grr
-                                                      .toLowerCase();
-                                            }
-
-                                            //*Check GRR 
-                                            int ok = await signupController
-                                                .checkGrr();
-
-                                            if (ok == 500) {
-                                              String msg = "GRR Inválido!";
-                                              String error =
-                                                  "O GRR informado já foi cadastrado";
-                                              showError(msg, error, context);
-                                            }
-
                                             //*Check if created
                                             if (created) {
                                               Navigator.pushReplacementNamed(
                                                   context, '/main');
-                                            } else if ((created == false) &&
-                                                (ok == 200)) {
+                                            } else {
+                                              //*Check ALL inputs:
+                                              bool ok = signupController
+                                                  .checkAll(context);
+                                              //If all inputs are OK:
+                                              if (ok) {
+                                                //*Check GRR
+                                                int ok = await signupController
+                                                    .checkGrr();
 
-                                              //* Check pass
-                                              if (signupController
-                                                      .signup.password
-                                                      .compareTo(signupController
-                                                          .signup
-                                                          .confirmPassword) ==
-                                                  0) {
-
-                                                //*Arrumar data:
-                                                DateTime dateUser = DateFormat("dd/MM/yyyy").parse(signupController.signup.birth);
-                                                String datePost = dateFormat.format(dateUser);
-
-                                                //*Post Event
-                                                int statusCode =
-                                                    await signupController
-                                                        .postNewUser(
-                                                            dateUser: datePost,
-                                                            context: context);
-
-                                                //*Check status Code
-                                                //*Sucesso
-                                                if ((statusCode == 200) ||
-                                                    (statusCode == 201)) {
-                                                  created = true;
-                                                  int statusCodeLogin =
-                                                      await signupController
-                                                          .postLoginUser(
-                                                              context: context);
-                                                  if (statusCodeLogin == 201 ||
-                                                      statusCodeLogin == 200) {
-                                                    showSuccess(
-                                                        "Cadastrado com Sucesso!",
-                                                        "/main",
-                                                        context);
-                                                  } else {
-                                                    showError(
-                                                        "Erro ao logar",
-                                                        "O Cadastro foi feito sucesso, entretando deu erro ao logar",
-                                                        context);
-                                                  }
-                                                } 
-
-                                                //*Erros:
-                                                else if (statusCode == 401) {
+                                                //If error:
+                                                if (ok == 500) {
+                                                  String msg = "GRR Inválido!";
+                                                  String error =
+                                                      "O GRR informado já foi cadastrado";
                                                   showError(
-                                                      "Erro 401",
-                                                      "Não autorizado, favor logar novamente",
-                                                      context);
-                                                } else if (statusCode == 404) {
-                                                  showError(
-                                                      "Erro 404",
-                                                      "Usuário não foi encontrado",
-                                                      context);
-                                                } else if (statusCode == 500) {
-                                                  showError(
-                                                      "Erro 500",
-                                                      "Erro no servidor, favor tente novamente mais tarde",
-                                                      context);
+                                                      msg, error, context);
                                                 } else {
-                                                  showError(
-                                                      "Erro Desconhecido",
-                                                      "StatusCode: $statusCode",
-                                                      context);
+                                                  //*GRR to LowCase
+                                                  if (signupController
+                                                      .signup.grr
+                                                      .startsWith("GRR")) {
+                                                    signupController
+                                                            .signup.grr =
+                                                        signupController
+                                                            .signup.grr
+                                                            .toLowerCase();
+                                                  }
+                                                  // // Check pass
+                                                  // if (signupController
+                                                  //         .signup.password
+                                                  //         .compareTo(signupController
+                                                  //             .signup
+                                                  //             .confirmPassword) ==
+                                                  //     0) {
+                                                  //*Arrumar data:
+                                                  DateTime dateUser =
+                                                      DateFormat("dd/MM/yyyy")
+                                                          .parse(
+                                                              signupController
+                                                                  .signup
+                                                                  .birth);
+                                                  String datePost = dateFormat
+                                                      .format(dateUser);
+
+                                                  //*Post Event
+                                                  int statusCode =
+                                                      await signupController
+                                                          .postNewUser(
+                                                              dateUser:
+                                                                  datePost,
+                                                              context: context);
+
+                                                  //*Check status Code
+                                                  //*Sucesso
+                                                  if ((statusCode == 200) ||
+                                                      (statusCode == 201)) {
+                                                    created = true;
+                                                    int statusCodeLogin =
+                                                        await signupController
+                                                            .postLoginUser(
+                                                                context:
+                                                                    context);
+                                                    if (statusCodeLogin ==
+                                                            201 ||
+                                                        statusCodeLogin ==
+                                                            200) {
+                                                      showSuccess(
+                                                          "Cadastrado com Sucesso!",
+                                                          "/main",
+                                                          context);
+                                                    } else {
+                                                      errorStatusCode(
+                                                          statusCodeLogin,
+                                                          context,
+                                                          "Erro ao se Cadastrar");
+                                                    }
+                                                  }
+
+                                                  //*Erros:
+                                                  errorStatusCode(
+                                                      statusCode,
+                                                      context,
+                                                      "Erro verificar GRR");
                                                 }
                                               } else {
-                                                String msg = "Erro no Cadastro";
-                                                String error =
-                                                    "Ocorreu um erro ao fazer o Cadastro";
-                                                showError(msg, error, context);
+                                                //if create
                                               }
                                             }
                                           }

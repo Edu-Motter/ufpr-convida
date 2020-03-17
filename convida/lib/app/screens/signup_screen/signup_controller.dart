@@ -20,13 +20,8 @@ abstract class _SignupControllerBase with Store {
 
   @computed
   bool get isValid {
-    return ((validateName() == null) &&
-        (validadeLastName() == null) &&
-        (validadeGrr() == null) &&
-        (validadeBirth() == null) &&
-        (validadeEmail() == null) &&
-        (validadePassword() == null) &&
-        (validadeConfirmPassword() == null));
+    return true;
+    //Validations..
   }
 
   String validateName() {
@@ -80,6 +75,61 @@ abstract class _SignupControllerBase with Store {
     return statusC;
   }
 
+  bool checkAll(BuildContext context){
+    String error; 
+    
+    //*Name
+    error = nameValidation(signup.name, "nome");
+    if(error != null){
+      showError("Nome inválido", error, context);
+      return false;
+    }
+
+    //*LastName
+    error = nameValidation(signup.lastName, "sobrenome");
+    if(error != null){
+      showError("Sobrenome inválido", error, context);
+      return false;
+    }
+
+    //*GRR
+    error = grrValidation(signup.grr);
+    if(error != null){
+      showError("GRR inválido", error, context);
+      return false;
+    }
+
+    //*Birthday
+    error = birthValidation(signup.birth);
+    if(error != null){
+      showError("Data de Nascimento inválida", error, context);
+      return false;
+    }
+
+    //*Email
+    error = emailValidation(signup.email);
+    if(error != null){
+      showError("E-mail Inválido", error, context);
+      return false;
+    }
+
+    //*Password
+    error = passwordValidation(signup.password, signup.confirmPassword);
+    if(error != null){
+      showError("Senha Inválida", error, context);
+      return false;
+    }
+
+    //*Confirm Password
+    error = passwordValidation(signup.confirmPassword, signup.password);
+    if(error != null){
+      showError("Confirmações de Senha inválida", error, context);
+      return false;
+    }
+    
+    return true;
+  }
+  
   Future<int> postNewUser({String dateUser, BuildContext context}) async {
     User u = new User(
         grr: signup.grr,

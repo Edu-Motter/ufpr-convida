@@ -1,5 +1,9 @@
+import 'package:convida/app/screens/detailed_event_screen/detailed_event_controller.dart';
+import 'package:convida/app/shared/models/report.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
+import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -20,6 +24,10 @@ class DetailedEventWidget extends StatefulWidget {
 class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   final _save = FlutterSecureStorage();
 
+  final DetailedEventController detailedEventController =
+      DetailedEventController();
+
+  final TextEditingController reportController = new TextEditingController();
   String _url = globals.URL;
   final DateFormat formatter = new DateFormat.yMd("pt_BR").add_Hm();
   final DateFormat hour = new DateFormat.Hm();
@@ -29,14 +37,13 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   String address =
       "R. Dr. Alcides Vieira Arcoverde, 1225 - Jardim das Américas, Curitiba - PR, 81520-260";
 
-  bool fav;
+  // bool fav;
   User eventAuthor;
 
   String token;
 
   @override
   Widget build(BuildContext context) {
-
     final routeArgs =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     final eventId = routeArgs['id'];
@@ -70,14 +77,15 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
             _imageAsset = 'type-sport.png';
           } else if (snapshot.data.type == 'Festas e Comemorações') {
             _imageAsset = 'type-party.png';
-          } else if (snapshot.data.type == 'Cultura e Religião') {
+          } else if (snapshot.data.type == 'Arte e Cultura') {
             _imageAsset = 'type-art.png';
+          } else if (snapshot.data.type == 'Fé e Espiritualidade') {
+            _imageAsset = 'type-faith.png';
           } else if (snapshot.data.type == 'Acadêmico e Profissional') {
             _imageAsset = 'type-graduation.png';
           } else {
             _imageAsset = 'type-others.png';
           }
-          print("Fav: $fav");
 
           var column = Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -142,6 +150,9 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
           );
 
           return Scaffold(
+            //It makes the page Fixed avoiding overflow when the keybord Appears
+            resizeToAvoidBottomPadding: false,
+
             backgroundColor: Colors.grey.shade200,
             body: Column(
               children: <Widget>[
@@ -487,7 +498,10 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                   ),
                 ),
                 Expanded(
-                  flex: (MediaQuery.of(context).orientation == Orientation.portrait) ? 1 : 2,
+                  flex: (MediaQuery.of(context).orientation ==
+                          Orientation.portrait)
+                      ? 1
+                      : 2,
                   child: Container(
                     color: Colors.white,
                     child: Padding(
@@ -495,55 +509,26 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Expanded(
-                              child: InkWell(
-                                onTap: () async {
-                                  openLink(snapshot.data.link);
-                                },
-                                child: Column(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.link,
-                                      size: 26,
-                                    ),
-                                    Text(
-                                      "Link",
-                                      maxLines: 1,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  if (token != null) {
-                                    if (fav == true)
-                                      _deleteEventFav(snapshot.data.id);
-                                    else
-                                      _putEventFav(snapshot.data.id);
-                                  } else {
-                                    _showDialog("Necessário estar logado!",
-                                        "Somente se você estiver logado será possível favoritar eventos, para isso, crie uma conta ou entre com seu login!");
-                                  }
-                                },
-                                child: Column(
-                                  children: <Widget>[
-                                    fav == true
-                                        ? Icon(
-                                            Icons.star,
-                                            size: 26,
-                                            color: Colors.amberAccent,
-                                          )
-                                        : Icon(Icons.star_border, size: 26),
-                                    Text(
-                                      "Favoritar",
-                                      maxLines: 1,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
+                            //*Link Buttom
+                            // Expanded(
+                            //   child: InkWell(
+                            //     onTap: () async {
+                            //       openLink(snapshot.data.link);
+                            //     },
+                            //     child: Column(
+                            //       children: <Widget>[
+                            //         Icon(
+                            //           Icons.link,
+                            //           size: 26,
+                            //         ),
+                            //         Text(
+                            //           "Link",
+                            //           maxLines: 1,
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
                             Expanded(
                               child: InkWell(
                                 onTap: () {
@@ -564,7 +549,120 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                   ],
                                 ),
                               ),
-                            )
+                            ),
+
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  if (token != null) {
+                                    if (detailedEventController.favorite ==
+                                        true)
+                                      _deleteEventFav(snapshot.data.id);
+                                    else
+                                      _putEventFav(snapshot.data.id);
+                                  } else {
+                                    _showDialog("Necessário estar logado!",
+                                        "Somente se você estiver logado será possível favoritar eventos, para isso, crie uma conta ou entre com seu login!");
+                                  }
+                                },
+                                child:
+                                    Observer(builder: (BuildContext context) {
+                                  print(detailedEventController.favorite);
+                                  return Column(
+                                    children: <Widget>[
+                                      detailedEventController.favorite == true
+                                          ? Icon(
+                                              Icons.star,
+                                              size: 26,
+                                              color: Colors.amberAccent,
+                                            )
+                                          : Icon(Icons.star_border, size: 26),
+                                      Text(
+                                        "Favoritar",
+                                        maxLines: 1,
+                                      )
+                                    ],
+                                  );
+                                }),
+                              ),
+                            ),
+
+                            snapshot.data.active == true
+                                ? Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (token != null) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Observer(builder:
+                                                  (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text("Justificativa:"),
+                                                  content: textFieldWithoutIcon(
+                                                      maxLines: 4,
+                                                      onChanged:
+                                                          detailedEventController
+                                                              .setReport,
+                                                      maxLength: 280,
+                                                      labelText:
+                                                          "Justifique sua denuncia",
+                                                      errorText:
+                                                          detailedEventController
+                                                              .validateReport),
+                                                  actions: <Widget>[
+                                                    new FlatButton(
+                                                      child:
+                                                          new Text("Denunciar"),
+                                                      onPressed: () {
+                                                        if (token != null) {
+                                                          _putRerport(
+                                                              snapshot.data.id,
+                                                              detailedEventController.report
+                                                          );
+                                                          Navigator.pop(
+                                                              context);
+                                                        } else {
+                                                          _showDialog(
+                                                              "Necessário estar logado!",
+                                                              "Somente se você estiver logado será possível denunciar eventos, para isso, crie uma conta ou entre com seu login!");
+                                                        }
+                                                      },
+                                                    ),
+                                                    new FlatButton(
+                                                      child:
+                                                          new Text("Cancelar"),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              });
+                                            },
+                                          );
+                                        } else {
+                                          _showDialog(
+                                              "Necessário estar logado!",
+                                              "Somente se você estiver logado será possível denunciar eventos, para isso, crie uma conta ou entre com seu login!");
+                                        }
+                                      },
+                                      child: Column(
+                                        children: <Widget>[
+                                          Icon(Icons.assignment_late, size: 26),
+                                          Text("Denunciar", maxLines: 1)
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Expanded(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Icon(Icons.block, size: 26),
+                                        Text("Desativado", maxLines: 1)
+                                      ],
+                                    ),
+                                  )
                           ]),
                     ),
                   ),
@@ -631,10 +729,9 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
               body: body, headers: mapHeaders);
 
           if (r.statusCode == 200) {
-            print("Fav = TRUE");
-            fav = true;
+            detailedEventController.setFavorite(true);
           } else if ((r.statusCode == 401) || (r.statusCode == 404)) {
-            fav = false;
+            detailedEventController.setFavorite(false);
           } else if (r.statusCode == 500) {
             showError("Erro 500",
                 "Erro no servidor, favor tente novamente mais tarde", context);
@@ -742,9 +839,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
     try {
       r = await http.post("$_url/users/fav", body: body, headers: mapHeaders);
       if (r.statusCode == 204) {
-        setState(() {
-          fav = true;
-        });
+        detailedEventController.setFavorite(true);
       } else if (r.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
       } else if (r.statusCode == 404) {
@@ -778,9 +873,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
     try {
       r = await http.post("$_url/users/rfav", body: body, headers: mapHeaders);
       if (r.statusCode == 204) {
-        setState(() {
-          fav = false;
-        });
+        detailedEventController.setFavorite(false);
       } else if (r.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
       } else if (r.statusCode == 404) {
@@ -832,5 +925,41 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
         );
       },
     );
+  }
+
+  _putRerport(String idEvent, String report) async {
+    print("report: $report");
+    final _id = await _save.read(key: "user");
+    final _token = await _save.read(key: "token");
+
+    Map<String, String> mapHeaders = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $_token"
+    };
+
+    String idUser = _id;
+    Report newReport = new Report(grr: idUser, report: report);
+    String body = json.encode(newReport.toJson());
+    var r;
+
+    try {
+      r = await http.put("$_url/events/report/$idEvent",
+          body: body, headers: mapHeaders);
+      if (r.statusCode == 200) {
+        showSuccess("Evento Denunciado com Sucesso!", "pop", context);
+      } else if (r.statusCode == 401) {
+        showError("Erro 401", "Não autorizado, favor logar novamente", context);
+      } else if (r.statusCode == 404) {
+        showError("Erro 404", "Autor não foi encontrado", context);
+      } else if (r.statusCode == 500) {
+        showError("Erro 500",
+            "Erro no servidor, favor tente novamente mais tarde", context);
+      } else {
+        showError("Erro Desconhecido", "StatusCode: ${r.statusCode}", context);
+      }
+    } catch (e) {
+      showError("Erro desconhecido", "Erro: $e", context);
+    }
   }
 }

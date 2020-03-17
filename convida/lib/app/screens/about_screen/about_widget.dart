@@ -10,12 +10,7 @@ class _AboutWidgetState extends State<AboutWidget> {
   @override
   Widget build(BuildContext context) {
     try {
-      return WillPopScope(
-        onWillPop: () {
-          Navigator.pushReplacementNamed(context,'/main');
-          return null;
-        },
-        child: Scaffold(
+        return Scaffold(
           backgroundColor: Colors.white,
           appBar:
           AppBar(
@@ -37,8 +32,8 @@ class _AboutWidgetState extends State<AboutWidget> {
               ),
             ],
           ),
-        ),
-      );
+        );
+      // );
     } catch (e) {
       print(e.toString());
       return CircularProgressIndicator();

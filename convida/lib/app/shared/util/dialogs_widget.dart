@@ -47,3 +47,16 @@ void showError(String title, String content, BuildContext context) {
     },
   );
 }
+
+// errorStatusCode(int statusCode, BuildContext context){
+//   if (statusCode == 401) {
+//     showError("Erro 401", "Não autorizado, favor logar novamente", context);
+//   } else if (statusCode == 404) {
+//     showError("Erro 404", "Evento ou usuário não foi encontrado", context);
+//   } else if (statusCode == 500) {
+//     showError("Erro 500", "Erro no servidor, favor tente novamente mais tarde",
+//         context);
+//   } else {
+//     showError("Erro Desconhecido", "StatusCode: $statusCode", context);
+//   }
+// }

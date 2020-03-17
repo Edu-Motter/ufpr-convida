@@ -1,3 +1,4 @@
+import 'package:convida/app/shared/DAO/util_requisitions.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/models/mobx/new_event.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -60,11 +61,11 @@ abstract class _NewEventControllerBase with Store {
   }
 
   String validadeDateStart() {
-    return dateValidation(newEvent.dateStart);
+    return dateValidation(newEvent.dateStart, "de início do evento");
   }
 
   String validadeDateEnd() {
-    return dateValidation(newEvent.dateEnd);
+    return dateValidation(newEvent.dateEnd, "de fim do evento");
   }
 
   String validadeHourStart() {
@@ -76,15 +77,16 @@ abstract class _NewEventControllerBase with Store {
   }
 
   String validadeSubStart() {
-    return dateValidation(newEvent.subStart);
+    return dateValidation(newEvent.subStart, "de início das inscrições");
   }
 
   String validadeSubEnd() {
-    return dateValidation(newEvent.subEnd);
+    return dateValidation(newEvent.subEnd, "de fim das inscrições");
   }
 
   String datesValidations(bool isSwitchedSubs) {
     //*Tratar todas as datas:
+
     DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
     DateFormat hourFormat = new DateFormat("HH:mm");
 
@@ -97,8 +99,8 @@ abstract class _NewEventControllerBase with Store {
     DateTime parsedSubEnd;
     DateTime parsedSubStart;
     if (isSwitchedSubs) {
-      parsedSubEnd = dateFormat.parse(newEvent.subStart);
-      parsedSubStart = dateFormat.parse(newEvent.subEnd);
+      parsedSubStart = dateFormat.parse(newEvent.subStart);
+      parsedSubEnd = dateFormat.parse(newEvent.subEnd);
     }
 
     //Check if Date Start > Date End
@@ -112,14 +114,15 @@ abstract class _NewEventControllerBase with Store {
       }
       return "";
     } else if (isSwitchedSubs) {
-      //Check if Date Sub Start < Date Sub End
+      //Check if Date Sub End > Sub start
       if (parsedSubStart.compareTo(parsedSubEnd) > 0) {
         return "O Fim das inscrições está antes do Início!";
       }
       //?Talvez não seja boa essa validação, comparar com o fim?
-      //Check if Date Start > Date Sub End
-      if (parsedDateStart.compareTo(parsedSubStart) > 0) {
-        return "As inscrições não encerram antes do Evento iniciar!";
+      //Check if Date End > Date Sub End
+
+      if (parsedSubEnd.compareTo(parsedDateEnd) > 0) {
+        return "As inscrições não encerram junto com o Evento!";
       }
 
       return "";
@@ -134,12 +137,10 @@ abstract class _NewEventControllerBase with Store {
     String _token = await _save.read(key: "token");
     String _id = await _save.read(key: "user");
     User user;
-    Map<String, String> mapHeaders = {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $_token"
-    };
 
+    var mapHeaders = getHeaderToken(_token);
+
+    //!GET USER
     try {
       user = await http
           .get("$_url/users/$_id", headers: mapHeaders)
@@ -201,11 +202,13 @@ abstract class _NewEventControllerBase with Store {
         endSub: postSubEnd,
         author: user.grr,
         lat: coords.latitude,
-        lng: coords.longitude);
+        lng: coords.longitude,
+        active: true);
 
     String eventJson = json.encode(p.toJson());
     int code;
 
+    //!POST EVENT
     try {
       code = await http
           .post("$_url/events", body: eventJson, headers: mapHeaders)
@@ -225,17 +228,84 @@ abstract class _NewEventControllerBase with Store {
     }
     return code;
   }
-}
 
-errorStatusCode(int statusCode, BuildContext context){
-  if (statusCode == 401) {
-    showError("Erro 401", "Não autorizado, favor logar novamente", context);
-  } else if (statusCode == 404) {
-    showError("Erro 404", "Evento ou usuário não foi encontrado", context);
-  } else if (statusCode == 500) {
-    showError("Erro 500", "Erro no servidor, favor tente novamente mais tarde",
-        context);
-  } else {
-    showError("Erro Desconhecido", "StatusCode: $statusCode", context);
+  bool checkAll(BuildContext context, bool isSwitchedSubs) {
+    String error;
+
+    error = nameValidation(newEvent.name);
+    if (error != null) {
+      showError("Nome inválido", error, context);
+      return false;
+    }
+
+    error = targetValidation(newEvent.target);
+    if (error != null) {
+      showError("Público Alvo inválido", error, context);
+      return false;
+    }
+
+    error = descriptionValidation(newEvent.desc);
+    if (error != null) {
+      showError("Descrição inválida", error, context);
+      return false;
+    }
+
+    error = addressValidation(newEvent.address);
+    if (error != null) {
+      showError("Endereço inválido", error, context);
+      return false;
+    }
+
+    error = complementValidation(newEvent.complement);
+    if (error != null) {
+      showError("Complemento inválido", error, context);
+      return false;
+    }
+
+    error = linkValidation(newEvent.link);
+    if (error != null) {
+      showError("Link ou Email inválido", error, context);
+      return false;
+    }
+
+    error = hourValidation(newEvent.hrStart, "início do evento");
+    if (error != null) {
+      showError("Horário inválido", error, context);
+      return false;
+    }
+
+    error = hourValidation(newEvent.hrEnd, "fim do evento");
+    if (error != null) {
+      showError("Horário inválido", error, context);
+      return false;
+    }
+
+    error = dateValidation(newEvent.dateStart, "de início do evento");
+    if (error != null) {
+      showError("Data inválida", error, context);
+      return false;
+    }
+
+    error = dateValidation(newEvent.dateEnd, "de fim do evento");
+    if (error != null) {
+      showError("Data inválida", error, context);
+      return false;
+    }
+
+    if (isSwitchedSubs) {
+      error = dateValidation(newEvent.subStart, "de início das inscrições");
+      if (error != null) {
+        showError("Data inválida", error, context);
+        return false;
+      }
+
+      error = dateValidation(newEvent.subEnd, "de fim das inscrições");
+      if (error != null) {
+        showError("Data inválida", error, context);
+        return false;
+      }
+    }
+
+    return true;
   }
 }

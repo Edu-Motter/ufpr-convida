@@ -149,13 +149,37 @@ String linkValidation(value) {
   }
 }
 
-String dateValidation(value) {
+String reportValidation(value) {
+  String expression =
+      r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{3,280})$";
+  RegExp _reportValidator = RegExp(expression);
+
   if (value == null) {
-    return 'Favor entre com a Data';
+    return 'Favor justifique sua denuncia';
   } else if (value.isEmpty) {
-    return 'Favor entre com a Data';
+    return 'Favor justifique sua denuncia';
+  } else if (value.startsWith(' ')) {
+    return 'Inicia com espaço';
+  } else if (value.contains('  ')) {
+    return 'Contém espaços desnecessários';
+  } else if (value.length < 3) {
+    return 'Min. 3 caracteres';
+  } else if (value.length > 280) {
+    return 'Max. 280 caracteres';
+  } else if (_reportValidator.hasMatch(value)) {
+    return null;
+  } else {
+    return 'Possuí caracter inválido';
+  }
+}
+
+String dateValidation(value, String date) {
+  if (value == null) {
+    return 'Favor entre com a Data $date';
+  } else if (value.isEmpty) {
+    return 'Favor entre com a Data $date';
   } else if (value.length < 10) {
-    return 'Favor entre com a Data';
+    return 'Favor entre com a Data $date';
   } else {
     DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
     DateTime parsedDate = dateFormat.parse(value);

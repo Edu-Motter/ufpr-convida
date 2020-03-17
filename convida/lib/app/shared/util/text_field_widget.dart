@@ -106,3 +106,18 @@ textFieldKeyboard({String initialValue, TextInputType keyboardType, String label
     ),
   );
   }
+
+
+  textFieldWithoutIcon({int maxLines, String initialValue, String labelText, IconData icon, onChanged, int maxLength,String Function() errorText}) {
+  return TextFormField(
+    maxLines: maxLines,
+    initialValue: initialValue,
+    onChanged: onChanged,
+    maxLength: maxLength,
+    decoration: InputDecoration(
+      labelText: labelText,
+      errorText: errorText == null ? null : errorText(),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
+    ),
+  );
+}

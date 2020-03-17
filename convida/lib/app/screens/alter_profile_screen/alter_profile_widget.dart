@@ -1,4 +1,5 @@
 import 'package:convida/app/screens/alter_profile_screen/alter_profile_controller.dart';
+import 'package:convida/app/shared/DAO/util_requisitions.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter/material.dart';
@@ -34,12 +35,6 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
 
   //Controllers:
   final TextEditingController _userGrrController = new TextEditingController();
-  // final TextEditingController _userFirstNameController =
-  //     new TextEditingController();
-  // final TextEditingController _userLastNameController =
-  //     new TextEditingController();
-  // final TextEditingController _userEmailController =
-  //     new TextEditingController();
 
   bool isSwitchedPassword = false;
   DateTime parsedBirth;
@@ -72,6 +67,9 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
         } else if (snapshot.data == true) {
           return WillPopScope(
             onWillPop: () {
+              if (user.name == null) {
+                return null;
+              }
               if (created) {
                 Navigator.of(context).pushReplacementNamed("/login");
                 return null;
@@ -140,8 +138,9 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                             return textFieldMask(
                                 maskFormatter: dateMask,
                                 labelText: "Data de Nascimento:",
+                                keyboardType: TextInputType.datetime,
                                 icon: Icons.calendar_today,
-                                initialValue: initialBirth,
+                                initialValue: profileController.profile.birth,
                                 onChanged:
                                     profileController.profile.changeBirth,
                                 maxLength: 10,
@@ -163,31 +162,38 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                 errorText: profileController.validadeEmail);
                           }),
                         ),
-                        
-                        //!Revisar as senhas:      
+
+                        //!Revisar as senhas:
                         //*Switch passwords:
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(47, 8.0, 8.0, 8.0),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: <Widget>[
-                                Text("Deseja alterar sua senha?",
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.black54)),
-                                Switch(
-                                    value: isSwitchedPassword,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        print("Executou um setState");
-                                        isSwitchedPassword = value;
-                                      });
-                                    }),
-                              ],
-                            ),
-                          ),
-                        ),
+                        user.grr.endsWith("@ufpr.br") == true
+                            ? SizedBox(
+                                width: 0,
+                                height: 0,
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    47, 8.0, 8.0, 8.0),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text("Deseja alterar sua senha?",
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black54)),
+                                      Switch(
+                                          value: isSwitchedPassword,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              print("Executou um setState");
+                                              isSwitchedPassword = value;
+                                            });
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                              ),
 
                         Container(
                           child: isSwitchedPassword == true
@@ -268,24 +274,28 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: RaisedButton(
-                                    color: Color(0xFF295492),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed("/main");
-                                    },
-                                    padding:
-                                        EdgeInsets.fromLTRB(45, 12, 45, 12),
-                                    child: Text('Cancelar',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18)),
-                                  ),
-                                ),
+                                user.name == null
+                                    ? SizedBox()
+                                    : Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RaisedButton(
+                                          color: Color(0xFF295492),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(24),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pushReplacementNamed("/main");
+                                          },
+                                          padding: EdgeInsets.fromLTRB(
+                                              45, 12, 45, 12),
+                                          child: Text('Cancelar',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18)),
+                                        ),
+                                      ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: RaisedButton(
@@ -295,9 +305,12 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                     ),
                                     onPressed: () async {
                                       //*Arrumar data:
-                                      DateTime dateUser = DateFormat("dd/MM/yyyy").parse(profileController.profile.birth);
-                                      String datePost = postFormat.format(dateUser);
-
+                                      DateTime dateUser =
+                                          DateFormat("dd/MM/yyyy").parse(
+                                              profileController.profile.birth);
+                                      String datePost =
+                                          postFormat.format(dateUser);
+                                      
                                       if (created) {
                                         Navigator.of(context)
                                             .pushReplacementNamed("/main");
@@ -309,14 +322,14 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                           (user.email ==
                                               profileController
                                                   .profile.email) &&
-                                          (user.birth ==
-                                              datePost) &&
+                                          (user.birth == datePost) &&
                                           (isSwitchedPassword == false)) {
                                         String error = "Sem Alterações";
-                                        String desc =
-                                            "Não existe nada alterado";
+                                        String desc = "Não foi nada alterado";
                                         showError(error, desc, context);
-                                      } else if (profileController
+                                      }
+                                      //!Corrigir
+                                      else if (profileController
                                               .profile.password ==
                                           profileController
                                               .profile.newPassword) {
@@ -325,50 +338,42 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                             "A senha nova é igual a antiga";
                                         showError(error, desc, context);
                                       } else if (created == false) {
-                                        bool correct =
-                                            await profileController.passCheck(
-                                                user: user, context: context);
+                                        bool ok =
+                                            profileController.checkAll(context);
+                                        if (ok) {
+                                          bool correct =
+                                              await profileController.passCheck(
+                                                  user: user, context: context);
 
-                                        if (correct) {
-                                          int statusCode =
-                                              await profileController.putUser(
-                                                  isSwitch: isSwitchedPassword,
-                                                  user: user,
-                                                  dateUser: datePost,
-                                                  context: context);
-                                          if ((statusCode == 200) ||
-                                              (statusCode == 204)) {
-                                            showSuccess(
-                                                "Usuário Alterado com sucesso!",
-                                                "/main",
-                                                context);
-                                          } else if (statusCode == 401) {
-                                            showError(
-                                                "Erro 401",
-                                                "Não autorizado, favor logar novamente",
-                                                context);
-                                          } else if (statusCode == 404) {
-                                            showError(
-                                                "Erro 404",
-                                                "Usuário não foi encontrado, favor logar novamente",
-                                                context);
-                                          } else if (statusCode == 500) {
-                                            showError(
-                                                "Erro 500",
-                                                "Erro no servidor, favor tente novamente mais tarde",
-                                                context);
+                                          if (correct) {
+                                            int statusCode =
+                                                await profileController.putUser(
+                                                    isSwitch:
+                                                        isSwitchedPassword,
+                                                    user: user,
+                                                    dateUser: datePost,
+                                                    context: context);
+                                            if ((statusCode == 200) ||
+                                                (statusCode == 204)) {
+                                              showSuccess(
+                                                  "Usuário Alterado com sucesso!",
+                                                  "/main",
+                                                  context);
+                                            } else {
+                                              errorStatusCode(
+                                                  statusCode,
+                                                  context,
+                                                  "Erro ao alterar Usuário");
+                                            }
+                                            created = true;
                                           } else {
-                                            showError(
-                                                "Erro Desconhecido",
-                                                "StatusCode: $statusCode",
-                                                context);
+                                            String error = "Senha incorreta";
+                                            String desc =
+                                                "Pressione 'Ok' e tente novamente";
+                                            showError(error, desc, context);
                                           }
-                                          created = true;
                                         } else {
-                                          String error = "Senha incorreta";
-                                          String desc =
-                                              "Pressione 'Ok' e tente novamente";
-                                          showError(error, desc, context);
+                                          //!Corrigir!
                                         }
                                       }
                                     },
@@ -411,7 +416,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
         enabled: false,
         controller: _userGrrController,
         autovalidate: true,
-        maxLength: 11,
+        maxLength: 50,
         decoration: InputDecoration(
           hintText: "Seu GRR:",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),

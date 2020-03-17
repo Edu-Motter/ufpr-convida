@@ -1,4 +1,5 @@
 import 'package:convida/app/screens/new_event_screen/new_event_controller.dart';
+import 'package:convida/app/shared/DAO/util_requisitions.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -69,7 +70,8 @@ class _NewEventWidgetState extends State<NewEventWidget> {
     "Saúde e Bem-estar",
     "Esporte e Lazer",
     "Festas e Comemorações",
-    "Cultura e Religião",
+    "Arte e Cultura",
+    "Fé e Espiritualidade",
     "Acadêmico e Profissional",
     "Outros",
   ];
@@ -167,7 +169,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                     }),
                   ),
 
-                  //Event Addres Complement:
+                  //Event Address Complement:
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
@@ -404,26 +406,34 @@ class _NewEventWidgetState extends State<NewEventWidget> {
 
                                 if (created == false) {
                                   String error = "";
+                                  //* Check all Inputs
+                                  bool ok = newEventController.checkAll(
+                                      context, isSwitchedSubs);
 
-                                  error = newEventController
-                                      .datesValidations(isSwitchedSubs);
-                                  if (error != "") {
-                                    showError(
-                                        "Data Incorreta", "$error", context);
-                                  } else {
-                                    int statusCode =
-                                        await newEventController.postNewEvent(
-                                            _currentType,
-                                            isSwitchedSubs,
-                                            coords,
-                                            context);
-                                    if ((statusCode == 200) ||
-                                        (statusCode == 201)) {
-                                      created = true;
-                                      showSuccess("Evento criado com Sucesso!",
-                                          "/main", context);
+                                  if (ok) {
+                                    //* Check all Dates
+                                    error = newEventController
+                                        .datesValidations(isSwitchedSubs);
+                                    if (error != "") {
+                                      showError(
+                                          "Data Incorreta", "$error", context);
                                     } else {
-                                      errorStatusCode(statusCode, context);
+                                      int statusCode =
+                                          await newEventController.postNewEvent(
+                                              _currentType,
+                                              isSwitchedSubs,
+                                              coords,
+                                              context);
+                                      if ((statusCode == 200) ||
+                                          (statusCode == 201)) {
+                                        created = true;
+                                        showSuccess(
+                                            "Evento criado com Sucesso!",
+                                            "/main",
+                                            context);
+                                      } else {
+                                        errorStatusCode(statusCode, context, "Erro ao Criar evento");
+                                      }
                                     }
                                   }
                                 }
