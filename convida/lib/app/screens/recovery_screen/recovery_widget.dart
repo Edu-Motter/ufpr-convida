@@ -1,5 +1,4 @@
 import 'package:convida/app/screens/recovery_screen/recovery_controlle.dart';
-import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -26,7 +25,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
               SizedBox(height: 10),
               Center(
                   child: Text(
-                'Informacoes Necessárias',
+                'Informações Necessárias',
                 style: TextStyle(
                     color: Color(0xFF295492),
                     fontSize: 22,
@@ -43,7 +42,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                             initalValue: recoveryController.recovery.password,
                             onChanged: recoveryController.recovery.setPassword,
                             maxLength: 50,
-                            labelText: "Favor entre com seu E-mail cadastrado",
+                            labelText: "Favor entre com seu e-mail cadastrado",
                             errorText:
                                 recoveryController.validadeRecoveryEmail),
                         SizedBox(
@@ -86,7 +85,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                   child: Padding(
                 padding: const EdgeInsets.fromLTRB(14.0, 12, 8, 12),
                 child: Text(
-                  'Obs.: Essa recuperacao somente e valida para os usuario com GRR, aqueles que usam o login @ufpr devem recorrer a Intranet para Recuperar/Alterar sua senha UFPR',
+                  'Obs.: Essa recuperação somente é válida para os usuário com GRR, aqueles que usam o login @ufpr devem recorrer a Intranet para Recuperar/Alterar sua senha UFPR',
                   style: TextStyle(
                       color: Color(0xFF8A275D),
                       fontSize: 13,

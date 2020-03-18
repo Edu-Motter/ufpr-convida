@@ -37,7 +37,6 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
               if (snapshot.data == null) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                //List<Report> reports = snapshot.data
                 return Column(
                   children: <Widget>[
                     Expanded(
@@ -51,19 +50,21 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                               child: Card(
                                 child: ListTile(
                                   title: Text(
-                                        snapshot.data[index].report,
-                                        maxLines: 3,
-                                        style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w300),
-                                      ),
+                                    snapshot.data[index].report,
+                                    maxLines: 3,
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w300),
+                                  ),
                                   subtitle: Text(
-                                      "Reportado por: ${snapshot.data[index].grr}",
-                                      maxLines: 1, style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w500),),
+                                    "Reportado por: ${snapshot.data[index].grr}",
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                   onTap: () {
                                     //!Irá mostrar todos os dados do Autor
                                   },
@@ -95,9 +96,9 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                                           padding:
                                               const EdgeInsets.only(top: 0.0),
                                           child: Icon(
-                                            Icons.check_box,
+                                            Icons.report_off,
                                             size: 26,
-                                            color: Colors.green,
+                                            color: Color(0xFF295492),
                                           ),
                                         ),
                                         Text("Ignorar Denuncias")
@@ -106,30 +107,62 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: InkWell(
-                                    onTap: () async {
-                                      bool success =  await getDeactivate(event.id);
-                                      if(success){
-                                        showSuccess("Evento Desativado", "pop", context);
-                                      }
-                                    },
-                                    child: Column(
-                                      children: <Widget>[
-                                        Icon(Icons.cancel,
-                                            size: 26, color: Colors.red),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 0.0),
-                                          child: Text("Desativar Evento"),
-                                        )
-                                      ],
+                              event.active == true
+                                //Deactivate Event 
+                                  ? Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            bool success =
+                                                await getDeactivate(event.id);
+                                            if (success) {
+                                              showSuccess("Evento Desativado",
+                                                  "pop", context);
+                                            }
+                                          },
+                                          child: Column(
+                                            children: <Widget>[
+                                              Icon(Icons.cancel,
+                                                  size: 26, color: Colors.red),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 0.0),
+                                                child: Text("Desativar Evento"),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+
+                                  //Ativate Event
+                                  : Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            bool success =
+                                                await getActivate(event.id);
+                                            if (success) {
+                                              showSuccess("Evento Ativado",
+                                                  "pop", context);
+                                            }
+                                          },
+                                          child: Column(
+                                            children: <Widget>[
+                                              Icon(Icons.check_circle,
+                                                  size: 26, color: Colors.green),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 0.0),
+                                                child: Text("Ativar Evento"),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
                             ]),
                       ),
                     )
@@ -221,7 +254,32 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
       if ((response.statusCode == 200) || (response.statusCode == 201)) {
         return true;
       } else {
-        errorStatusCode(response.statusCode, context, "Erro ao Desativar Evento");
+        errorStatusCode(
+            response.statusCode, context, "Erro ao Desativar Evento");
+        return false;
+      }
+    } catch (e) {
+      showError("Erro desconhecido", "Erro: $e", context);
+      return false;
+    }
+  }
+
+  Future<bool> getActivate(String id) async {
+    final String _token = await _save.read(key: "token");
+    final String _url = globals.URL;
+    dynamic response;
+    final String request = "$_url/events/activate/$id";
+
+    try {
+      var mapHeaders = getHeaderToken(_token);
+      response = await http.get(request, headers: mapHeaders);
+      printRequisition(request, response.statusCode, "Activate This Event");
+
+      if ((response.statusCode == 200) || (response.statusCode == 201)) {
+        return true;
+      } else {
+        errorStatusCode(
+            response.statusCode, context, "Erro ao Ativar Evento");
         return false;
       }
     } catch (e) {

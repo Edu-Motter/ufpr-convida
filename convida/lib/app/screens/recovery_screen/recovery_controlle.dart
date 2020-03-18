@@ -1,18 +1,14 @@
 import 'package:convida/app/shared/DAO/util_requisitions.dart';
 import 'package:convida/app/shared/models/login.dart';
 import 'package:convida/app/shared/models/mobx/login.dart';
-import 'package:convida/app/shared/models/user.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:convert';
-import 'dart:io';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/validations/login_validation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:convida/app/shared/global/globals.dart' as globals;
-import 'package:convida/app/shared/models/mobx/login.dart';
-import 'package:mobx/mobx.dart';
+
 part 'recovery_controlle.g.dart';
 
 class RecoveryController = _RecoveryControllerBase with _$RecoveryController;
@@ -56,9 +52,8 @@ abstract class _RecoveryControllerBase with Store {
 
       if ((response.statusCode == 200) || (response.statusCode == 204)) {
         loading = false;
-        if (pop == false)
-          Navigator.pop(context); 
-        showSuccess('Deu boa!', 'pop', context);
+        if (pop == false) Navigator.pop(context);
+        showSuccess('Senha recuperada com sucesso, acesse seu e-mail cadastrado!', 'pop', context);
         return true;
       } else {
         loading = false;
