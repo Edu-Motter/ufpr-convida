@@ -51,3 +51,45 @@ String passwordValidation(value) {
   else
     return null;
 }
+
+String emailValidation(value) {
+  String expression = r"^([a-zA-Z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$";
+  RegExp _emailValidator = RegExp(expression);
+
+  if (value == null) {
+    return 'Favor entre com seu E-mail';
+  } else if (value.isEmpty) {
+    return 'Favor entre com seu E-mail';
+  } else if (value.startsWith(' ')) {
+    return 'Inicia com espaço';
+  } else if (value.contains('  ')) {
+    return 'Contém espaços desnecessários';
+  } else if (value.length > 50) {
+    return 'Max. 50 caracteres';
+  } else if (!value.contains("@")) {
+    return 'Está faltando "@"';
+  } else if (!value.contains(".")) {
+    return 'Está faltando "."';
+  } else if (_emailValidator.hasMatch(value)) {
+    return null;
+  } else
+    return 'E-mail inválido';
+}
+
+String recoveryEmailValidation(value) {
+  String expression = r"^([a-zA-Z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$";
+  RegExp _emailValidator = RegExp(expression);
+
+  if (value == null) {
+    return 'Favor entre com seu E-mail';
+  } else if (value.isEmpty) {
+    return 'Favor entre com seu E-mail';
+  } else if (value.startsWith(' ')) {
+    return 'Inicia com espaço';
+  } else if (value.contains('  ')) {
+    return 'Contém espaços desnecessários';
+  } else if (_emailValidator.hasMatch(value)) {
+    return null;
+  } else
+    return 'E-mail inválido';
+}

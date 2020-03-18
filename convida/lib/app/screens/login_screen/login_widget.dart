@@ -1,7 +1,13 @@
+import 'dart:convert';
+import 'package:convida/app/shared/global/globals.dart' as globals;
+import 'package:http/http.dart' as http;
+
 import 'package:convida/app/screens/alter_profile_screen/alter_profile_widget.dart';
 import 'package:convida/app/screens/login_screen/login_controller.dart';
 import 'package:convida/app/shared/DAO/util_requisitions.dart';
+import 'package:convida/app/shared/models/login.dart';
 import 'package:convida/app/shared/models/user.dart';
+import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -134,26 +140,26 @@ class _LoginWidgetState extends State<LoginWidget> {
                                       if ((where == "fav") ||
                                           (where == "my-events")) {
                                         Navigator.pop(context);
-                                      }  else {
+                                      } else {
                                         Navigator.pushReplacementNamed(
                                             context, '/main');
                                       }
                                     } else if (statusCode == 0) {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AlterProfileWidget(
-                                                user: User(
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AlterProfileWidget(
+                                              user: User(
                                                   name: null,
                                                   lastName: null,
-                                                  grr: loginController.login.user,
+                                                  grr: loginController
+                                                      .login.user,
                                                   birth: null,
-                                                  email: null
-                                                ),
-                                              ),
-                                            ));
-                                      } else {
+                                                  email: null),
+                                            ),
+                                          ));
+                                    } else {
                                       errorStatusCode(statusCode, context,
                                           "GRR ou Senha incorreto");
                                     }
@@ -184,23 +190,23 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         color: Colors.white, fontSize: 18)),
                               ),
                             ),
-                            // Padding(
-                            //   padding: const EdgeInsets.all(8.0),
-                            //   child: RaisedButton(
-                            //     color: Color(0xFF8A275D),
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(24),
-                            //     ),
-                            //     onPressed: () {
-                            //       //!Implementação da requisição de recuperação de SENHA!
-                            //     },
-                            //     padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
-                            //     child: Text('Recuperar Senha',
-                            //         //Color(0xFF295492),(0xFF8A275D)
-                            //         style: TextStyle(
-                            //             color: Colors.white, fontSize: 18)),
-                            //   ),
-                            // ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: RaisedButton(
+                                color: Color(0xFF8A275D),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/recovery");
+                                },
+                                padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
+                                child: Text('Recuperar Senha',
+                                    //Color(0xFF295492),(0xFF8A275D)
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18)),
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
@@ -236,4 +242,6 @@ class _LoginWidgetState extends State<LoginWidget> {
           )),
     );
   }
+
+  
 }

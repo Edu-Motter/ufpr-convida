@@ -16,6 +16,7 @@ class LoginController = _LoginControllerBase with _$LoginController;
 
 abstract class _LoginControllerBase with Store {
   Login login = new Login();
+  Login recovery = new Login();
   String _url = globals.URL;
 
   String validateUser() {
@@ -25,6 +26,8 @@ abstract class _LoginControllerBase with Store {
   String validatePassword() {
     return passwordValidation(login.password);
   }
+
+  
 
   bool validadeLogin(BuildContext context) {
     String ok = validateUser();
