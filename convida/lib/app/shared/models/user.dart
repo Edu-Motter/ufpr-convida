@@ -7,9 +7,10 @@ class User {
   String password;
   String email;
   String birth;
+  bool adm;
   List<Event> fav;
 
-  User({this.name, this.lastName, this.grr, this.email, this.password, this.birth, this.fav});
+  User({this.name, this.lastName, this.grr, this.email, this.password, this.birth, this.adm,this.fav});
 
   User.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -17,6 +18,7 @@ class User {
     grr = json['grr'];
     email = json['email'];
     birth = json['birth'];
+    adm = json['adm'];
     password = json['password'];
     if (json['fav'] != null) {
       fav = new List<Event>();
@@ -33,6 +35,7 @@ class User {
     data['grr'] = this.grr;
     data['email'] = this.email;
     data['birth'] = this.birth;
+    data['adm'] = this.adm;
     data['password'] = this.password;
     if (this.fav != null) {
       data['fav'] = this.fav.map((v) => v.toJson()).toList();

@@ -34,7 +34,7 @@ abstract class _ReportControllerBase with Store {
     var response;
     try {
       response =
-          await http.get("$_url/users/myevents?text=$_id", headers: mapHeaders);
+          await http.get("$_url/events/reported", headers: mapHeaders);
 
       print("-------------------------------------------------------");
       print("Request on: $_url/users/myevents?text=$_id");

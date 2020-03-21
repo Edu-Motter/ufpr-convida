@@ -30,6 +30,8 @@ class _MainWidgetState extends State<MainWidget> {
   String othersType;
   String dataType;
 
+  bool admin;
+
   User user;
   String _url = globals.URL;
 
@@ -332,7 +334,8 @@ class _MainWidgetState extends State<MainWidget> {
           new DrawerLogout(),
           new Divider(),
           //!Falta implementar algumas coisas
-          drawerReport(),
+
+          admin == true ? drawerReport() : SizedBox(),
           drawerAbout(),
 
           //O Fechar somente fecha a barra de ferramentas
@@ -393,6 +396,8 @@ class _MainWidgetState extends State<MainWidget> {
             "Error while fetching data, status code: $statusCode");
       }
     });
+    print("ADMIN: $admin");
+    admin = user.adm;
 
     return "Success";
   }

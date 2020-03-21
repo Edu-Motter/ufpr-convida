@@ -162,7 +162,7 @@ abstract class _SignupControllerBase with Store {
         }
       });
     } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
+      showError("Erro desconhecido capturado", "Erro: $e", context);
     }
     return code;
   }
@@ -182,9 +182,9 @@ abstract class _SignupControllerBase with Store {
 
     String loginJson = json.encode(l.toJson());
 
-    int s;
+    int sts;
     try {
-      s = await http
+      sts = await http
           .post("$_url/login", body: loginJson, headers: mapHeaders)
           .then((http.Response response) {
         final int statusCode = response.statusCode;
@@ -209,7 +209,7 @@ abstract class _SignupControllerBase with Store {
         }
       });
     } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
+      showError("Erro desconhecido ao fazer login automático", "Erro: $e", context);
     }
 
     final token = await _save.read(key: "token");
@@ -220,7 +220,7 @@ abstract class _SignupControllerBase with Store {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
 
-    if (s == 200 || s == 201) {
+    if (sts == 200 || sts == 201) {
       try {
         String id = signup.grr;
         User user = await http
@@ -243,9 +243,9 @@ abstract class _SignupControllerBase with Store {
         _save.write(key: "email", value: "${user.email}");
         _save.write(key: "lastName", value: "${user.lastName}");
       } catch (e) {
-        showError("Erro desconhecido", "Erro: $e", context);
+        showError("Erro desconhecido ao salvar Credenciais", "Erro: $e", context);
       }
     }
-    return s;
+    return sts;
   }
 }

@@ -124,6 +124,7 @@ abstract class _LoginControllerBase with Store {
         if (user.name == null){
           return 0;
         }
+        //_save.write(key: "adm", value: "${user.adm}");
         _save.write(key: "name", value: "${user.name}");
         _save.write(key: "email", value: "${user.email}");
         _save.write(key: "lastName", value: "${user.lastName}");
