@@ -36,7 +36,7 @@ class MapWidget extends StatefulWidget {
 
   @override
   _MapWidgetState createState() => _MapWidgetState(healthType, sportType,
-      partyType, artType, faithType,studyType, othersType, dataType);
+      partyType, artType, faithType, studyType, othersType, dataType);
 }
 
 class _MapWidgetState extends State<MapWidget> {
@@ -49,8 +49,8 @@ class _MapWidgetState extends State<MapWidget> {
   String othersType;
   String dataType;
 
-  _MapWidgetState(this.healthType, this.sportType, this.partyType, this.artType, this.faithType,
-      this.studyType, this.othersType, this.dataType);
+  _MapWidgetState(this.healthType, this.sportType, this.partyType, this.artType,
+      this.faithType, this.studyType, this.othersType, this.dataType);
 
   MapType _mapType;
   // Completer<GoogleMapController> _controller = Completer();
@@ -231,12 +231,27 @@ class _MapWidgetState extends State<MapWidget> {
                   currentLocation = null;
                 }
 
+                print(currentLocation);
+                
                 if (currentLocation != null) {
+                  
                   mapController.animateCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
                       bearing: 0,
                       target: LatLng(
                           currentLocation.latitude, currentLocation.longitude),
+                      zoom: 16.0,
+                    ),
+                  ));
+                } else {
+               
+                  LatLng ufprLocation = new LatLng(-25.4269032,-49.2639545);
+
+                  mapController.animateCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      bearing: 0,
+                      target: LatLng(
+                          ufprLocation.latitude, ufprLocation.longitude),
                       zoom: 16.0,
                     ),
                   ));
@@ -288,7 +303,7 @@ class _MapWidgetState extends State<MapWidget> {
     } else
       requisition =
           "$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=X";
-    
+
     var response;
     Map<MarkerId, Marker> mrks = <MarkerId, Marker>{};
 
@@ -320,7 +335,7 @@ class _MapWidgetState extends State<MapWidget> {
 
           //Marker color:
           if (type == "Saúde e Bem-estar") {
-            color = 0.0;   //Vermelho
+            color = 0.0; //Vermelho
           } else if (type == "Esporte e Lazer") {
             color = 120.0; //Verde
           } else if (type == "Festas e Comemorações") {
@@ -328,11 +343,11 @@ class _MapWidgetState extends State<MapWidget> {
           } else if (type == "Arte e Cultura") {
             color = 300.0; //Rosa
           } else if (type == "Fé e Espiritualidade") {
-            color = 60.0;  //Amarelo
+            color = 60.0; //Amarelo
           } else if (type == "Acadêmico e Profissional") {
             color = 225.0; //Azul
           } else {
-            color = 30.0;  //Laranja
+            color = 30.0; //Laranja
           }
 
           Marker marker = Marker(
