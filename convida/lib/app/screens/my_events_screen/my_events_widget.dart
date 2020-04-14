@@ -112,6 +112,8 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                             } else if (values[index].type ==
                                 'Festas e Comemorações') {
                               _imageAsset = 'type-party.png';
+                            } else if (values[index].type == 'Online') {
+                              _imageAsset = 'type-online.png';
                             } else if (values[index].type == 'Arte e Cultura') {
                               _imageAsset = 'type-art.png';
                             } else if (values[index].type ==

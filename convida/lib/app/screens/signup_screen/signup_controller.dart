@@ -123,7 +123,7 @@ abstract class _SignupControllerBase with Store {
     //*Confirm Password
     error = passwordValidation(signup.confirmPassword, signup.password);
     if(error != null){
-      showError("Confirmações de Senha inválida", error, context);
+      showError("Confirmação de Senha inválida", error, context);
       return false;
     }
     

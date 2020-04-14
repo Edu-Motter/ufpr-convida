@@ -1,8 +1,8 @@
 library my_prj.validations.login;
 
 String userValidation(value) {
-  String expression = r"^[gG]{1}[rR]{2}[0-9]{8}";
-  RegExp _grrValidator = RegExp(expression);
+  //String expression = r"^[gG]{1}[rR]{2}[0-9]{8}";
+  //RegExp _grrValidator = RegExp(expression);
 
   if (value == null) {
     return 'Favor entre com seu GRR ou Email';

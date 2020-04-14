@@ -24,6 +24,7 @@ class _MainWidgetState extends State<MainWidget> {
   String healthType;
   String sportType;
   String partyType;
+  String onlineType;
   String artType;
   String faithType;
   String studyType;
@@ -53,6 +54,7 @@ class _MainWidgetState extends State<MainWidget> {
                 healthType: healthType,
                 sportType: sportType,
                 partyType: partyType,
+                onlineType: onlineType,
                 artType: artType,
                 faithType: faithType,
                 studyType: studyType,
@@ -99,6 +101,7 @@ class _MainWidgetState extends State<MainWidget> {
             healthType: healthType,
             sportType: sportType,
             partyType: partyType,
+            onlineType: onlineType,
             artType: artType,
             faithType: faithType,
             studyType: studyType,
@@ -162,6 +165,7 @@ class _MainWidgetState extends State<MainWidget> {
       healthType = "Saúde e Bem-estar";
       sportType = "Esporte e Lazer";
       partyType = "Festas e Comemorações";
+      onlineType = "Online";
       artType =  "Arte e Cultura";
       faithType = "Fé e Espiritualidade";
       studyType = "Acadêmico e Profissional";
@@ -171,6 +175,7 @@ class _MainWidgetState extends State<MainWidget> {
       healthType = types['healthType'];
       sportType = types['sportType'];
       partyType = types['partyType'];
+      onlineType = types['onlineType'];
       artType = types['artType'];
       faithType = types['faithType'];
       studyType = types['studyType'];
@@ -190,6 +195,7 @@ class _MainWidgetState extends State<MainWidget> {
             healthType = "";
             sportType = "";
             partyType = "";
+            onlineType = "";
             artType =  "";
             faithType = "";
             studyType = "";
@@ -392,6 +398,7 @@ class _MainWidgetState extends State<MainWidget> {
         print("Success loading user profile!");
         return User.fromJson(jsonDecode(response.body));
       } else {
+        //!ARRUMAR
         throw new Exception(
             "Error while fetching data, status code: $statusCode");
       }

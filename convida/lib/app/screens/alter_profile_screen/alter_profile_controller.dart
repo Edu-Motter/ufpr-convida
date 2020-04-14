@@ -93,17 +93,18 @@ abstract class _AlterProfileControllerBase with Store {
     }
 
     if (profile.newPassword != null) {
+
       //*Confirm Password
-      error = passwordValidation(profile.newPassword, profile.password);
+      error = passwordValidation(profile.newPassword, profile.confirmPassword);
       if (error != null) {
-        showError("Confirmações de Senha inválida", error, context);
+        showError("Confirmação de Senha inválida", error, context);
         return false;
       }
 
       //*Confirm Password
-      error = passwordValidation(profile.confirmPassword, profile.password);
+      error = passwordValidation(profile.confirmPassword, profile.newPassword);
       if (error != null) {
-        showError("Confirmações de Senha inválida", error, context);
+        showError("Confirmação de Senha inválida", error, context);
         return false;
       }
     }

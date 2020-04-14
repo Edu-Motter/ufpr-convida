@@ -236,7 +236,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                         padding: const EdgeInsets.all(8.0),
                                         child: Observer(builder: (_) {
                                           return textFieldObscure(
-                                              labelText: "Confirmar senha:",
+                                              labelText: "Confirmar nova senha:",
                                               icon: Icons.lock,
                                               onChanged: profileController
                                                   .profile
@@ -328,6 +328,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                         String desc = "Não foi nada alterado";
                                         showError(error, desc, context);
                                       }
+                                      
                                       //!Corrigir
                                       else if (profileController
                                               .profile.password ==
@@ -427,16 +428,5 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
         ),
       ),
     );
-  }
-
-  Future<DateTime> _selectedDate(BuildContext context) {
-    DateTime now = DateTime.now();
-    var lastDate = now.subtract(Duration(days: (12 * 365 + 3)));
-    showDatePicker(
-        context: context,
-        initialDate: DateTime(2000),
-        firstDate: DateTime(1900),
-        lastDate: lastDate);
-    return null;
   }
 }

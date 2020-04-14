@@ -61,6 +61,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
     "Saúde e Bem-estar",
     "Esporte e Lazer",
     "Festas e Comemorações",
+    "Online",
     "Arte e Cultura",
     "Fé e Espiritualidade",
     "Acadêmico e Profissional",

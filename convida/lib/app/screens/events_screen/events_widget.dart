@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:convida/app/shared/DAO/event_requisitions.dart';
-import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/global/globals.dart' as globals;
-import 'package:http/http.dart' as http;
 
 class EventsWidget extends StatefulWidget {
   @override
@@ -14,7 +10,7 @@ class EventsWidget extends StatefulWidget {
 }
 
 class _EventsWidgetState extends State<EventsWidget> {
-  String _url = globals.URL;
+ 
   var jsonData;
   String _imageAsset = "";
   DateFormat date = new DateFormat.yMMMMd("pt_BR");
@@ -26,6 +22,7 @@ class _EventsWidgetState extends State<EventsWidget> {
   Color healthColor = Colors.white;
   Color sportColor = Colors.white;
   Color partyColor = Colors.white;
+  Color onlineColor = Colors.white;
   Color artColor = Colors.white;
   Color faithColor = Colors.white;
   Color studyColor = Colors.white;
@@ -34,6 +31,7 @@ class _EventsWidgetState extends State<EventsWidget> {
   Color healthLine = Colors.black;
   Color sportLine = Colors.black;
   Color partyLine = Colors.black;
+  Color onlineLine = Colors.black;
   Color artLine = Colors.black;
   Color faithLine = Colors.black;
   Color studyLine = Colors.black;
@@ -50,7 +48,7 @@ class _EventsWidgetState extends State<EventsWidget> {
             future: getEvents(search, type, context),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               List<Event> values = snapshot.data;
-              
+
               if (snapshot.data == null) {
                 return CircularProgressIndicator();
               } else {
@@ -163,6 +161,9 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
+                                                  onlineColor = Colors.white;
+                                                  onlineLine = Colors.black;
+
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
 
@@ -243,6 +244,9 @@ class _EventsWidgetState extends State<EventsWidget> {
 
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
+
+                                                  onlineColor = Colors.white;
+                                                  onlineLine = Colors.black;
 
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
@@ -371,6 +375,90 @@ class _EventsWidgetState extends State<EventsWidget> {
                                         ),
                                       ),
 
+                                      //? ONLINE
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            // border: new Border.all(
+                                            //     color: Colors.grey,
+                                            //     width: 1.0,
+                                            //     style: BorderStyle.solid),
+                                            boxShadow: [
+                                              new BoxShadow(
+                                                  color: Colors.cyan,
+                                                  blurRadius: 1,
+                                                  spreadRadius: 1
+                                                  //offset: new Offset(1.0, 1.0,1,1),
+                                                  )
+                                            ],
+                                          ),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                print(type);
+                                                if ((type != "") &&
+                                                    (onlineColor ==
+                                                        Colors.white)) {
+                                                  search =
+                                                      _searchController.text;
+                                                  type = "Online";
+
+                                                  healthColor = Colors.white;
+                                                  healthLine = Colors.black;
+
+                                                  sportColor = Colors.white;
+                                                  sportLine = Colors.black;
+
+                                                  partyColor = Colors.white;
+                                                  partyLine = Colors.black;
+
+                                                  onlineColor = Colors.cyan;
+                                                  onlineLine = Colors.white;
+
+                                                  artColor = Colors.white;
+                                                  artLine = Colors.black;
+
+                                                  faithColor = Colors.white;                                                  Colors.cyanAccent;
+                                                  faithLine = Colors.black;
+
+                                                  studyColor = Colors.white;
+                                                  studyLine = Colors.black;
+
+                                                  othersColor = Colors.white;
+                                                  othersLine = Colors.black;
+                                                } else if (type ==
+                                                    "Online") {
+                                                  type = "";
+                                                  onlineColor = Colors.white;
+                                                  onlineLine = Colors.black;
+                                                } else {
+                                                  type = "Online";
+                                                  onlineColor = Colors.cyan;
+                                                  onlineLine = Colors.white;
+                                                }
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: onlineColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5)),
+                                              width: 47,
+                                              height: 47,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2.0),
+                                                child: Image.asset(
+                                                    "assets/type-mini-online.png",
+                                                    color: onlineLine),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
@@ -407,6 +495,9 @@ class _EventsWidgetState extends State<EventsWidget> {
 
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
+
+                                                  onlineColor = Colors.white;
+                                                  onlineLine = Colors.black;
 
                                                   artColor = Colors.pink;
                                                   artLine = Colors.white;
@@ -489,11 +580,11 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
+                                                  onlineColor = Colors.white;
+                                                  onlineLine = Colors.black;
+
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
-
-                                                  faithColor = Colors.yellow;
-                                                  faithLine = Colors.white;
 
                                                   studyColor = Colors.white;
                                                   studyLine = Colors.black;
@@ -569,6 +660,9 @@ class _EventsWidgetState extends State<EventsWidget> {
 
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
+
+                                                  onlineColor = Colors.white;
+                                                  onlineLine = Colors.black;
 
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
@@ -653,6 +747,9 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
+                                                  onlineColor = Colors.white;
+                                                  onlineLine = Colors.black;
+
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
 
@@ -714,6 +811,8 @@ class _EventsWidgetState extends State<EventsWidget> {
                                 } else if (values[index].type ==
                                     'Festas e Comemorações') {
                                   _imageAsset = 'type-party.png';
+                                } else if (values[index].type == 'Online') {
+                                  _imageAsset = 'type-online.png';
                                 } else if (values[index].type ==
                                     'Arte e Cultura') {
                                   _imageAsset = 'type-art.png';

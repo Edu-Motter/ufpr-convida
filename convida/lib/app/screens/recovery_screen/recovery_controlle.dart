@@ -34,7 +34,7 @@ abstract class _RecoveryControllerBase with Store {
     loading = true;
     // final _save = FlutterSecureStorage();
     //* GRR To Lower Case
-    recovery.user = recovery.user.toLowerCase();
+    recovery.password = recovery.password.toLowerCase();
 
     AccountCredentials l = new AccountCredentials(
       username: recovery.user,
@@ -49,6 +49,7 @@ abstract class _RecoveryControllerBase with Store {
       var mapHeaders = getHeader();
       response = await http.post(request, body: loginJson, headers: mapHeaders);
       printRequisition(request, response.statusCode, "Post Recovery");
+      print(loginJson);
 
       if ((response.statusCode == 200) || (response.statusCode == 204)) {
         loading = false;

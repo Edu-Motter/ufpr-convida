@@ -189,7 +189,7 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
 
     if (ok) {
       String _url = globals.URL;
-      final _id = await _save.read(key: "user");
+     // final _id = await _save.read(key: "user");
       _token = await _save.read(key: "token");
 
       Map<String, String> mapHeaders = {

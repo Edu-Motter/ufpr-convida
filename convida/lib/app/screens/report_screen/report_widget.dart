@@ -82,6 +82,8 @@ class EventReportWidget extends StatelessWidget {
       _imageAsset = 'type-sport.png';
     } else if (eventReport.type == 'Festas e Comemorações') {
       _imageAsset = 'type-party.png';
+    } else if (eventReport.type == 'Online') {
+      _imageAsset = 'type-online.png';
     } else if (eventReport.type == 'Arte e Cultura') {
       _imageAsset = 'type-art.png';
     } else if (eventReport.type == 'Fé e Espiritualidade') {

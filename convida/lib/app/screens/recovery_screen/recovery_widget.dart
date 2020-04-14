@@ -39,8 +39,8 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                       children: <Widget>[
                         textFieldInitialValue(
                             icon: Icons.email,
-                            initalValue: recoveryController.recovery.password,
-                            onChanged: recoveryController.recovery.setPassword,
+                            initalValue: recoveryController.recovery.user,
+                            onChanged: recoveryController.recovery.setUser,
                             maxLength: 50,
                             labelText: "Favor entre com seu e-mail cadastrado",
                             errorText:
@@ -50,10 +50,11 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                         ),
                         textFieldInitialValue(
                             icon: Icons.person,
-                            initalValue: recoveryController.recovery.user,
-                            onChanged: recoveryController.recovery.setUser,
+                            initalValue: recoveryController.recovery.password,
+                            onChanged: recoveryController.recovery.setPassword,
                             maxLength: 50,
                             labelText: "Favor entre com seu GRR",
+                            //Alterar validade para RecoveryGRR
                             errorText: recoveryController.validadeRecoveryUser)
                       ],
                     );

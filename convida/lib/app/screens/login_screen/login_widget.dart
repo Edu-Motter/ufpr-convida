@@ -1,19 +1,10 @@
-import 'dart:convert';
-import 'package:convida/app/shared/global/globals.dart' as globals;
-import 'package:http/http.dart' as http;
-
 import 'package:convida/app/screens/alter_profile_screen/alter_profile_widget.dart';
 import 'package:convida/app/screens/login_screen/login_controller.dart';
 import 'package:convida/app/shared/DAO/util_requisitions.dart';
-import 'package:convida/app/shared/models/login.dart';
 import 'package:convida/app/shared/models/user.dart';
-import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
-
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginWidget extends StatefulWidget {
   @override

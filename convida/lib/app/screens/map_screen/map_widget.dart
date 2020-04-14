@@ -16,6 +16,7 @@ class MapWidget extends StatefulWidget {
   final String healthType;
   final String sportType;
   final String partyType;
+  final String onlineType;
   final String artType;
   final String faithType;
   final String studyType;
@@ -27,6 +28,7 @@ class MapWidget extends StatefulWidget {
       this.healthType,
       this.sportType,
       this.partyType,
+      this.onlineType,
       this.artType,
       this.faithType,
       this.studyType,
@@ -36,20 +38,21 @@ class MapWidget extends StatefulWidget {
 
   @override
   _MapWidgetState createState() => _MapWidgetState(healthType, sportType,
-      partyType, artType, faithType, studyType, othersType, dataType);
+      partyType, onlineType, artType, faithType, studyType, othersType, dataType);
 }
 
 class _MapWidgetState extends State<MapWidget> {
   String healthType;
   String sportType;
   String partyType;
+  String onlineType;
   String artType;
   String faithType;
   String studyType;
   String othersType;
   String dataType;
 
-  _MapWidgetState(this.healthType, this.sportType, this.partyType, this.artType,
+  _MapWidgetState(this.healthType, this.sportType, this.partyType, this.onlineType, this.artType,
       this.faithType, this.studyType, this.othersType, this.dataType);
 
   MapType _mapType;
@@ -72,23 +75,17 @@ class _MapWidgetState extends State<MapWidget> {
     //setState(() {});
     return FutureBuilder(
         future: _getCurrentUserLocation(),
-        builder: (BuildContext context, AsyncSnapshot<LocationData> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<LatLng> snapshot) {
           if (snapshot.data == null) {
             return CircularProgressIndicator();
-          }
-          // if ((snapshot.connectionState == ConnectionState.waiting) ||
-          //     (snapshot.connectionState == ConnectionState.none)) {
-          //   return Center(child: CircularProgressIndicator());
-          // }
-          //Tratar erro:
-          else {
-            final _userLocation = snapshot.data;
+          } else {
+            //*Snapshot.Data == User Location --> Future Builder
             return Stack(
               alignment: Alignment.center,
               children: <Widget>[
                 //Google's Map:
                 _googleMap(
-                    context, _userLocation.latitude, _userLocation.longitude),
+                    context, snapshot.data.latitude, snapshot.data.longitude),
 
                 //Search Text Field:
                 // Align(
@@ -156,6 +153,7 @@ class _MapWidgetState extends State<MapWidget> {
                                 healthType: healthType,
                                 sportType: sportType,
                                 partyType: partyType,
+                                onlineType: onlineType,
                                 artType: artType,
                                 faithType: faithType,
                                 studyType: studyType,
@@ -232,9 +230,8 @@ class _MapWidgetState extends State<MapWidget> {
                 }
 
                 print(currentLocation);
-                
+
                 if (currentLocation != null) {
-                  
                   mapController.animateCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
                       bearing: 0,
@@ -244,14 +241,13 @@ class _MapWidgetState extends State<MapWidget> {
                     ),
                   ));
                 } else {
-               
-                  LatLng ufprLocation = new LatLng(-25.4269032,-49.2639545);
+                  LatLng ufprLocation = new LatLng(-25.4269032, -49.2639545);
 
                   mapController.animateCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
                       bearing: 0,
-                      target: LatLng(
-                          ufprLocation.latitude, ufprLocation.longitude),
+                      target:
+                          LatLng(ufprLocation.latitude, ufprLocation.longitude),
                       zoom: 16.0,
                     ),
                   ));
@@ -267,17 +263,21 @@ class _MapWidgetState extends State<MapWidget> {
     );
   }
 
-  Future<LocationData> _getCurrentUserLocation() async {
-    var locData;
-    try {
-      locData = await Location().getLocation();
-    } catch (e) {
-      showError("Erro ao carregar sua localização", "Erro: $e", context);
-    }
-
+  Future<LatLng> _getCurrentUserLocation() async {
+    print("Executou!!");
     markersMaps = await getMarkers(context);
-
-    return locData;
+    try {
+      LocationData userLocation = await Location().getLocation();
+      LatLng data = new LatLng(userLocation.latitude, userLocation.longitude);
+      return data;
+    } catch (e) {
+      final String errorLocation =
+          "Como não permitiu o acesso a sua localização, algumas funcionalidades do aplicativo serão comprometidas.";
+      showError("Localização indisponível.", "$errorLocation", context);
+      //This need to be final and global
+      final LatLng ufprLocation = new LatLng(-25.4269032, -49.2639545);
+      return ufprLocation;
+    }
   }
 
   Future<Map<MarkerId, Marker>> getMarkers(BuildContext context) async {
@@ -287,6 +287,7 @@ class _MapWidgetState extends State<MapWidget> {
     String parsedHealthType = Uri.encodeFull(healthType);
     String parsedSportType = Uri.encodeFull(sportType);
     String parsedPartyType = Uri.encodeFull(partyType);
+    String parsedOnlineType = Uri.encodeFull(onlineType);
     String parsedArtType = Uri.encodeFull(artType);
     String parsedFaithType = Uri.encodeFull(faithType);
     String parsedStudyType = Uri.encodeFull(studyType);
@@ -294,18 +295,31 @@ class _MapWidgetState extends State<MapWidget> {
 
     String requisition;
 
+    //!Arrumar as requisições:
+
     if (dataType == 'week') {
       requisition =
-          "$_url/events/weektype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=X";
+          "$_url/events/weektype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=$parsedOnlineType";
     } else if (dataType == 'day') {
       requisition =
-          "$_url/events/todaytype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=X";
+          "$_url/events/todaytype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=$parsedOnlineType";
     } else
       requisition =
-          "$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=X";
+          "$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=$parsedOnlineType";
 
     var response;
     Map<MarkerId, Marker> mrks = <MarkerId, Marker>{};
+
+    //*Create a marker because if something went wrong this marker returns
+    var idZero = randID.v1();
+    MarkerId markerZeroId = MarkerId("$idZero");
+    Marker markerZero = Marker(
+              markerId: markerZeroId,
+              draggable: false,
+              position: LatLng(-25.4202491,-49.2645976),
+              infoWindow: InfoWindow(title: "UFPR Convida", snippet: "Não existem eventos"),
+              icon: BitmapDescriptor.defaultMarker, 
+      );
 
     try {
       response = await http.get(requisition);
@@ -340,6 +354,8 @@ class _MapWidgetState extends State<MapWidget> {
             color = 120.0; //Verde
           } else if (type == "Festas e Comemorações") {
             color = 270.0; //Roxo
+          } else if (type == "Online") {
+            color = 170.0; //Ciano
           } else if (type == "Arte e Cultura") {
             color = 300.0; //Rosa
           } else if (type == "Fé e Espiritualidade") {
@@ -364,24 +380,24 @@ class _MapWidgetState extends State<MapWidget> {
         }
       } else if (response.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
-        mrks = null;
+        mrks[markerZeroId] = markerZero;
       } else if (response.statusCode == 404) {
         showError("Erro 404", "Evento não foi encontrado", context);
-        mrks = null;
+        mrks[markerZeroId] = markerZero;
       } else if (response.statusCode == 500) {
         showError(
             "Erro 500",
-            "Erro no servidor, favor tente novamente mais tarde (map)",
+            "Erro no servidor, favor tente novamente mais tarde (Map)",
             context);
-        mrks = null;
+        mrks[markerZeroId] = markerZero;
       } else {
         showError(
             "Erro Desconhecido", "StatusCode: ${response.statusCode}", context);
-        mrks = null;
+        mrks[markerZeroId] = markerZero;
       }
     } catch (e) {
       showError("Erro desconhecido", "Erro: $e", context);
-      mrks = null;
+      mrks[markerZeroId] = markerZero;
     }
     return mrks;
   }

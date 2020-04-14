@@ -3,7 +3,6 @@ import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:convida/app/screens/alter_event_screen/alter_event_widget.dart';
 import 'dart:convert';
@@ -64,12 +63,14 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
               _imageAsset = 'type-sport.png';
             } else if (snapshot.data.type == 'Festas e Comemorações') {
               _imageAsset = 'type-party.png';
+            } else if (snapshot.data.type == 'Online') {
+              _imageAsset = 'type-online.png';
             } else if (snapshot.data.type == 'Arte e Cultura') {
               _imageAsset = 'type-art.png';
             } else if (snapshot.data.type == 'Fé e Espiritualidade') {
               _imageAsset = 'type-faith.png';
             } else if (snapshot.data.type == 'Acadêmico e Profissional') {
-              _imageAsset = 'type-graduation.png' ;
+              _imageAsset = 'type-graduation.png';
             } else {
               _imageAsset = 'type-others.png';
             }
@@ -544,8 +545,10 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                   padding: const EdgeInsets.all(2.0),
                                   child: InkWell(
                                     onTap: () {
-                                      DateTime tomorrow = DateTime.now().add(Duration(hours: 24));
-                                      if ((tomorrow.compareTo(dateEnd)) > 0) {
+                                      DateTime yesterday = DateTime.now()
+                                          .subtract(Duration(hours: 24));
+
+                                      if ((yesterday.compareTo(dateEnd)) > 0) {
                                         //If the event ended:
                                         _showError("Evento Finalizado",
                                             "Não é possível alterar mais esse evento, pois ele já foi encerrado!");

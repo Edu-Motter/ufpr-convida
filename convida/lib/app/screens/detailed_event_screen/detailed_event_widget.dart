@@ -77,6 +77,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
             _imageAsset = 'type-sport.png';
           } else if (snapshot.data.type == 'Festas e Comemorações') {
             _imageAsset = 'type-party.png';
+          } else if (snapshot.data.type == 'Online') {
+            _imageAsset = 'type-online.png';
           } else if (snapshot.data.type == 'Arte e Cultura') {
             _imageAsset = 'type-art.png';
           } else if (snapshot.data.type == 'Fé e Espiritualidade') {
@@ -618,8 +620,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                                         if (token != null) {
                                                           _putRerport(
                                                               snapshot.data.id,
-                                                              detailedEventController.report
-                                                          );
+                                                              detailedEventController
+                                                                  .report);
                                                           Navigator.pop(
                                                               context);
                                                         } else {

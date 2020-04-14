@@ -295,16 +295,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                           context,
                                                           "Erro ao se Cadastrar");
                                                     }
-                                                  }
-
-                                                  //*Erros:
-                                                  errorStatusCode(
-                                                      statusCode,
-                                                      context,
-                                                      "Erro verificar GRR");
+                                                  }                                                 
                                                 }
-                                              } else {
-                                                //if create
                                               }
                                             }
                                           }
