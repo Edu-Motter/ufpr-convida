@@ -52,6 +52,27 @@ abstract class _SignupControllerBase with Store {
     return passwordValidation(signup.confirmPassword, signup.password);
   }
 
+  Future<int> checkEmail() async {
+    Map<String, String> mapHeaders = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    };
+
+    String email = signup.email;
+    int statusE = await http
+        .get("$_url/users/checkemail/$email", headers: mapHeaders)
+        .then((http.Response response) {
+      final int statusCode = response.statusCode;
+      if ((statusCode == 200) || (statusCode == 201)) {
+        print("Check E-mail: ${response.body}");
+        return 500;
+      } else {
+        return 200;
+      }
+    });
+    return statusE;
+  }
+
   Future<int> checkGrr() async {
     Map<String, String> mapHeaders = {
       "Accept": "application/json",
@@ -75,61 +96,61 @@ abstract class _SignupControllerBase with Store {
     return statusC;
   }
 
-  bool checkAll(BuildContext context){
-    String error; 
-    
+  bool checkAll(BuildContext context) {
+    String error;
+
     //*Name
     error = nameValidation(signup.name, "nome");
-    if(error != null){
+    if (error != null) {
       showError("Nome inválido", error, context);
       return false;
     }
 
     //*LastName
     error = nameValidation(signup.lastName, "sobrenome");
-    if(error != null){
+    if (error != null) {
       showError("Sobrenome inválido", error, context);
       return false;
     }
 
     //*GRR
     error = grrValidation(signup.grr);
-    if(error != null){
+    if (error != null) {
       showError("GRR inválido", error, context);
       return false;
     }
 
     //*Birthday
     error = birthValidation(signup.birth);
-    if(error != null){
+    if (error != null) {
       showError("Data de Nascimento inválida", error, context);
       return false;
     }
 
     //*Email
     error = emailValidation(signup.email);
-    if(error != null){
+    if (error != null) {
       showError("E-mail Inválido", error, context);
       return false;
     }
 
     //*Password
     error = passwordValidation(signup.password, signup.confirmPassword);
-    if(error != null){
+    if (error != null) {
       showError("Senha Inválida", error, context);
       return false;
     }
 
     //*Confirm Password
     error = passwordValidation(signup.confirmPassword, signup.password);
-    if(error != null){
+    if (error != null) {
       showError("Confirmação de Senha inválida", error, context);
       return false;
     }
-    
+
     return true;
   }
-  
+
   Future<int> postNewUser({String dateUser, BuildContext context}) async {
     User u = new User(
         grr: signup.grr,
@@ -209,7 +230,8 @@ abstract class _SignupControllerBase with Store {
         }
       });
     } catch (e) {
-      showError("Erro desconhecido ao fazer login automático", "Erro: $e", context);
+      showError(
+          "Erro desconhecido ao fazer login automático", "Erro: $e", context);
     }
 
     final token = await _save.read(key: "token");
@@ -243,7 +265,8 @@ abstract class _SignupControllerBase with Store {
         _save.write(key: "email", value: "${user.email}");
         _save.write(key: "lastName", value: "${user.lastName}");
       } catch (e) {
-        showError("Erro desconhecido ao salvar Credenciais", "Erro: $e", context);
+        showError(
+            "Erro desconhecido ao salvar Credenciais", "Erro: $e", context);
       }
     }
     return sts;

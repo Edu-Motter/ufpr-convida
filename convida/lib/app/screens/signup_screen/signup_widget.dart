@@ -228,11 +228,23 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                 int ok = await signupController
                                                     .checkGrr();
 
-                                                //If error:
+                                                //*Check E-mail:
+                                                int emailOk = await signupController.checkEmail();
+                                                print("int Email OK = $emailOk");
+
+                                                //If grr already exist:
                                                 if (ok == 500) {
                                                   String msg = "GRR Inválido!";
                                                   String error =
-                                                      "O GRR informado já foi cadastrado";
+                                                      "O GRR informado já foi cadastrado, favor informar outro.";
+                                                  showError(
+                                                      msg, error, context);
+                                                } 
+                                                //If Email  already exist:
+                                                else if (emailOk == 500) {
+                                                  String msg = "E-mail Inválido!";
+                                                  String error =
+                                                      "O E-mail informado já foi cadastrado, favor informar outro.";
                                                   showError(
                                                       msg, error, context);
                                                 } else {
@@ -263,7 +275,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                   String datePost = dateFormat
                                                       .format(dateUser);
 
-                                                  //*Post Event
+                                                  //*Post User
                                                   int statusCode =
                                                       await signupController
                                                           .postNewUser(
@@ -295,6 +307,11 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                           context,
                                                           "Erro ao se Cadastrar");
                                                     }
+                                                  } else {
+                                                    errorStatusCode(
+                                                          statusCode,
+                                                          context,
+                                                          "Erro ao se Cadastrar");
                                                   }                                                 
                                                 }
                                               }

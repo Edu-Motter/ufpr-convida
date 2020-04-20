@@ -586,6 +586,9 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
 
+                                                  faithColor = Colors.yellow;
+                                                  faithLine = Colors.white;
+                                                
                                                   studyColor = Colors.white;
                                                   studyLine = Colors.black;
 
