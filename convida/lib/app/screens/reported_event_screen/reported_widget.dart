@@ -23,6 +23,7 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
 
   String _token;
   final _save = FlutterSecureStorage();
+  String _url = globals.URL;
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +59,70 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                                         fontWeight: FontWeight.w300),
                                   ),
                                   subtitle: Text(
-                                    "Reportado por: ${snapshot.data[index].grr}",
+                                    "Reportado por: ${snapshot.data[index].id}",
                                     maxLines: 1,
                                     style: TextStyle(
                                         color: Colors.black87,
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.w500),
                                   ),
-                                  onTap: () {
-                                    //!Irá mostrar todos os dados do Autor
+                                  onTap: () async {
+                                    
+                                          
+                                           
+                                            final _id =
+                                                await _save.read(key: "user");
+                                            final _token =
+                                                await _save.read(key: "token");
+
+                                            Map<String, String> mapHeaders = {
+                                              "Accept": "application/json",
+                                              "Content-Type":
+                                                  "application/json",
+                                              HttpHeaders.authorizationHeader:
+                                                  "Bearer $_token"
+                                            };
+
+                                            
+                                            var r;
+                                            print("Request on: /events/ignore/${snapshot.data[index].id}");
+                                            try {
+                                              r = await http.get(
+                                                  "$_url/events/ignore/${snapshot.data[index].id}",
+
+                                                  headers: mapHeaders);
+                                              if (r.statusCode == 200) {
+                                                showSuccess(
+                                                    "Evento Ignorado com Sucesso!",
+                                                    "pop",
+                                                    context);
+                                              } else if (r.statusCode == 401) {
+                                                showError(
+                                                    "Erro 401",
+                                                    "Não autorizado, favor logar novamente",
+                                                    context);
+                                              } else if (r.statusCode == 404) {
+                                                showError(
+                                                    "Erro 404",
+                                                    "Autor não foi encontrado",
+                                                    context);
+                                              } else if (r.statusCode == 500) {
+                                                showError(
+                                                    "Erro 500",
+                                                    "Erro no servidor, favor tente novamente mais tarde",
+                                                    context);
+                                              } else {
+                                                showError(
+                                                    "Erro Desconhecido",
+                                                    "StatusCode: ${r.statusCode}",
+                                                    context);
+                                              }
+                                            } catch (e) {
+                                              showError("Erro desconhecido",
+                                                  "Erro: $e", context);
+                                            }
+                                        
+                                  
                                   },
                                 ),
                               ),
@@ -108,7 +164,7 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                                 ),
                               ),
                               event.active == true
-                                //Deactivate Event 
+                                  //Deactivate Event
                                   ? Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.all(2.0),
@@ -152,7 +208,8 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                                           child: Column(
                                             children: <Widget>[
                                               Icon(Icons.check_circle,
-                                                  size: 26, color: Colors.green),
+                                                  size: 26,
+                                                  color: Colors.green),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 0.0),
@@ -189,7 +246,7 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
 
     if (ok) {
       String _url = globals.URL;
-     // final _id = await _save.read(key: "user");
+      // final _id = await _save.read(key: "user");
       _token = await _save.read(key: "token");
 
       Map<String, String> mapHeaders = {
@@ -198,7 +255,7 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
         HttpHeaders.authorizationHeader: "Bearer $_token"
       };
       var response;
-
+      print("$_url/events/report/$idEvent");
       try {
         response =
             await http.get("$_url/events/report/$idEvent", headers: mapHeaders);
@@ -278,8 +335,7 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
       if ((response.statusCode == 200) || (response.statusCode == 201)) {
         return true;
       } else {
-        errorStatusCode(
-            response.statusCode, context, "Erro ao Ativar Evento");
+        errorStatusCode(response.statusCode, context, "Erro ao Ativar Evento");
         return false;
       }
     } catch (e) {

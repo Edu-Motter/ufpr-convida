@@ -63,11 +63,13 @@ abstract class _SignupControllerBase with Store {
         .get("$_url/users/checkemail/$email", headers: mapHeaders)
         .then((http.Response response) {
       final int statusCode = response.statusCode;
-      if ((statusCode == 200) || (statusCode == 201)) {
-        print("Check E-mail: ${response.body}");
-        return 500;
-      } else {
+      if (response.body.compareTo("true") == 0){
+        print("Email válido");
         return 200;
+      }
+       else {
+        print("Email Inválido");
+        return 500;
       }
     });
     return statusE;
@@ -80,6 +82,7 @@ abstract class _SignupControllerBase with Store {
     };
 
     String grr = signup.grr;
+    print(grr);
 
     int statusC = await http
         .get("$_url/users/$grr", headers: mapHeaders)

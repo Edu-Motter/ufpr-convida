@@ -214,6 +214,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                     ),
                                     onPressed: signupController.isValid
                                         ? () async {
+                                            //*GRR to LowCase
+                                            signupController.signup.grr = signupController.signup.grr.toLowerCase();
+                                            
                                             //*Check if created
                                             if (created) {
                                               Navigator.pushReplacementNamed(
@@ -248,23 +251,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                   showError(
                                                       msg, error, context);
                                                 } else {
-                                                  //*GRR to LowCase
-                                                  if (signupController
-                                                      .signup.grr
-                                                      .startsWith("GRR")) {
-                                                    signupController
-                                                            .signup.grr =
-                                                        signupController
-                                                            .signup.grr
-                                                            .toLowerCase();
-                                                  }
-                                                  // // Check pass
-                                                  // if (signupController
-                                                  //         .signup.password
-                                                  //         .compareTo(signupController
-                                                  //             .signup
-                                                  //             .confirmPassword) ==
-                                                  //     0) {
+                                                 
                                                   //*Arrumar data:
                                                   DateTime dateUser =
                                                       DateFormat("dd/MM/yyyy")

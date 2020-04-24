@@ -941,7 +941,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
     };
 
     String idUser = _id;
-    Report newReport = new Report(grr: idUser, report: report);
+    Report newReport = new Report(grr: idUser, report: report, ignored: false);
     String body = json.encode(newReport.toJson());
     var r;
 
