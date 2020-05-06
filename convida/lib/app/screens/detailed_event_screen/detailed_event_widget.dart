@@ -235,6 +235,21 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                       ),
 
                                       //Endereço:
+                                      snapshot.data.online ?
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            11, 8, 0, 0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(Icons.wifi, size: 24),
+                                            SizedBox(width: 6),
+                                            Expanded(
+                                              child: Text(
+                                                  "Este evento é Online"),
+                                            )
+                                          ],
+                                        ),
+                                      ) : 
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             8, 8, 0, 0),
@@ -608,14 +623,14 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                                               .setReport,
                                                       maxLength: 280,
                                                       labelText:
-                                                          "Justifique sua denuncia",
+                                                          "Justifique sua Denúncia",
                                                       errorText:
                                                           detailedEventController
                                                               .validateReport),
                                                   actions: <Widget>[
                                                     new FlatButton(
                                                       child:
-                                                          new Text("Denunciar"),
+                                                          new Text("Denúnciar"),
                                                       onPressed: () {
                                                         if (token != null) {
                                                           _putRerport(
@@ -627,7 +642,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                                         } else {
                                                           _showDialog(
                                                               "Necessário estar logado!",
-                                                              "Somente se você estiver logado será possível denunciar eventos, para isso, crie uma conta ou entre com seu login!");
+                                                              "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
                                                         }
                                                       },
                                                     ),
@@ -646,13 +661,13 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                         } else {
                                           _showDialog(
                                               "Necessário estar logado!",
-                                              "Somente se você estiver logado será possível denunciar eventos, para isso, crie uma conta ou entre com seu login!");
+                                              "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
                                         }
                                       },
                                       child: Column(
                                         children: <Widget>[
                                           Icon(Icons.assignment_late, size: 26),
-                                          Text("Denunciar", maxLines: 1)
+                                          Text("Denúnciar", maxLines: 1)
                                         ],
                                       ),
                                     ),
@@ -930,7 +945,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   }
 
   _putRerport(String idEvent, String report) async {
-    print("report: $report");
+
     final _id = await _save.read(key: "user");
     final _token = await _save.read(key: "token");
 
@@ -949,7 +964,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       r = await http.put("$_url/events/report/$idEvent",
           body: body, headers: mapHeaders);
       if (r.statusCode == 200) {
-        showSuccess("Evento Denunciado com Sucesso!", "pop", context);
+        showSuccess("Evento Denúnciado com Sucesso!", "null", context);
       } else if (r.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
       } else if (r.statusCode == 404) {

@@ -155,9 +155,9 @@ String reportValidation(value) {
   RegExp _reportValidator = RegExp(expression);
 
   if (value == null) {
-    return 'Favor justifique sua denuncia';
+    return 'Favor justifique sua Denúncia';
   } else if (value.isEmpty) {
-    return 'Favor justifique sua denuncia';
+    return 'Favor justifique sua Denúncia';
   } else if (value.startsWith(' ')) {
     return 'Inicia com espaço';
   } else if (value.contains('  ')) {

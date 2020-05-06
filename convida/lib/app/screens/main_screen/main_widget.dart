@@ -54,7 +54,7 @@ class _MainWidgetState extends State<MainWidget> {
                 healthType: healthType,
                 sportType: sportType,
                 partyType: partyType,
-                onlineType: onlineType,
+                //onlineType: onlineType,
                 artType: artType,
                 faithType: faithType,
                 studyType: studyType,
@@ -101,7 +101,7 @@ class _MainWidgetState extends State<MainWidget> {
             healthType: healthType,
             sportType: sportType,
             partyType: partyType,
-            onlineType: onlineType,
+            //onlineType: onlineType,
             artType: artType,
             faithType: faithType,
             studyType: studyType,
@@ -215,6 +215,7 @@ class _MainWidgetState extends State<MainWidget> {
             );
           } else if (snapshot.data != null) { 
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Colors.white,
               key: _scaffoldKey,
               drawer: _token == null
@@ -279,7 +280,7 @@ class _MainWidgetState extends State<MainWidget> {
   }
   ListTile drawerReport() {
     return ListTile(
-        title: Text("Denuncias"),
+        title: Text("Denúncias"),
         trailing: Icon(Icons.assignment_late),
         onTap: () {
           //Pop Drawer:

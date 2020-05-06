@@ -61,7 +61,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
     "Saúde e Bem-estar",
     "Esporte e Lazer",
     "Festas e Comemorações",
-    "Online",
+    // "Online",
     "Arte e Cultura",
     "Fé e Espiritualidade",
     "Acadêmico e Profissional",
@@ -94,6 +94,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
     alterEventController.alterEvent.link = event.link;
     alterEventController.alterEvent.address = event.address;
     alterEventController.alterEvent.complement = event.complement;
+    alterEventController.alterEvent.online = event.online;
 
     _currentType = event.type;
 
@@ -205,6 +206,13 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     errorText: alterEventController.validateDesc);
               }),
             ),
+
+            //Online Event
+                  SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: eventSwitchOnline()),
+                  
+
             //eventAddressInput(),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -565,6 +573,25 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                 )),
           ],
         ),
+      ),
+    );
+  }
+   Padding eventSwitchOnline() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(47, 8.0, 8.0, 8.0),
+      child: Row(
+        children: <Widget>[
+          Text("Seu evento é Online ?",
+              style: TextStyle(fontSize: 16, color: Colors.black54)),
+          Switch(
+              value: alterEventController.alterEvent.online,
+              onChanged: (value) {
+                setState(() {
+                  print("Executou um setState");
+                  alterEventController.alterEvent.online = value;
+                });
+              }),
+        ],
       ),
     );
   }

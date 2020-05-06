@@ -323,7 +323,7 @@ abstract class _DetailedEventControllerBase with Store {
       r = await http.put("$_url/events/report/$idEvent",
           body: body, headers: mapHeaders);
       if (r.statusCode == 200) {
-        showSuccess("Evento Denunciado com Sucesso!", "pop", context);
+        showSuccess("Evento Denúnciado com Sucesso!", "pop", context);
       } else if (r.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
       } else if (r.statusCode == 404) {

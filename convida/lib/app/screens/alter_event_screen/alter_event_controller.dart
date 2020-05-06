@@ -170,9 +170,11 @@ String datesValidations(bool isSwitchedSubs) {
         author: event.author,
         lat: event.lat,
         lng: event.lng,
-        active: true);
+        active: true,
+        online: alterEvent.online);
 
     String eventJson = json.encode(p.toJson());
+    print(eventJson);
 
     int code;
     try {

@@ -10,7 +10,6 @@ class EventsWidget extends StatefulWidget {
 }
 
 class _EventsWidgetState extends State<EventsWidget> {
- 
   var jsonData;
   String _imageAsset = "";
   DateFormat date = new DateFormat.yMMMMd("pt_BR");
@@ -18,11 +17,12 @@ class _EventsWidgetState extends State<EventsWidget> {
 
   String search = "";
   String type = "";
+  bool checked = false;
 
   Color healthColor = Colors.white;
   Color sportColor = Colors.white;
   Color partyColor = Colors.white;
-  Color onlineColor = Colors.white;
+  //Color onlineColor = Colors.white;
   Color artColor = Colors.white;
   Color faithColor = Colors.white;
   Color studyColor = Colors.white;
@@ -31,7 +31,7 @@ class _EventsWidgetState extends State<EventsWidget> {
   Color healthLine = Colors.black;
   Color sportLine = Colors.black;
   Color partyLine = Colors.black;
-  Color onlineLine = Colors.black;
+  //Color onlineLine = Colors.black;
   Color artLine = Colors.black;
   Color faithLine = Colors.black;
   Color studyLine = Colors.black;
@@ -45,7 +45,7 @@ class _EventsWidgetState extends State<EventsWidget> {
         alignment: Alignment.center,
         child: FutureBuilder(
             //initialData: "Loading..",
-            future: getEvents(search, type, context),
+            future: getEvents(search, type, checked, context),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               List<Event> values = snapshot.data;
 
@@ -66,11 +66,11 @@ class _EventsWidgetState extends State<EventsWidget> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: Container(
                                     color: Colors.white,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.fromLTRB(8.0,0.0,8.0,0.0),
                                       child: Row(
                                         children: <Widget>[
                                           Expanded(
@@ -161,8 +161,8 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
-                                                  onlineColor = Colors.white;
-                                                  onlineLine = Colors.black;
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
 
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
@@ -245,8 +245,8 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
-                                                  onlineColor = Colors.white;
-                                                  onlineLine = Colors.black;
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
 
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
@@ -375,89 +375,89 @@ class _EventsWidgetState extends State<EventsWidget> {
                                         ),
                                       ),
 
-                                      //? ONLINE
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            // border: new Border.all(
-                                            //     color: Colors.grey,
-                                            //     width: 1.0,
-                                            //     style: BorderStyle.solid),
-                                            boxShadow: [
-                                              new BoxShadow(
-                                                  color: Colors.cyan,
-                                                  blurRadius: 1,
-                                                  spreadRadius: 1
-                                                  //offset: new Offset(1.0, 1.0,1,1),
-                                                  )
-                                            ],
-                                          ),
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                print(type);
-                                                if ((type != "") &&
-                                                    (onlineColor ==
-                                                        Colors.white)) {
-                                                  search =
-                                                      _searchController.text;
-                                                  type = "Online";
+                                      // //? ONLINE
+                                      // Padding(
+                                      //   padding: const EdgeInsets.all(8.0),
+                                      //   child: Container(
+                                      //     decoration: BoxDecoration(
+                                      //       // border: new Border.all(
+                                      //       //     color: Colors.grey,
+                                      //       //     width: 1.0,
+                                      //       //     style: BorderStyle.solid),
+                                      //       boxShadow: [
+                                      //         new BoxShadow(
+                                      //             color: Colors.cyan,
+                                      //             blurRadius: 1,
+                                      //             spreadRadius: 1
+                                      //             //offset: new Offset(1.0, 1.0,1,1),
+                                      //             )
+                                      //       ],
+                                      //     ),
+                                      //     child: InkWell(
+                                      //       onTap: () {
+                                      //         setState(() {
+                                      //           print(type);
+                                      //           if ((type != "") &&
+                                      //               (onlineColor ==
+                                      //                   Colors.white)) {
+                                      //             search =
+                                      //                 _searchController.text;
+                                      //             type = "Online";
 
-                                                  healthColor = Colors.white;
-                                                  healthLine = Colors.black;
+                                      //             healthColor = Colors.white;
+                                      //             healthLine = Colors.black;
 
-                                                  sportColor = Colors.white;
-                                                  sportLine = Colors.black;
+                                      //             sportColor = Colors.white;
+                                      //             sportLine = Colors.black;
 
-                                                  partyColor = Colors.white;
-                                                  partyLine = Colors.black;
+                                      //             partyColor = Colors.white;
+                                      //             partyLine = Colors.black;
 
-                                                  onlineColor = Colors.cyan;
-                                                  onlineLine = Colors.white;
+                                      //             onlineColor = Colors.cyan;
+                                      //             onlineLine = Colors.white;
 
-                                                  artColor = Colors.white;
-                                                  artLine = Colors.black;
+                                      //             artColor = Colors.white;
+                                      //             artLine = Colors.black;
 
-                                                  faithColor = Colors.white;                                                  Colors.cyanAccent;
-                                                  faithLine = Colors.black;
+                                      //             faithColor = Colors.white;
+                                      //             Colors.cyanAccent;
+                                      //             faithLine = Colors.black;
 
-                                                  studyColor = Colors.white;
-                                                  studyLine = Colors.black;
+                                      //             studyColor = Colors.white;
+                                      //             studyLine = Colors.black;
 
-                                                  othersColor = Colors.white;
-                                                  othersLine = Colors.black;
-                                                } else if (type ==
-                                                    "Online") {
-                                                  type = "";
-                                                  onlineColor = Colors.white;
-                                                  onlineLine = Colors.black;
-                                                } else {
-                                                  type = "Online";
-                                                  onlineColor = Colors.cyan;
-                                                  onlineLine = Colors.white;
-                                                }
-                                              });
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: onlineColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.5)),
-                                              width: 47,
-                                              height: 47,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2.0),
-                                                child: Image.asset(
-                                                    "assets/type-mini-online.png",
-                                                    color: onlineLine),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                      //             othersColor = Colors.white;
+                                      //             othersLine = Colors.black;
+                                      //           } else if (type == "Online") {
+                                      //             type = "";
+                                      //             onlineColor = Colors.white;
+                                      //             onlineLine = Colors.black;
+                                      //           } else {
+                                      //             type = "Online";
+                                      //             onlineColor = Colors.cyan;
+                                      //             onlineLine = Colors.white;
+                                      //           }
+                                      //         });
+                                      //       },
+                                      //       child: Container(
+                                      //         decoration: BoxDecoration(
+                                      //             color: onlineColor,
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(
+                                      //                     4.5)),
+                                      //         width: 47,
+                                      //         height: 47,
+                                      //         child: Padding(
+                                      //           padding:
+                                      //               const EdgeInsets.all(2.0),
+                                      //           child: Image.asset(
+                                      //               "assets/type-mini-online.png",
+                                      //               color: onlineLine),
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
 
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
@@ -496,8 +496,8 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
-                                                  onlineColor = Colors.white;
-                                                  onlineLine = Colors.black;
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
 
                                                   artColor = Colors.pink;
                                                   artLine = Colors.white;
@@ -580,15 +580,15 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
-                                                  onlineColor = Colors.white;
-                                                  onlineLine = Colors.black;
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
 
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
 
                                                   faithColor = Colors.yellow;
                                                   faithLine = Colors.white;
-                                                
+
                                                   studyColor = Colors.white;
                                                   studyLine = Colors.black;
 
@@ -664,8 +664,8 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
-                                                  onlineColor = Colors.white;
-                                                  onlineLine = Colors.black;
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
 
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
@@ -750,8 +750,8 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
-                                                  onlineColor = Colors.white;
-                                                  onlineLine = Colors.black;
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
 
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
@@ -799,6 +799,28 @@ class _EventsWidgetState extends State<EventsWidget> {
                                   ),
                                 ),
                               ),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: ActionChip(
+                                    padding: const EdgeInsets.all(0.0),
+                                    avatar: checked ? Icon(Icons.check) : null,
+                                    label: Text("Somente eventos Online"),
+                                    onPressed: () {
+                                      setState(() {
+                                        if (checked)
+                                          checked = false;
+                                        else
+                                          checked = true;
+                                      });
+                                    },
+                                    
+                                    shadowColor: Colors.white,
+                                  ),
+                                ),
+                              ))
                             ],
                           )),
                       Expanded(

@@ -16,7 +16,7 @@ class MapWidget extends StatefulWidget {
   final String healthType;
   final String sportType;
   final String partyType;
-  final String onlineType;
+  //final String onlineType;
   final String artType;
   final String faithType;
   final String studyType;
@@ -28,7 +28,7 @@ class MapWidget extends StatefulWidget {
       this.healthType,
       this.sportType,
       this.partyType,
-      this.onlineType,
+      //this.onlineType,
       this.artType,
       this.faithType,
       this.studyType,
@@ -38,21 +38,21 @@ class MapWidget extends StatefulWidget {
 
   @override
   _MapWidgetState createState() => _MapWidgetState(healthType, sportType,
-      partyType, onlineType, artType, faithType, studyType, othersType, dataType);
+      partyType, /*onlineType,*/ artType, faithType, studyType, othersType, dataType);
 }
 
 class _MapWidgetState extends State<MapWidget> {
   String healthType;
   String sportType;
   String partyType;
-  String onlineType;
+  //String onlineType;
   String artType;
   String faithType;
   String studyType;
   String othersType;
   String dataType;
 
-  _MapWidgetState(this.healthType, this.sportType, this.partyType, this.onlineType, this.artType,
+  _MapWidgetState(this.healthType, this.sportType, this.partyType, /*this.onlineType,*/ this.artType,
       this.faithType, this.studyType, this.othersType, this.dataType);
 
   MapType _mapType;
@@ -153,7 +153,7 @@ class _MapWidgetState extends State<MapWidget> {
                                 healthType: healthType,
                                 sportType: sportType,
                                 partyType: partyType,
-                                onlineType: onlineType,
+                                //onlineType: onlineType,
                                 artType: artType,
                                 faithType: faithType,
                                 studyType: studyType,
@@ -287,7 +287,7 @@ class _MapWidgetState extends State<MapWidget> {
     String parsedHealthType = Uri.encodeFull(healthType);
     String parsedSportType = Uri.encodeFull(sportType);
     String parsedPartyType = Uri.encodeFull(partyType);
-    String parsedOnlineType = Uri.encodeFull(onlineType);
+    //String parsedOnlineType = Uri.encodeFull(onlineType);
     String parsedArtType = Uri.encodeFull(artType);
     String parsedFaithType = Uri.encodeFull(faithType);
     String parsedStudyType = Uri.encodeFull(studyType);
@@ -296,16 +296,16 @@ class _MapWidgetState extends State<MapWidget> {
     String requisition;
 
     //!Arrumar as requisições:
-
+    //"$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=$parsedOnlineType";
     if (dataType == 'week') {
       requisition =
-          "$_url/events/weektype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=$parsedOnlineType";
+          "$_url/events/weektype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType";
     } else if (dataType == 'day') {
       requisition =
-          "$_url/events/todaytype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=$parsedOnlineType";
+          "$_url/events/todaytype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType";
     } else
       requisition =
-          "$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=$parsedOnlineType";
+          "$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType";
 
     var response;
     Map<MarkerId, Marker> mrks = <MarkerId, Marker>{};

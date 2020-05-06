@@ -161,21 +161,35 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                           ),
 
                                           //Endereço:
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                8, 8, 0, 0),
-                                            child: Row(
-                                              children: <Widget>[
-                                                Icon(Icons.location_on,
-                                                    size: 28),
-                                                SizedBox(width: 5),
-                                                Expanded(
-                                                  child: Text(
-                                                      "${snapshot.data.address} - ${snapshot.data.complement}"),
-                                                )
-                                              ],
-                                            ),
-                                          )
+                                      snapshot.data.online ?
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            11, 8, 0, 0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(Icons.wifi, size: 24),
+                                            SizedBox(width: 6),
+                                            Expanded(
+                                              child: Text(
+                                                  "Este evento é Online"),
+                                            )
+                                          ],
+                                        ),
+                                      ) : 
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8, 8, 0, 0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(Icons.location_on, size: 28),
+                                            SizedBox(width: 5),
+                                            Expanded(
+                                              child: Text(
+                                                  "${snapshot.data.address} - ${snapshot.data.complement}"),
+                                            )
+                                          ],
+                                        ),
+                                      )
                                         ],
                                       ),
                                     ),

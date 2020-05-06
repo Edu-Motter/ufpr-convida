@@ -70,7 +70,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
     "Saúde e Bem-estar",
     "Esporte e Lazer",
     "Festas e Comemorações",
-    "Online",
+    //"Online",
     "Arte e Cultura",
     "Fé e Espiritualidade",
     "Acadêmico e Profissional",
@@ -81,6 +81,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
 
   //Switch:
   bool isSwitchedSubs = false;
+  bool isOnline = false;
 
   @override
   Widget build(BuildContext context) {
@@ -156,6 +157,12 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                     }),
                   ),
 
+
+                  //Online Event
+                  SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: eventSwitchOnline()),
+                  
                   //Event Address:
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -424,6 +431,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                               _currentType,
                                               isSwitchedSubs,
                                               coords,
+                                              isOnline,
                                               context);
                                       if ((statusCode == 200) ||
                                           (statusCode == 201)) {
@@ -673,6 +681,26 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                 setState(() {
                   print("Executou um setState");
                   isSwitchedSubs = value;
+                });
+              }),
+        ],
+      ),
+    );
+  }
+
+  Padding eventSwitchOnline() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(47, 8.0, 8.0, 8.0),
+      child: Row(
+        children: <Widget>[
+          Text("Seu evento é Online ?",
+              style: TextStyle(fontSize: 16, color: Colors.black54)),
+          Switch(
+              value: isOnline,
+              onChanged: (value) {
+                setState(() {
+                  print("Executou um setState");
+                  isOnline = value;
                 });
               }),
         ],

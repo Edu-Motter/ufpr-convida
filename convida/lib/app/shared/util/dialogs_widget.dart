@@ -15,13 +15,39 @@ void showSuccess(String s, String route, BuildContext context) {
             child: new Text("Ok"),
             onPressed: () {
               Navigator.pop(context);
-              if (route == "pop") {
+              if (route == null){
+
+              }
+              else if (route == "pop") {
                 Navigator.of(context).pop();
               } else {
                 Navigator.of(context).pushReplacementNamed(route);
               }
             },
           ),
+        ],
+      );
+    },
+  );
+}
+void showConfirm({String title, String content, Function onPressed, BuildContext context}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: new Text(title),
+        content: new Text(content),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text("Sim"),
+            onPressed: onPressed,
+          ),
+          new FlatButton(
+            child: new Text("Não"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
         ],
       );
     },

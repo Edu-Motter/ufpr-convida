@@ -20,6 +20,11 @@ abstract class _NewEventBase with Store {
   setDesc(String value) => desc = value;
 
   @observable
+  bool online;
+  @action
+  setOnline(bool value) => online = value;
+
+  @observable
   String address;
   @action
   setAddress(String value) => address = value;

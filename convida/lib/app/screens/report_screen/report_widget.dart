@@ -17,7 +17,7 @@ class _ReportWidgetState extends State<ReportWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Denuncias"),
+        title: Text("Denúncias"),
       ),
       body: FutureBuilder(
         future: controller.getReportedEvents(context),
@@ -29,7 +29,7 @@ class _ReportWidgetState extends State<ReportWidget> {
               padding: const EdgeInsets.all(12.0),
               child: Center(
                 child: Text(
-                  "Não há eventos denunciados",
+                  "Não há eventos Denúnciados",
                   style: TextStyle(
                       color: Color(0xFF8A275D),
                       fontSize: 28,

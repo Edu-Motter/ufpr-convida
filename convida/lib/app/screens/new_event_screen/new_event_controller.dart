@@ -5,7 +5,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:convert';
-import 'dart:io';
 import 'package:convida/app/shared/models/user.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/validations/event_validation.dart';
@@ -131,7 +130,7 @@ abstract class _NewEventControllerBase with Store {
     }
   }
 
-  Future<int> postNewEvent(String type, bool isSwitchedSubs, LatLng coords,
+  Future<int> postNewEvent(String type, bool isSwitchedSubs, LatLng coords, bool isOnline,
       BuildContext context) async {
     final _save = FlutterSecureStorage();
     String _token = await _save.read(key: "token");
@@ -203,7 +202,8 @@ abstract class _NewEventControllerBase with Store {
         author: user.grr,
         lat: coords.latitude,
         lng: coords.longitude,
-        active: true);
+        active: true,
+        online: isOnline);
 
     String eventJson = json.encode(p.toJson());
     int code;

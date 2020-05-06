@@ -11,12 +11,15 @@ import 'package:convida/app/shared/util/dialogs_widget.dart';
 String _url = globals.URL;
 
 //*Requisition to get Events with Type e Search
-Future<List> getEvents(String search, String type, BuildContext context) async {
+Future<List> getEvents(String search, String type, bool checked, BuildContext context) async {
   String parsedSearch = Uri.encodeFull(search);
   String parsedType = Uri.encodeFull(type);
   dynamic response;
-  final String request =
-        "$_url/events/nametypesearch?text=$parsedSearch&type=$parsedType";
+  String request;
+  if (checked)
+    request = "$_url/events/nametypeonlinesearch?text=$parsedSearch&type=$parsedType";
+  else 
+    request = "$_url/events/nametypesearch?text=$parsedSearch&type=$parsedType";
         
   try {
     
