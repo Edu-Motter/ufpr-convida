@@ -1,5 +1,6 @@
 import 'package:convida/app/screens/report_screen/report_controller.dart';
 import 'package:convida/app/screens/reported_event_screen/reported_widget.dart';
+import 'package:convida/app/shared/global/globals.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/models/mobx/event_report.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                 child: Text(
                   "Não há eventos Denúnciados",
                   style: TextStyle(
-                      color: Color(0xFF8A275D),
+                      color: Color(secondaryColor),
                       fontSize: 28,
                       fontWeight: FontWeight.bold),
                 ),
@@ -49,7 +50,7 @@ class _ReportWidgetState extends State<ReportWidget> {
         },
       ),
       // bottomNavigationBar: RaisedButton(
-      //   color: Color(0xFF295492),
+      //   color: Color(primaryColor),
       //   // shape: RoundedRectangleBorder(
       //   //   borderRadius: BorderRadius.circular(24),
       //   // ),

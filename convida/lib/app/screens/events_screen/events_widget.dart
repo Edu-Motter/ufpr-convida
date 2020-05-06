@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/global/globals.dart' as globals;
-
+import 'package:convida/app/shared/global/globals.dart';
 class EventsWidget extends StatefulWidget {
   @override
   _EventsWidgetState createState() => _EventsWidgetState();
@@ -97,7 +97,7 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               4.5),
-                                                      color: Color(0xFF295492),
+                                                      color: Color(primaryColor),
                                                     ),
                                                     width: 50,
                                                     height: 50,

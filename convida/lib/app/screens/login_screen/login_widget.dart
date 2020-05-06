@@ -5,7 +5,7 @@ import 'package:convida/app/shared/models/user.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/material.dart';
-
+import 'package:convida/app/shared/global/globals.dart';
 class LoginWidget extends StatefulWidget {
   @override
   _LoginWidgetState createState() => _LoginWidgetState();
@@ -45,17 +45,23 @@ class _LoginWidgetState extends State<LoginWidget> {
           body: ListView(
             children: <Widget>[
               (queryData.orientation == Orientation.portrait)
-                  ? Image.asset(
-                      //Image:
-                      "assets/logo-ufprconvida-sembordas.png",
-                      scale: 2,
-                    )
+                  ? Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+                      child: Image.asset(
+                          //Image:
+                          "assets/logo-ufprconvida.png",
+                          scale: 2,
+                        ),
+                    ),
+                  )
                   : Container(
                       height: queryData.size.height / 2,
                       width: queryData.size.width / 2,
                       child: Image.asset(
                         //Image:
-                        "assets/logo-ufprconvida-sembordas.png",
+                        "assets/logo-ufprconvida.png",
                         scale: 2,
                       ),
                     ),
@@ -65,7 +71,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   alignment: Alignment.center,
                   child: Text("$msg",
                       style: TextStyle(
-                        color: Color(0xFF295492),
+                        color: Color(primaryColor),
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       )),
@@ -115,7 +121,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
-                                color: Color(0xFF295492),
+                                color: Color(primaryColor),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -165,7 +171,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
-                                color: Color(0xFF8A275D),
+                                color: Color(secondaryColor),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -176,7 +182,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 },
                                 padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                                 child: Text('Cadastrar',
-                                    //Color(0xFF295492),(0xFF8A275D)
+                                    //Color(primaryColor),(secondaryColor)
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18)),
                               ),
@@ -184,7 +190,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
-                                color: Color(0xFF8A275D),
+                                color: Color(secondaryColor),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -193,7 +199,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 },
                                 padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
                                 child: Text('Recuperar Senha',
-                                    //Color(0xFF295492),(0xFF8A275D)
+                                    //Color(primaryColor),(secondaryColor)
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18)),
                               ),
@@ -201,7 +207,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
-                                color: Color(0xFF295492),
+                                color: Color(primaryColor),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -219,7 +225,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 },
                                 padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                                 child: Text('Voltar',
-                                    //Color(0xFF295492),(0xFF8A275D)
+                                    //Color(primaryColor),(secondaryColor)
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18)),
                               ),

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/global/globals.dart' as globals;
 import 'package:http/http.dart' as http;
+import 'package:convida/app/shared/global/globals.dart';
 
 enum WhyFarther { Link, Favoritar, Mapa }
 
@@ -57,7 +58,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                                   child: Text(
                                     "Ainda não existem eventos favoritados por você",
                                     style: TextStyle(
-                                        color: Color(0xFF8A275D),
+                                        color: Color(secondaryColor),
                                         fontSize: 28,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -70,7 +71,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                                   child: Text(
                                     "Para favoritar um evento, basta visualizar detalhadamente o evento e pressionar na estrela que estará branca, então ela ficará amarela indicando que o evento foi favoritado com sucesso",
                                     style: TextStyle(
-                                        color: Color(0xFF295492),
+                                        color: Color(primaryColor),
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -80,7 +81,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: RaisedButton(
-                                  color: Color(0xFF295492),
+                                  color: Color(primaryColor),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(24),
                                   ),
@@ -90,7 +91,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                                   },
                                   padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                                   child: Text('Ir aos Eventos',
-                                      //Color(0xFF295492),(0xFF8A275D)
+                                      //Color(primaryColor),(secondaryColor)
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 18)),
                                 ),
@@ -185,17 +186,20 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Image.asset(
-                            //Image:
-                            "assets/logo-ufprconvida-sembordas.png",
-                            scale: 1.5,
-                            //color: Colors.white70,
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+                            child: Image.asset(
+                              //Image:
+                              "assets/logo-ufprconvida.png",
+                              scale: 1.5,
+                              //color: Colors.white70,
+                            ),
                           ),
                           SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: RaisedButton(
-                              color: Color(0xFF295492),
+                              color: Color(primaryColor),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),
                               ),
@@ -213,7 +217,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: RaisedButton(
-                              color: Color(0xFF8A275D),
+                              color: Color(secondaryColor),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),
                               ),
@@ -226,7 +230,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                               },
                               padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                               child: Text('Fazer Cadastro',
-                                  //Color(0xFF295492),(0xFF8A275D)
+                                  //Color(primaryColor),(secondaryColor)
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 18)),
                             ),

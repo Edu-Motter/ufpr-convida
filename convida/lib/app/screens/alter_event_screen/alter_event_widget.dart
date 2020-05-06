@@ -1,5 +1,6 @@
 import 'package:convida/app/screens/alter_event_screen/alter_event_controller.dart';
 import 'package:convida/app/shared/DAO/util_requisitions.dart';
+import 'package:convida/app/shared/global/globals.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -156,7 +157,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                 child: Text(
                   "Alterando Evento",
                   style: TextStyle(
-                      color: Color(0xFF295492), //Color(0xFF8A275D),
+                      color: Color(primaryColor), //Color(secondaryColor),
                       fontSize: 32.0,
                       fontWeight: FontWeight.bold),
                 ),
@@ -433,7 +434,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                         Navigator.pop(context);
                         //Navigator.of(context).pushNamed("/main");
                       },
-                      color: Color(0xFF295492),
+                      color: Color(primaryColor),
                       child: Text(
                         "Cancelar",
                         style: TextStyle(color: Colors.white, fontSize: 17.0),
@@ -480,7 +481,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                           }
                         }
                       },
-                      color: Color(0xFF8A275D),
+                      color: Color(secondaryColor),
                       child: Text(
                         "Alterar",
                         style: TextStyle(color: Colors.white, fontSize: 17.0),
@@ -509,17 +510,20 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    Image.asset(
-                      //Image:
-                      "assets/logo-ufprconvida-sembordas.png",
-                      width: 400.0,
-                      height: 400.0,
-                      //color: Colors.white70,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+                      child: Image.asset(
+                        //Image:
+                        "assets/logo-ufprconvida.png",
+                        width: 400.0,
+                        height: 400.0,
+                        //color: Colors.white70,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RaisedButton(
-                        color: Color(0xFF295492),
+                        color: Color(primaryColor),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
                         ),
@@ -536,7 +540,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RaisedButton(
-                        color: Color(0xFF8A275D),
+                        color: Color(secondaryColor),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
                         ),
@@ -547,7 +551,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                         },
                         padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                         child: Text('Fazer Cadastro',
-                            //Color(0xFF295492),(0xFF8A275D)
+                            //Color(primaryColor),(secondaryColor)
                             style:
                                 TextStyle(color: Colors.white, fontSize: 18)),
                       ),
@@ -562,7 +566,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                         Navigator.pop(context);
                         Navigator.of(context).pushNamed("/main");
                       },
-                      color: Color(0xFF295492),
+                      color: Color(primaryColor),
                       child: Text(
                         "Voltar",
                         style: TextStyle(color: Colors.white, fontSize: 17.0),

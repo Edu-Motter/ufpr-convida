@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:convida/app/shared/global/globals.dart';
 
 class OrganizationWidget extends StatefulWidget {
   final String healthType;
@@ -126,7 +127,7 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
                 child: Text(
                   "Tipo de eventos:",
                   style: TextStyle(
-                      color: Color(0xFF295492), //Color(0xFF8A275D),
+                      color: Color(primaryColor), //Color(secondaryColor),
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold),
                 ),
@@ -449,7 +450,7 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
                 child: Text(
                   "Datas dos eventos:",
                   style: TextStyle(
-                      color: Color(0xFF295492), //Color(0xFF8A275D),
+                      color: Color(primaryColor), //Color(secondaryColor),
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold),
                 ),
@@ -523,7 +524,7 @@ class _OrganizationWidgetState extends State<OrganizationWidget> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 4, 8, 4),
             child: RaisedButton(
-              color: Color(0xFF8A275D),
+              color: Color(secondaryColor),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

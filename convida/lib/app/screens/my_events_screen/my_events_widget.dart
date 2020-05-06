@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/global/globals.dart' as globals;
 import 'package:http/http.dart' as http;
-
+import 'package:convida/app/shared/global/globals.dart';
 class MyEventsWidget extends StatefulWidget {
   @override
   _MyEventsWidgetState createState() => _MyEventsWidgetState();
@@ -54,7 +54,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                 child: Text(
                                   "Ainda não existem eventos criados por você",
                                   style: TextStyle(
-                                      color: Color(0xFF8A275D),
+                                      color: Color(secondaryColor),
                                       fontSize: 28,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -67,7 +67,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                 child: Text(
                                   "Para criar um evento, basta ir ao Mapa pressionar exatamente no local que deseja criar seu evento e esperar alguns segundos",
                                   style: TextStyle(
-                                      color: Color(0xFF295492),
+                                      color: Color(primaryColor),
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -77,7 +77,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
-                                color: Color(0xFF295492),
+                                color: Color(primaryColor),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -88,7 +88,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                 },
                                 padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                                 child: Text('Ir ao Mapa',
-                                    //Color(0xFF295492),(0xFF8A275D)
+                                    //Color(primaryColor),(secondaryColor)
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18)),
                               ),
@@ -184,17 +184,20 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Image.asset(
-                          //Image:
-                          "assets/logo-ufprconvida-sembordas.png",
-                          scale: 1.5,
-                          //color: Colors.white70,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+                          child: Image.asset(
+                            //Image:
+                            "assets/logo-ufprconvida.png",
+                            scale: 1.5,
+                            //color: Colors.white70,
+                          ),
                         ),
                         SizedBox(height: 20),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton(
-                            color: Color(0xFF295492),
+                            color: Color(primaryColor),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24),
                             ),
@@ -212,7 +215,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton(
-                            color: Color(0xFF8A275D),
+                            color: Color(secondaryColor),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24),
                             ),
@@ -223,7 +226,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                             },
                             padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                             child: Text('Fazer Cadastro',
-                                //Color(0xFF295492),(0xFF8A275D)
+                                //Color(primaryColor),(secondaryColor)
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18)),
                           ),
