@@ -11,6 +11,7 @@ import 'package:convida/app/shared/global/globals.dart' as globals;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
+import 'package:convida/app/shared/global/globals.dart';
 
 class MapWidget extends StatefulWidget {
   final String healthType;
@@ -126,7 +127,7 @@ class _MapWidgetState extends State<MapWidget> {
                 //                     );
                 //                   });
                 //             },
-                //             color: Color(0xFF295492),
+                //             color: Color(primaryColor),
                 //             shape: RoundedRectangleBorder(
                 //               borderRadius: BorderRadius.circular(8),
                 //             ),
@@ -141,7 +142,7 @@ class _MapWidgetState extends State<MapWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: RaisedButton(
-                      color: Color(0xFF8A275D),
+                      color: Color(secondaryColor),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -165,7 +166,7 @@ class _MapWidgetState extends State<MapWidget> {
                       padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
                       child: Text('Filtrar e Organizar',
                           maxLines: 1,
-                          //Color(0xFF295492),(0xFF8A275D)
+                          //Color(primaryColor),(secondaryColor)
                           style: TextStyle(color: Colors.white, fontSize: 18)),
                     ),
                   ),
@@ -255,7 +256,7 @@ class _MapWidgetState extends State<MapWidget> {
               },
               mini: true,
               child: Icon(Icons.my_location),
-              backgroundColor: Color(0xFF295492),
+              backgroundColor: Color(primaryColor),
             ),
           ),
         ),
@@ -415,7 +416,7 @@ class _MapWidgetState extends State<MapWidget> {
       dismissDirection: FlushbarDismissDirection.HORIZONTAL,
       messageText: Text("Evento: $eventName",
           style: TextStyle(
-              color: Color(0xFF295492),
+              color: Color(primaryColor),
               fontSize: 18,
               fontWeight: FontWeight.bold)),
       //message: "E",
@@ -442,7 +443,7 @@ class _MapWidgetState extends State<MapWidget> {
       dismissDirection: FlushbarDismissDirection.HORIZONTAL,
       messageText: Text("Deseja criar um evento aqui?",
           style: TextStyle(
-              color: Color(0xFF295492),
+              color: Color(primaryColor),
               fontSize: 18,
               fontWeight: FontWeight.bold)),
       mainButton: FlatButton(

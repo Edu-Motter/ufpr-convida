@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
+import 'package:convida/app/shared/global/globals.dart';
 class NewEventWidget extends StatefulWidget {
   @override
   _NewEventWidgetState createState() => _NewEventWidgetState();
@@ -107,7 +107,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                       child: Text(
                         "Criando Novo Evento",
                         style: TextStyle(
-                            color: Color(0xFF295492), //Color(0xFF8A275D),
+                            color: Color(primaryColor), //Color(secondaryColor),
                             fontSize: 32.0,
                             fontWeight: FontWeight.bold),
                       ),
@@ -391,7 +391,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                 Navigator.pushReplacementNamed(
                                     context, "/main");
                               },
-                              color: Color(0xFF295492),
+                              color: Color(primaryColor),
                               child: Text(
                                 "Cancelar",
                                 style: TextStyle(
@@ -447,7 +447,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                   }
                                 }
                               },
-                              color: Color(0xFF8A275D),
+                              color: Color(secondaryColor),
                               child: Text(
                                 "Criar",
                                 style: TextStyle(
@@ -482,17 +482,20 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Image.asset(
-                        //Image:
-                        "assets/logo-ufprconvida-sembordas.png",
-                        width: 400.0,
-                        height: 400.0,
-                        //color: Colors.white70,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+                        child: Image.asset(
+                          //Image:
+                          "assets/logo-ufprconvida.png",
+                          width: 400.0,
+                          height: 400.0,
+                          //color: Colors.white70,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: RaisedButton(
-                          color: Color(0xFF295492),
+                          color: Color(primaryColor),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24),
                           ),
@@ -508,7 +511,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: RaisedButton(
-                          color: Color(0xFF8A275D),
+                          color: Color(secondaryColor),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24),
                           ),
@@ -518,7 +521,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                           },
                           padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                           child: Text('Fazer Cadastro',
-                              //Color(0xFF295492),(0xFF8A275D)
+                              //Color(primaryColor),(secondaryColor)
                               style:
                                   TextStyle(color: Colors.white, fontSize: 18)),
                         ),
@@ -532,7 +535,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                         onPressed: () {
                           Navigator.of(context).pushNamed("/main");
                         },
-                        color: Color(0xFF295492),
+                        color: Color(primaryColor),
                         child: Text(
                           "Voltar",
                           style: TextStyle(color: Colors.white, fontSize: 17.0),

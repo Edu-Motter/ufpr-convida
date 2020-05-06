@@ -6,7 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
+import 'package:convida/app/shared/global/globals.dart';
 class SignUpWidget extends StatefulWidget {
   @override
   _SignUpWidgetState createState() => _SignUpWidgetState();
@@ -61,7 +61,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         child: Text(
                           "Cadastro",
                           style: TextStyle(
-                              color: Color(0xFF295492), //Color(0xFF8A275D),
+                              color: Color(primaryColor), //Color(secondaryColor),
                               fontSize: 32.0,
                               fontWeight: FontWeight.bold),
                         ),
@@ -180,7 +180,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
-                                color: Color(0xFF295492),
+                                color: Color(primaryColor),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -208,7 +208,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                               child: Observer(
                                 builder: (_) {
                                   return RaisedButton(
-                                    color: Color(0xFF8A275D),
+                                    color: Color(secondaryColor),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(24),
                                     ),
@@ -308,7 +308,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                     padding:
                                         EdgeInsets.fromLTRB(43, 12, 43, 12),
                                     child: Text('Confirmar',
-                                        //Color(0xFF295492),(0xFF8A275D)
+                                        //Color(primaryColor),(secondaryColor)
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 18)),
                                   );

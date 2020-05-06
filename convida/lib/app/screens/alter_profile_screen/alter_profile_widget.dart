@@ -1,5 +1,6 @@
 import 'package:convida/app/screens/alter_profile_screen/alter_profile_controller.dart';
 import 'package:convida/app/shared/DAO/util_requisitions.dart';
+import 'package:convida/app/shared/global/globals.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                             child: Text(
                               "Perfil",
                               style: TextStyle(
-                                  color: Color(0xFF295492), //Color(0xFF8A275D),
+                                  color: Color(primaryColor), //Color(secondaryColor),
                                   fontSize: 32.0,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -279,7 +280,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                     : Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: RaisedButton(
-                                          color: Color(0xFF295492),
+                                          color: Color(primaryColor),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(24),
@@ -299,7 +300,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: RaisedButton(
-                                    color: Color(0xFF8A275D),
+                                    color: Color(secondaryColor),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(24),
                                     ),
@@ -381,7 +382,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                     padding:
                                         EdgeInsets.fromLTRB(43, 12, 43, 12),
                                     child: Text('Alterar',
-                                        //Color(0xFF295492),(0xFF8A275D)
+                                        //Color(primaryColor),(secondaryColor)
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 18)),
                                   ),

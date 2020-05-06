@@ -2,6 +2,7 @@ import 'package:convida/app/screens/recovery_screen/recovery_controlle.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:convida/app/shared/global/globals.dart';
 
 class RecoveryWidget extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                   child: Text(
                 'Informações Necessárias',
                 style: TextStyle(
-                    color: Color(0xFF295492),
+                    color: Color(primaryColor),
                     fontSize: 22,
                     fontWeight: FontWeight.w500),
               )),
@@ -65,7 +66,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                 return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: RaisedButton(
-                  color: Color(0xFF8A275D),
+                  color: Color(secondaryColor),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
@@ -76,7 +77,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                         },
                   padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
                   child: Text('Recuperar',
-                      //Color(0xFF295492),(0xFF8A275D)
+                      //Color(primaryColor),(secondaryColor)
                       style: TextStyle(color: Colors.white, fontSize: 18)),
                 ),
               );
@@ -88,7 +89,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                 child: Text(
                   'Obs.: Essa recuperação somente é válida para os usuário com GRR, aqueles que usam o login @ufpr devem recorrer a Intranet para Recuperar/Alterar sua senha UFPR',
                   style: TextStyle(
-                      color: Color(0xFF8A275D),
+                      color: Color(secondaryColor),
                       fontSize: 13,
                       fontWeight: FontWeight.w500),
                 ),

@@ -10,7 +10,7 @@ import 'package:convida/app/screens/map_screen/map_widget.dart';
 import 'package:convida/app/screens/my_events_screen/my_events_widget.dart';
 import 'package:convida/app/shared/global/globals.dart' as globals;
 import 'package:convida/app/shared/models/user.dart';
-
+import 'package:convida/app/shared/global/globals.dart';
 class MainWidget extends StatefulWidget {
   @override
   _MainWidgetState createState() => _MainWidgetState();
@@ -113,7 +113,7 @@ class _MainWidgetState extends State<MainWidget> {
   FloatingActionButton getDrawer() {
     return FloatingActionButton(
       heroTag: 0,
-      backgroundColor: Color(0xFF295492),
+      backgroundColor: Color(primaryColor),
       mini: true,
       onPressed: () async {
         final save = FlutterSecureStorage();

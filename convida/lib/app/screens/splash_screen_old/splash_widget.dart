@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
+import 'package:convida/app/shared/global/globals.dart';
 //import '../map_screen/map_widget.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -68,7 +68,7 @@ class CustomLoading extends StatelessWidget {
         CircularProgressIndicator(),
         Padding(padding: EdgeInsetsDirectional.only(top: 10.0),),
         Text("Carregando", style: TextStyle(
-            color: Color(0xFF295492),
+            color: Color(primaryColor),
             fontSize: 18.0,
             fontWeight: FontWeight.bold),)
       ],
@@ -83,11 +83,14 @@ class CustomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      //Imagem LOGO da UFPR
-      "assets/logo-ufprconvida-sembordas.png",
-      width: 400.0,
-      height: 400.0,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+      child: Image.asset(
+        //Imagem LOGO da UFPR
+        "assets/logo-ufprconvida.png",
+        width: 400.0,
+        height: 400.0,
+      ),
     );
   }
 }

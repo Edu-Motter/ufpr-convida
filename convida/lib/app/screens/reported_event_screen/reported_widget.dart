@@ -140,7 +140,7 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                               //             child: Icon(
                               //               Icons.report_off,
                               //               size: 26,
-                              //               color: Color(0xFF295492),
+                              //               color: Color(primaryColor),
                               //             ),
                               //           ),
                               //           Text("Ignorar Denúncias")

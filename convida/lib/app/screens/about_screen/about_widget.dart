@@ -21,9 +21,12 @@ class _AboutWidgetState extends State<AboutWidget> {
         ),
         body: Column(
           children: <Widget>[
-            Image.asset(
-              "assets/logo-ufprconvida-sembordas.png",
-              scale: 2,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+              child: Image.asset(
+                "assets/logo-ufprconvida.png",
+                scale: 2,
+              ),
             ),
             SingleChildScrollView(
               child: Padding(
