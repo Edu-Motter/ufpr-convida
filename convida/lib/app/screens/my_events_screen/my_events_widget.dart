@@ -184,6 +184,8 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
+                        SizedBox(height: 40),
+   
                         Padding(
                           padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
                           child: Image.asset(

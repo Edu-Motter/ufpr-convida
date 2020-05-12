@@ -18,6 +18,9 @@ abstract class _LoginControllerBase with Store {
   Login login = new Login();
   Login recovery = new Login();
   String _url = globals.URL;
+  
+  @observable
+  bool loading = false;
 
   String validateUser() {
     return userValidation(login.user);
@@ -46,6 +49,7 @@ abstract class _LoginControllerBase with Store {
   }
 
   Future<int> postLoginUser(BuildContext context) async {
+    loading = true;
     final _save = FlutterSecureStorage();
     //* GRR To Lower Case
     login.user = login.user.toLowerCase();
@@ -132,6 +136,8 @@ abstract class _LoginControllerBase with Store {
         showError("Erro desconhecido", "Erro: $e", context);
       }
     }
+
+    loading = false;
     return s;
   }
 

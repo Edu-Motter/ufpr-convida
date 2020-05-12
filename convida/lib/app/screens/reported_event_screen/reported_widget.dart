@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:convida/app/screens/reported_event_screen/reported_event_controller.dart';
 import 'package:convida/app/shared/DAO/util_requisitions.dart';
+import 'package:convida/app/shared/global/globals.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/models/report.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
@@ -41,79 +42,115 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
             future: controller.updateList(event.id, context),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               print(snapshot.connectionState);
-              if (snapshot.data != null) {
+              if (snapshot.data != null ||
+                  snapshot.connectionState != ConnectionState.done) {
                 return Center(child: CircularProgressIndicator());
               } else {
                 return Column(
                   children: <Widget>[
                     Observer(builder: (_) {
-                      return Expanded(
-                        flex: 10,
-                        child: ListView.builder(
-                            itemCount: controller.listReports.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Observer(builder: (_) {
-                                return SizedBox(
-                                  width: double.infinity,
-                                  height: 120,
-                                  child: Card(
-                                    child: ListTile(
-                                      title: Text(
-                                        controller
-                                            .listReports[index].description,
-                                        maxLines: 4,
-                                        style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w300),
-                                      ),
-                                      subtitle: Padding(
-                                        padding: const EdgeInsets.only(top: 10.0),
-                                        child: Text(
-                                          "Reportado por: ${controller.listReports[index].author}",
-                                          maxLines: 1,
+                      if (controller.listReports.length == 0) {
+                        return Expanded(
+                          flex: 10,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12, right: 12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    child: Text(
+                                      "Todas as denúncias foram verificadas!",
+                                      style: TextStyle(
+                                          color: Color(secondaryColor),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Expanded(
+                          flex: 10,
+                          child: ListView.builder(
+                              itemCount: controller.listReports.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Observer(builder: (_) {
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    height: 120,
+                                    child: Card(
+                                      child: ListTile(
+                                        title: Text(
+                                          controller
+                                              .listReports[index].description,
+                                          maxLines: 4,
                                           style: TextStyle(
                                               color: Colors.black87,
                                               fontSize: 16.0,
-                                              fontWeight: FontWeight.w400),
+                                              fontWeight: FontWeight.w300),
                                         ),
-                                      ),
-                                      trailing: InkWell(
-                                        child: Icon(Icons.check_box,
-                                            color: Colors.green, size: 32),
-                                        onTap: () {
-                                          showConfirm(
-                                              title: "Remover denúncia",
-                                              content:
-                                                  "Deseja realmente remover esta denúncia?",
-                                              onPressed: () {
-                                                controller.removeReport(
-                                                  controller.listReports[index],
-                                                  context);
-                                                Navigator.pop(context);
+                                        subtitle: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 10.0),
+                                          child: Text(
+                                            "Reportado por: ${controller.listReports[index].author}",
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ),
+                                        trailing: InkWell(
+                                          child: Icon(Icons.check_box,
+                                              color: Colors.green, size: 32),
+                                          onTap: controller.loading
+                                              ? null
+                                              : () {
+                                                  showConfirm(
+                                                      title: "Remover denúncia",
+                                                      content:
+                                                          "Deseja realmente remover esta denúncia?",
+                                                      onPressed: () {
+                                                        controller.removeReport(
+                                                            controller
+                                                                    .listReports[
+                                                                index],
+                                                            context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      context: context);
+                                                },
+                                        ),
+                                        onLongPress: controller.loading
+                                            ? null
+                                            : () {
+                                                showConfirm(
+                                                    title: "Remover denúncia",
+                                                    content:
+                                                        "Deseja realmente remover esta denúncia?",
+                                                    onPressed: () {
+                                                      controller.removeReport(
+                                                          controller
+                                                                  .listReports[
+                                                              index],
+                                                          context);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    context: context);
                                               },
-                                              context: context);
-                                        },
                                       ),
-                                      onLongPress: () {
-                                        showConfirm(
-                                              title: "Remover denúncia",
-                                              content:
-                                                  "Deseja realmente remover esta denúncia?",
-                                              onPressed: () {
-                                                controller.removeReport(
-                                                  controller.listReports[index],
-                                                  context);
-                                                Navigator.pop(context);
-                                              },
-                                              context: context);
-                                      },
                                     ),
-                                  ),
-                                );
-                              });
-                            }),
-                      );
+                                  );
+                                });
+                              }),
+                        );
+                      }
                     }),
                     Expanded(
                       flex: (MediaQuery.of(context).orientation ==
@@ -155,15 +192,31 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(2.0),
                                         child: InkWell(
-                                          onTap: () async {
-                                            bool success =
-                                                await controller.getDeactivate(
-                                                    event.id, context);
-                                            if (success) {
-                                              showSuccess("Evento Desativado",
-                                                  "pop", context);
-                                            }
-                                          },
+                                          onTap: controller.loading
+                                              ? null
+                                              : () async {
+                                                  bool success;
+                                                  showConfirm(
+                                                      title: "Desativar Evento",
+                                                      content:
+                                                          "Deseja realmente desativar este evento?",
+                                                      onPressed: () async {
+                                                        success =
+                                                            await controller
+                                                                .getDeactivate(
+                                                                    event.id,
+                                                                    context);
+                                                        Navigator.pop(context);
+
+                                                        if (success) {
+                                                          showSuccess(
+                                                              "Evento Desativado",
+                                                              "pop",
+                                                              context);
+                                                        }
+                                                      },
+                                                      context: context);
+                                                },
                                           child: Column(
                                             children: <Widget>[
                                               Icon(Icons.cancel,
@@ -184,14 +237,31 @@ class _RerportedEventWidgetState extends State<RerportedEventWidget> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(2.0),
                                         child: InkWell(
-                                          onTap: () async {
-                                            bool success = await controller
-                                                .getActivate(event.id, context);
-                                            if (success) {
-                                              showSuccess("Evento Ativado",
-                                                  "pop", context);
-                                            }
-                                          },
+                                          onTap: controller.loading
+                                              ? null
+                                              : () async {
+                                                  bool success;
+                                                  showConfirm(
+                                                      title: "Ativar Evento",
+                                                      content:
+                                                          "Deseja realmente Ativar este evento?",
+                                                      onPressed: () async {
+                                                        success =
+                                                            await controller
+                                                                .getActivate(
+                                                                    event.id,
+                                                                    context);
+                                                        Navigator.pop(context);
+
+                                                        if (success) {
+                                                          showSuccess(
+                                                              "Evento Ativado",
+                                                              "pop",
+                                                              context);
+                                                        }
+                                                      },
+                                                      context: context);
+                                                },
                                           child: Column(
                                             children: <Widget>[
                                               Icon(Icons.check_circle,

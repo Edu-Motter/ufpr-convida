@@ -4,7 +4,6 @@ import 'package:convida/app/shared/models/user.dart';
 import 'package:convida/app/shared/validations/event_validation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:convida/app/shared/models/event.dart';
-import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
@@ -193,6 +192,8 @@ abstract class _DetailedEventControllerBase with Store {
   }
 
   Future putEventFav(String eventId, BuildContext context) async {
+    favorite = true;
+
     final _save = FlutterSecureStorage();
     final _id = await _save.read(key: "user");
     final _token = await _save.read(key: "token");
@@ -212,24 +213,31 @@ abstract class _DetailedEventControllerBase with Store {
     try {
       r = await http.post("$_url/users/fav", body: body, headers: mapHeaders);
       if (r.statusCode == 204) {
-        
-            favorite = true;
+        //Show "Favoritado com Sucesso!"
       } else if (r.statusCode == 401) {
+        favorite = false;
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
       } else if (r.statusCode == 404) {
+        favorite = false;
         showError("Erro 404", "Autor não foi encontrado", context);
       } else if (r.statusCode == 500) {
+        favorite = false;
         showError("Erro 500",
             "Erro no servidor, favor tente novamente mais tarde", context);
       } else {
+        favorite = false;
         showError("Erro Desconhecido", "StatusCode: ${r.statusCode}", context);
       }
     } catch (e) {
+      favorite = false;
       showError("Erro desconhecido", "Erro: $e", context);
     }
   }
 
   Future deleteEventFav(String eventId, BuildContext context) async {
+
+    favorite = false;
+
     final _save = FlutterSecureStorage();
     final _id = await _save.read(key: "user");
     final _token = await _save.read(key: "token");
@@ -248,19 +256,23 @@ abstract class _DetailedEventControllerBase with Store {
     try {
       r = await http.post("$_url/users/rfav", body: body, headers: mapHeaders);
       if (r.statusCode == 204) {
-        
-            favorite = false;
+        //Show "Desfavoritado com Sucesso!"
       } else if (r.statusCode == 401) {
+        favorite = true;
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
       } else if (r.statusCode == 404) {
+        favorite = true;
         showError("Erro 404", "Autor não foi encontrado", context);
       } else if (r.statusCode == 500) {
+        favorite = true;
         showError("Erro 500",
             "Erro no servidor, favor tente novamente mais tarde", context);
       } else {
+        favorite = true;
         showError("Erro Desconhecido", "StatusCode: ${r.statusCode}", context);
       }
     } catch (e) {
+      favorite = true;
       showError("Erro desconhecido", "Erro: $e", context);
     }
   }

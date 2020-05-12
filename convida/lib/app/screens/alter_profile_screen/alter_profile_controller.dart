@@ -21,6 +21,9 @@ abstract class _AlterProfileControllerBase with Store {
   var profile = Profile();
   String _url = globals.URL;
 
+  @observable
+  bool loading = false;
+
   @computed
   bool get isValid {
     return ((validateName() == null) &&
@@ -70,7 +73,6 @@ abstract class _AlterProfileControllerBase with Store {
       return false;
     }
 
-
     //*Birthday
     error = birthValidation(profile.birth);
     if (error != null) {
@@ -93,7 +95,6 @@ abstract class _AlterProfileControllerBase with Store {
     }
 
     if (profile.newPassword != null) {
-
       //*Confirm Password
       error = passwordValidation(profile.newPassword, profile.confirmPassword);
       if (error != null) {
@@ -138,6 +139,7 @@ abstract class _AlterProfileControllerBase with Store {
   }
 
   Future<bool> passCheck({User user, BuildContext context}) async {
+    loading = true;
     final _save = FlutterSecureStorage();
     final _token = await _save.read(key: "token");
 
@@ -167,18 +169,24 @@ abstract class _AlterProfileControllerBase with Store {
         if ((response.statusCode == 200) || (response.statusCode == 201)) {
           if (response.body == "true")
             return true;
-          else
+          else {
+            loading = false;
             return false;
+          }
         } else if (response.statusCode == 401) {
+          loading = false;
           showError(
               "Erro 401", "Não autorizado, favor logar novamente", context);
         } else if (response.statusCode == 404) {
+          loading = false;
           showError(
               "Erro 404", "Evento ou usuário não foi encontrado", context);
         } else if (response.statusCode == 500) {
+          loading = false;
           showError("Erro 500",
               "Erro no servidor, favor tente novamente mais tarde", context);
         } else {
+          loading = false;
           showError("Erro Desconhecido", "StatusCode: ${response.statusCode}",
               context);
         }
@@ -251,7 +259,7 @@ abstract class _AlterProfileControllerBase with Store {
     } catch (e) {
       showError("Erro desconhecido", "Erro: $e", context);
     }
-
+    loading = false;
     return code;
   }
 }

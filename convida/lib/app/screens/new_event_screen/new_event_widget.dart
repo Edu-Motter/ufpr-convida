@@ -404,7 +404,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               padding: EdgeInsets.all(12),
-                              onPressed: () async {
+                              onPressed: newEventController.loading ? null : () async {
                                 //If pressed after creation, just redirect
                                 if (created) {
                                   //Navigator.pop(context);
@@ -459,6 +459,14 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                       ),
                     ),
                   ),
+                  Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Observer(builder: (_) {
+                          return newEventController.loading ? LinearProgressIndicator() : SizedBox();
+                        }),
+                      ),
+                    )
                 ],
               ),
             ),

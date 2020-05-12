@@ -18,6 +18,10 @@ abstract class _SignupControllerBase with Store {
   var signup = Signup();
   String _url = globals.URL;
 
+
+  @observable
+  bool loading = false;
+
   @computed
   bool get isValid {
     return true;
@@ -68,6 +72,7 @@ abstract class _SignupControllerBase with Store {
         return 200;
       }
        else {
+        loading = false;
         print("Email Inválido");
         return 500;
       }
@@ -76,6 +81,7 @@ abstract class _SignupControllerBase with Store {
   }
 
   Future<int> checkGrr() async {
+    loading = true;
     Map<String, String> mapHeaders = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -90,6 +96,7 @@ abstract class _SignupControllerBase with Store {
       final int statusCode = response.statusCode;
       if ((statusCode == 200) || (statusCode == 201)) {
         //Return 500 because already exist a user with this GRR
+        loading = false;
         return 500;
       } else {
         return 200;
@@ -188,6 +195,7 @@ abstract class _SignupControllerBase with Store {
     } catch (e) {
       showError("Erro desconhecido capturado", "Erro: $e", context);
     }
+    loading = false;
     return code;
   }
 

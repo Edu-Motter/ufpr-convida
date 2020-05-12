@@ -15,6 +15,10 @@ part 'alter_event_controller.g.dart';
 class AlterEventController = _AlterEventControllerBase with _$AlterEventController;
 
 abstract class _AlterEventControllerBase with Store {
+
+  @observable
+  bool loading = false;
+  
   NewEvent alterEvent = NewEvent();
   String _url = globals.URL;
   
@@ -113,6 +117,7 @@ String datesValidations(bool isSwitchedSubs) {
   }
 
   Future<int> putEvent(String type, bool isSwitchedSubs, Event event , BuildContext context) async {
+    loading = true;
     final _save = FlutterSecureStorage();
     final _token = await _save.read(key: "token");
 
@@ -194,6 +199,7 @@ String datesValidations(bool isSwitchedSubs) {
       showError("Erro desconhecido", "Erro: $e", context);
     }
 
+    loading = false;
     return code;
   }
 

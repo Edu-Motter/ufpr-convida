@@ -93,7 +93,8 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                             child: Text(
                               "Perfil",
                               style: TextStyle(
-                                  color: Color(primaryColor), //Color(secondaryColor),
+                                  color: Color(
+                                      primaryColor), //Color(secondaryColor),
                                   fontSize: 32.0,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -237,7 +238,8 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                         padding: const EdgeInsets.all(8.0),
                                         child: Observer(builder: (_) {
                                           return textFieldObscure(
-                                              labelText: "Confirmar nova senha:",
+                                              labelText:
+                                                  "Confirmar nova senha:",
                                               icon: Icons.lock,
                                               onChanged: profileController
                                                   .profile
@@ -297,100 +299,127 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                                   fontSize: 18)),
                                         ),
                                       ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: RaisedButton(
-                                    color: Color(secondaryColor),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    onPressed: () async {
-                                      //*Arrumar data:
-                                      DateTime dateUser =
-                                          DateFormat("dd/MM/yyyy").parse(
-                                              profileController.profile.birth);
-                                      String datePost =
-                                          postFormat.format(dateUser);
-                                      
-                                      if (created) {
-                                        Navigator.of(context)
-                                            .pushReplacementNamed("/main");
-                                      } else if ((user.name ==
-                                              profileController.profile.name) &&
-                                          (user.lastName ==
-                                              profileController
-                                                  .profile.lastName) &&
-                                          (user.email ==
-                                              profileController
-                                                  .profile.email) &&
-                                          (user.birth == datePost) &&
-                                          (isSwitchedPassword == false)) {
-                                        String error = "Sem Alterações";
-                                        String desc = "Não foi nada alterado";
-                                        showError(error, desc, context);
-                                      }
-                                      
-                                      //!Corrigir
-                                      else if (profileController
-                                              .profile.password ==
-                                          profileController
-                                              .profile.newPassword) {
-                                        String error = "Senhas iguais";
-                                        String desc =
-                                            "A senha nova é igual a antiga";
-                                        showError(error, desc, context);
-                                      } else if (created == false) {
-                                        bool ok =
-                                            profileController.checkAll(context);
-                                        if (ok) {
-                                          bool correct =
-                                              await profileController.passCheck(
-                                                  user: user, context: context);
+                                Observer(builder: (_) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: RaisedButton(
+                                      color: Color(secondaryColor),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      onPressed: profileController.loading
+                                          ? null
+                                          : () async {
+                                              //*Arrumar data:
+                                              DateTime dateUser =
+                                                  DateFormat("dd/MM/yyyy")
+                                                      .parse(profileController
+                                                          .profile.birth);
+                                              String datePost =
+                                                  postFormat.format(dateUser);
 
-                                          if (correct) {
-                                            int statusCode =
-                                                await profileController.putUser(
-                                                    isSwitch:
-                                                        isSwitchedPassword,
-                                                    user: user,
-                                                    dateUser: datePost,
-                                                    context: context);
-                                            if ((statusCode == 200) ||
-                                                (statusCode == 204)) {
-                                              showSuccess(
-                                                  "Usuário Alterado com sucesso!",
-                                                  "/main",
-                                                  context);
-                                            } else {
-                                              errorStatusCode(
-                                                  statusCode,
-                                                  context,
-                                                  "Erro ao alterar Usuário");
-                                            }
-                                            created = true;
-                                          } else {
-                                            String error = "Senha incorreta";
-                                            String desc =
-                                                "Pressione 'Ok' e tente novamente";
-                                            showError(error, desc, context);
-                                          }
-                                        } else {
-                                          //!Corrigir!
-                                        }
-                                      }
-                                    },
-                                    padding:
-                                        EdgeInsets.fromLTRB(43, 12, 43, 12),
-                                    child: Text('Alterar',
-                                        //Color(primaryColor),(secondaryColor)
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18)),
-                                  ),
-                                ),
+                                              if (created) {
+                                                Navigator.of(context)
+                                                    .pushReplacementNamed(
+                                                        "/main");
+                                              } else if ((user.name ==
+                                                      profileController
+                                                          .profile.name) &&
+                                                  (user.lastName ==
+                                                      profileController
+                                                          .profile.lastName) &&
+                                                  (user.email ==
+                                                      profileController
+                                                          .profile.email) &&
+                                                  (user.birth == datePost) &&
+                                                  (isSwitchedPassword ==
+                                                      false)) {
+                                                String error = "Sem Alterações";
+                                                String desc =
+                                                    "Não foi nada alterado";
+                                                showError(error, desc, context);
+                                              }
+
+                                              //!Corrigir
+                                              else if (profileController
+                                                      .profile.password ==
+                                                  profileController
+                                                      .profile.newPassword) {
+                                                String error = "Senhas iguais";
+                                                String desc =
+                                                    "A senha nova é igual a antiga";
+                                                showError(error, desc, context);
+                                              } else if (created == false) {
+                                                bool ok = profileController
+                                                    .checkAll(context);
+                                                if (ok) {
+                                                  bool correct =
+                                                      await profileController
+                                                          .passCheck(
+                                                              user: user,
+                                                              context: context);
+
+                                                  if (correct) {
+                                                    int statusCode =
+                                                        await profileController
+                                                            .putUser(
+                                                                isSwitch:
+                                                                    isSwitchedPassword,
+                                                                user: user,
+                                                                dateUser:
+                                                                    datePost,
+                                                                context:
+                                                                    context);
+                                                    if ((statusCode == 200) ||
+                                                        (statusCode == 204)) {
+                                                      showSuccess(
+                                                          "Usuário Alterado com sucesso!",
+                                                          "/main",
+                                                          context);
+                                                    } else {
+                                                      errorStatusCode(
+                                                          statusCode,
+                                                          context,
+                                                          "Erro ao alterar Usuário");
+                                                    }
+                                                    created = true;
+                                                  } else {
+                                                    String error =
+                                                        "Senha incorreta";
+                                                    String desc =
+                                                        "Pressione 'Ok' e tente novamente";
+                                                    showError(
+                                                        error, desc, context);
+                                                  }
+                                                } else {
+                                                  //!Corrigir!
+                                                }
+                                              }
+                                            },
+                                      padding:
+                                          EdgeInsets.fromLTRB(43, 12, 43, 12),
+                                      child: Text('Alterar',
+                                          //Color(primaryColor),(secondaryColor)
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18)),
+                                    ),
+                                  );
+                                })
                               ],
                             ),
                           ),
                         ),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Observer(builder: (_) {
+                              return profileController.loading
+                                  ? LinearProgressIndicator()
+                                  : SizedBox();
+                            }),
+                          ),
+                        )
                       ],
                     ),
                   ),

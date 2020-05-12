@@ -18,7 +18,8 @@ abstract class _ReportControllerBase with Store {
   @action
   setListItems(List<Event> value) => listItems = value;
 
-  Future<List<Event>> getReportedEvents(BuildContext context) async {
+  Future<List<Event>> 
+  getReportedEvents(BuildContext context) async {
     final _save = FlutterSecureStorage();
     var _token = await _save.read(key: "token");
     String _id = await _save.read(key: "user");

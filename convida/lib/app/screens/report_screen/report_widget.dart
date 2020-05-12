@@ -27,14 +27,19 @@ class _ReportWidgetState extends State<ReportWidget> {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.data.length == 0) {
             return Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.only(left: 12, right: 12),
               child: Center(
-                child: Text(
-                  "Não há eventos Denúnciados",
-                  style: TextStyle(
-                      color: Color(secondaryColor),
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: Text(
+                      "Não há eventos Denunciados!",
+                      style: TextStyle(
+                          color: Color(secondaryColor),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
               ),
             );

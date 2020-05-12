@@ -71,7 +71,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                     borderRadius: BorderRadius.circular(24),
                   ),
                   onPressed: recoveryController.loading == true
-                      ? null
+                      ? null //Disable the button
                       : () async {
                           recoveryController.postRecovery(context);
                         },
@@ -89,7 +89,7 @@ class _RecoveryWidgetState extends State<RecoveryWidget> {
                 child: Text(
                   'Obs.: Essa recuperação somente é válida para os usuário com GRR, aqueles que usam o login @ufpr devem recorrer a Intranet para Recuperar/Alterar sua senha UFPR',
                   style: TextStyle(
-                      color: Color(secondaryColor),
+                      color: Color(primaryColor),
                       fontSize: 13,
                       fontWeight: FontWeight.w500),
                 ),

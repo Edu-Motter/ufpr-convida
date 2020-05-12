@@ -60,6 +60,23 @@ mixin _$NewEvent on _NewEventBase, Store {
     }, _$descAtom, name: '${_$descAtom.name}_set');
   }
 
+  final _$onlineAtom = Atom(name: '_NewEventBase.online');
+
+  @override
+  bool get online {
+    _$onlineAtom.context.enforceReadPolicy(_$onlineAtom);
+    _$onlineAtom.reportObserved();
+    return super.online;
+  }
+
+  @override
+  set online(bool value) {
+    _$onlineAtom.context.conditionallyRunInAction(() {
+      super.online = value;
+      _$onlineAtom.reportChanged();
+    }, _$onlineAtom, name: '${_$onlineAtom.name}_set');
+  }
+
   final _$addressAtom = Atom(name: '_NewEventBase.address');
 
   @override
@@ -264,6 +281,16 @@ mixin _$NewEvent on _NewEventBase, Store {
   }
 
   @override
+  dynamic setOnline(bool value) {
+    final _$actionInfo = _$_NewEventBaseActionController.startAction();
+    try {
+      return super.setOnline(value);
+    } finally {
+      _$_NewEventBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic setAddress(String value) {
     final _$actionInfo = _$_NewEventBaseActionController.startAction();
     try {
@@ -366,7 +393,7 @@ mixin _$NewEvent on _NewEventBase, Store {
   @override
   String toString() {
     final string =
-        'name: ${name.toString()},target: ${target.toString()},desc: ${desc.toString()},address: ${address.toString()},complement: ${complement.toString()},link: ${link.toString()},type: ${type.toString()},hrStart: ${hrStart.toString()},hrEnd: ${hrEnd.toString()},dateStart: ${dateStart.toString()},dateEnd: ${dateEnd.toString()},subStart: ${subStart.toString()},subEnd: ${subEnd.toString()}';
+        'name: ${name.toString()},target: ${target.toString()},desc: ${desc.toString()},online: ${online.toString()},address: ${address.toString()},complement: ${complement.toString()},link: ${link.toString()},type: ${type.toString()},hrStart: ${hrStart.toString()},hrEnd: ${hrEnd.toString()},dateStart: ${dateStart.toString()},dateEnd: ${dateEnd.toString()},subStart: ${subStart.toString()},subEnd: ${subEnd.toString()}';
     return '{$string}';
   }
 }

@@ -16,6 +16,7 @@ class AlterEventWidget extends StatefulWidget {
   @override
   _AlterEventWidgetState createState() => _AlterEventWidgetState(event);
 }
+
 class _AlterEventWidgetState extends State<AlterEventWidget> {
   Event event;
   _AlterEventWidgetState(this.event);
@@ -209,10 +210,8 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
             ),
 
             //Online Event
-                  SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: eventSwitchOnline()),
-                  
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal, child: eventSwitchOnline()),
 
             //eventAddressInput(),
             Padding(
@@ -446,41 +445,53 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       padding: EdgeInsets.all(12),
-                      onPressed: () async {
-                        if (created) {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }
-                        if (created == false) {
-                          //* Check all Inputs
-                          bool ok = alterEventController.checkAll(
-                              context, isSwitchedSubs);
-
-                          if (ok) {
-                            String error = "";
-
-                            error = alterEventController
-                                .datesValidations(isSwitchedSubs);
-                            if (error != "") {
-                              showError("Data Incorreta", "$error", context);
-                            } else {
-                              int statusCode =
-                                  await alterEventController.putEvent(
-                                      _currentType,
-                                      isSwitchedSubs,
-                                      event,
-                                      context);
-                              if ((statusCode == 200) || (statusCode == 201)) {
-                                showSuccess("Evento Alterado com sucesso!",
-                                    "pop", context);
-                              } else {
-                                errorStatusCode(statusCode, context, "Erro ao Alterar Evento");
+                      onPressed: alterEventController.loading
+                          ? null
+                          : () async {
+                              if (created) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
                               }
-                              created = true;
-                            }
-                          }
-                        }
-                      },
+                              if (created == false) {
+                                //* Check all Inputs
+                                bool ok = alterEventController.checkAll(
+                                    context, isSwitchedSubs);
+
+                                if (ok) {
+                                  String error = "";
+
+                                  error = alterEventController
+                                      .datesValidations(isSwitchedSubs);
+                                  if (error != "") {
+                                    showError(
+                                        "Data Incorreta", "$error", context);
+                                  } else {
+                                    int statusCode =
+                                        await alterEventController.putEvent(
+                                            _currentType,
+                                            isSwitchedSubs,
+                                            event,
+                                            context);
+                                    if ((statusCode == 200) ||
+                                        (statusCode == 201)) {
+                                      showConfirm(
+                                          title: "Alterado com Sucesso!",
+                                          content: "Seu evento foi alterado com sucesso, deseja voltar ao seus eventos?",
+                                          onPressed: (){
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          },
+                                          context: context);
+                                    } else {
+                                      errorStatusCode(statusCode, context,
+                                          "Erro ao Alterar Evento");
+                                    }
+                                    created = true;
+                                  }
+                                }
+                              }
+                            },
                       color: Color(secondaryColor),
                       child: Text(
                         "Alterar",
@@ -489,6 +500,16 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Observer(builder: (_) {
+                  return alterEventController.loading
+                      ? LinearProgressIndicator()
+                      : SizedBox();
+                }),
               ),
             )
           ],
@@ -511,7 +532,8 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
+                      padding:
+                          const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
                       child: Image.asset(
                         //Image:
                         "assets/logo-ufprconvida.png",
@@ -580,7 +602,8 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
       ),
     );
   }
-   Padding eventSwitchOnline() {
+
+  Padding eventSwitchOnline() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(47, 8.0, 8.0, 8.0),
       child: Row(

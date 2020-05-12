@@ -17,6 +17,9 @@ part 'new_event_controller.g.dart';
 class NewEventController = _NewEventControllerBase with _$NewEventController;
 
 abstract class _NewEventControllerBase with Store {
+
+  @observable
+  bool loading = false;
   var newEvent = NewEvent();
   String _url = globals.URL;
 
@@ -132,6 +135,7 @@ abstract class _NewEventControllerBase with Store {
 
   Future<int> postNewEvent(String type, bool isSwitchedSubs, LatLng coords, bool isOnline,
       BuildContext context) async {
+        loading = true;
     final _save = FlutterSecureStorage();
     String _token = await _save.read(key: "token");
     String _id = await _save.read(key: "user");
@@ -203,10 +207,12 @@ abstract class _NewEventControllerBase with Store {
         lat: coords.latitude,
         lng: coords.longitude,
         active: true,
-        online: isOnline);
+        online: isOnline,
+        reported: false);
 
     String eventJson = json.encode(p.toJson());
     int code;
+    print(eventJson);
 
     //!POST EVENT
     try {
@@ -226,6 +232,7 @@ abstract class _NewEventControllerBase with Store {
       showError("Erro desconhecido", "Erro: $e", context);
       return 500;
     }
+    loading = false;
     return code;
   }
 

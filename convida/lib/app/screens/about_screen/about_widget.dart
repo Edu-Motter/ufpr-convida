@@ -1,3 +1,4 @@
+import 'package:convida/app/shared/global/globals.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,7 +20,7 @@ class _AboutWidgetState extends State<AboutWidget> {
           title: const Text("Sobre"),
           centerTitle: true,
         ),
-        body: Column(
+        body: ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
@@ -32,13 +33,26 @@ class _AboutWidgetState extends State<AboutWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: const Text(
-                  "O Aplicativo UFPRConVIDA possui todas as imagens produzidas pelos seguintes autores, \"Freepik\", \"Nikita Golubev\", \"Eucalyp\" e \"pongsakornRed\". Todos eles podem ser encontrados no site \"www.flaticon.com\"",
+                  "O Aplicativo UFPRConVIDA foi desenvolvido por Eduardo Zen Motter e Erick Rampim Garcia, ambos estudantes de Tecnologia em Análise e Desenvolvimento de Sistemas - SEPT - UFPR.", style: TextStyle(
+                    fontSize: 16,
+                    
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: const Text(
+                  "Todas as imagens utilizadas foram produzidas pelos seguintes autores, \"Freepik\", \"Nikita Golubev\", \"Eucalyp\" e \"pongsakornRed\". Todos eles podem ser encontrados no site \"www.flaticon.com\"",
                   style: TextStyle(
                     fontSize: 16,
                   ),
                 ),
               ),
             ),
+            SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -54,7 +68,22 @@ class _AboutWidgetState extends State<AboutWidget> {
                             decoration: TextDecoration.underline)),
                     onTap: () => openLink(linkUfpr))
               ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Versão: ",
+                  style: TextStyle(fontSize: 16),
+                ),
+                Text("$appVersion",
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        ))
+              ],
             )
+            
           ],
         ),
       );

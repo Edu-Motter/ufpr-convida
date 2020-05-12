@@ -19,6 +19,7 @@ class Event {
   double lng;
   bool active;
   bool online;
+  bool reported;
 
   Event(
       {this.id,
@@ -39,7 +40,8 @@ class Event {
         this.lat,
         this.lng,
         this.active,
-        this.online});
+        this.online,
+        this.reported});
 
   Event.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -61,6 +63,7 @@ class Event {
     lng = json['lng'];
     active = json['active'];
     online = json['online'];
+    reported = json['reported'];
   }
 
   Map<String, dynamic> toJson() {
@@ -84,6 +87,7 @@ class Event {
     data['lng'] = this.lng;
     data['active'] = this.active;
     data['online'] = this.online;
+    data['reported'] = this.reported;
     return data;
   }
 }

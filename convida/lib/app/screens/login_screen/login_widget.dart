@@ -6,6 +6,7 @@ import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/material.dart';
 import 'package:convida/app/shared/global/globals.dart';
+
 class LoginWidget extends StatefulWidget {
   @override
   _LoginWidgetState createState() => _LoginWidgetState();
@@ -46,16 +47,18 @@ class _LoginWidgetState extends State<LoginWidget> {
             children: <Widget>[
               (queryData.orientation == Orientation.portrait)
                   ? Padding(
-                    padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
-                      child: Image.asset(
+                      padding:
+                          const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
+                        child: Image.asset(
                           //Image:
                           "assets/logo-ufprconvida.png",
                           scale: 2,
                         ),
-                    ),
-                  )
+                      ),
+                    )
                   : Container(
                       height: queryData.size.height / 2,
                       width: queryData.size.width / 2,
@@ -107,6 +110,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                       errorText: loginController.validatePassword);
                 }),
               ),
+              Center(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(62.0, 0,62.0,0),
+                        child: Observer(builder: (_) {
+                          return loginController.loading ? LinearProgressIndicator() : SizedBox();
+                        }),
+                      ),
+                    ),
 
               Center(
                 child: Row(
@@ -118,56 +129,64 @@ class _LoginWidgetState extends State<LoginWidget> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RaisedButton(
-                                color: Color(primaryColor),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
+                            Observer(builder: (BuildContext context) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  color: Color(primaryColor),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                  onPressed: loginController.loading
+                                      ? null
+                                      : () async {
+                                          bool valid = loginController
+                                              .validadeLogin(context);
+                                          // If the form is valid, must authenticate
+                                          if (valid) {
+                                            int statusCode =
+                                                await loginController
+                                                    .postLoginUser(context);
+                                            if (statusCode == 200 ||
+                                                statusCode == 201) {
+                                              if ((where == "fav") ||
+                                                  (where == "my-events")) {
+                                                Navigator.pop(context);
+                                              } else {
+                                                Navigator.pushReplacementNamed(
+                                                    context, '/main');
+                                              }
+                                            } else if (statusCode == 0) {
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AlterProfileWidget(
+                                                      user: User(
+                                                          name: null,
+                                                          lastName: null,
+                                                          grr: loginController
+                                                              .login.user,
+                                                          birth: null,
+                                                          email: null),
+                                                    ),
+                                                  ));
+                                            } else {
+                                              print("AQUI : $statusCode");
+                                              errorStatusCode(
+                                                  statusCode,
+                                                  context,
+                                                  "GRR ou Senha incorreto");
+                                            }
+                                          }
+                                        },
+                                  padding: EdgeInsets.fromLTRB(60, 12, 60, 12),
+                                  child: Text('Entrar',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18)),
                                 ),
-                                onPressed: () async {
-                                  bool valid =
-                                      loginController.validadeLogin(context);
-                                  // If the form is valid, must authenticate
-                                  if (valid) {
-                                    int statusCode = await loginController
-                                        .postLoginUser(context);
-                                    if (statusCode == 200 ||
-                                        statusCode == 201) {
-                                      if ((where == "fav") ||
-                                          (where == "my-events")) {
-                                        Navigator.pop(context);
-                                      } else {
-                                        Navigator.pushReplacementNamed(
-                                            context, '/main');
-                                      }
-                                    } else if (statusCode == 0) {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AlterProfileWidget(
-                                              user: User(
-                                                  name: null,
-                                                  lastName: null,
-                                                  grr: loginController
-                                                      .login.user,
-                                                  birth: null,
-                                                  email: null),
-                                            ),
-                                          ));
-                                    } else {
-                                      errorStatusCode(statusCode, context,
-                                          "GRR ou Senha incorreto");
-                                    }
-                                  }
-                                },
-                                padding: EdgeInsets.fromLTRB(60, 12, 60, 12),
-                                child: Text('Entrar',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18)),
-                              ),
-                            ),
+                              );
+                            }),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
@@ -239,6 +258,4 @@ class _LoginWidgetState extends State<LoginWidget> {
           )),
     );
   }
-
-  
 }

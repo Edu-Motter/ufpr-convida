@@ -22,6 +22,9 @@ abstract class _ReportedEventControllerBase with Store {
   final _save = FlutterSecureStorage();
 
   @observable
+  bool loading = false;
+
+  @observable
   ObservableList listReports = [].asObservable();
 
   updateList(idEvent, BuildContext context) async {
@@ -42,10 +45,12 @@ abstract class _ReportedEventControllerBase with Store {
 
   @action
   removeReport(ReportModel report, BuildContext context) {
+    loading = true;
     ignoreReport(context, report.id);
     updateList(report, context);
     listReports.removeWhere((item) => (item.description == report.description &&
         item.author == report.author));
+    loading = false;
   }
 
   Future<List<Report>> getReports(String idEvent, BuildContext context) async {
@@ -112,6 +117,7 @@ abstract class _ReportedEventControllerBase with Store {
   }
 
   Future<bool> getDeactivate(String id, BuildContext context) async {
+    loading = true;
     final _token = await _save.read(key: "token");
     String _url = globals.URL;
     dynamic response;
@@ -123,19 +129,23 @@ abstract class _ReportedEventControllerBase with Store {
       printRequisition(request, response.statusCode, "Deactivate This Event");
 
       if ((response.statusCode == 200) || (response.statusCode == 201)) {
+        loading = false;
         return true;
       } else {
         errorStatusCode(
             response.statusCode, context, "Erro ao Desativar Evento");
+        loading = false;
         return false;
       }
     } catch (e) {
+      loading = false;
       showError("Erro desconhecido", "Erro: $e", context);
       return false;
     }
   }
 
   Future<bool> getActivate(String id, BuildContext context) async {
+    loading = true;
     final String _token = await _save.read(key: "token");
     final String _url = globals.URL;
     dynamic response;
@@ -147,18 +157,22 @@ abstract class _ReportedEventControllerBase with Store {
       printRequisition(request, response.statusCode, "Activate This Event");
 
       if ((response.statusCode == 200) || (response.statusCode == 201)) {
+        loading = false;
         return true;
       } else {
         errorStatusCode(response.statusCode, context, "Erro ao Ativar Evento");
+        loading = false;
         return false;
       }
     } catch (e) {
       showError("Erro desconhecido", "Erro: $e", context);
+      loading = false;
       return false;
     }
   }
 
   ignoreReport(BuildContext context, String reportId) async {
+    loading = true;
     final _id = await _save.read(key: "user");
     final _token = await _save.read(key: "token");
 
@@ -173,19 +187,25 @@ abstract class _ReportedEventControllerBase with Store {
     try {
       r = await http.get("$_url/events/ignore/$reportId", headers: mapHeaders);
       if (r.statusCode == 200) {
-        showSuccess("Verificado com Sucesso!", "null", context);
+        //showSuccess("Verificado com Sucesso!", "null", context);
+        loading = false;
       } else if (r.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
+        loading = false;
       } else if (r.statusCode == 404) {
         showError("Erro 404", "Autor não foi encontrado", context);
+        loading = false;
       } else if (r.statusCode == 500) {
         showError("Erro 500",
             "Erro no servidor, favor tente novamente mais tarde", context);
+            loading = false;
       } else {
         showError("Erro Desconhecido", "StatusCode: ${r.statusCode}", context);
+        loading = false;
       }
     } catch (e) {
       showError("Erro desconhecido", "Erro: $e", context);
+      loading = false;
     }
   }
 }

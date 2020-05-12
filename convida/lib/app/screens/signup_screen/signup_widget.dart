@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:convida/app/shared/global/globals.dart';
+
 class SignUpWidget extends StatefulWidget {
   @override
   _SignUpWidgetState createState() => _SignUpWidgetState();
@@ -61,7 +62,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         child: Text(
                           "Cadastro",
                           style: TextStyle(
-                              color: Color(primaryColor), //Color(secondaryColor),
+                              color:
+                                  Color(primaryColor), //Color(secondaryColor),
                               fontSize: 32.0,
                               fontWeight: FontWeight.bold),
                         ),
@@ -212,11 +214,15 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(24),
                                     ),
-                                    onPressed: signupController.isValid
-                                        ? () async {
+                                    onPressed: (!(signupController.isValid) ||
+                                            signupController.loading)
+                                        ? null
+                                        : () async {
                                             //*GRR to LowCase
-                                            signupController.signup.grr = signupController.signup.grr.toLowerCase();
-                                            
+                                            signupController.signup.grr =
+                                                signupController.signup.grr
+                                                    .toLowerCase();
+
                                             //*Check if created
                                             if (created) {
                                               Navigator.pushReplacementNamed(
@@ -232,8 +238,11 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                     .checkGrr();
 
                                                 //*Check E-mail:
-                                                int emailOk = await signupController.checkEmail();
-                                                print("int Email OK = $emailOk");
+                                                int emailOk =
+                                                    await signupController
+                                                        .checkEmail();
+                                                print(
+                                                    "int Email OK = $emailOk");
 
                                                 //If grr already exist:
                                                 if (ok == 500) {
@@ -242,16 +251,16 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                       "O GRR informado já foi cadastrado, favor informar outro.";
                                                   showError(
                                                       msg, error, context);
-                                                } 
+                                                }
                                                 //If Email  already exist:
                                                 else if (emailOk == 500) {
-                                                  String msg = "E-mail Inválido!";
+                                                  String msg =
+                                                      "E-mail Inválido!";
                                                   String error =
                                                       "O E-mail informado já foi cadastrado, favor informar outro.";
                                                   showError(
                                                       msg, error, context);
                                                 } else {
-                                                 
                                                   //*Arrumar data:
                                                   DateTime dateUser =
                                                       DateFormat("dd/MM/yyyy")
@@ -296,15 +305,14 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                     }
                                                   } else {
                                                     errorStatusCode(
-                                                          statusCode,
-                                                          context,
-                                                          "Erro ao se Cadastrar");
-                                                  }                                                 
+                                                        statusCode,
+                                                        context,
+                                                        "Erro ao se Cadastrar");
+                                                  }
                                                 }
                                               }
                                             }
-                                          }
-                                        : null,
+                                          },
                                     padding:
                                         EdgeInsets.fromLTRB(43, 12, 43, 12),
                                     child: Text('Confirmar',
@@ -314,12 +322,21 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                   );
                                 },
                               ),
-                            )
+                            ),
+
                             //
                           ],
                         ),
                       ),
                     ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Observer(builder: (_) {
+                          return signupController.loading ? LinearProgressIndicator() : SizedBox();
+                        }),
+                      ),
+                    )
                   ],
                 ),
               ),
