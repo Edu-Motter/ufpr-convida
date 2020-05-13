@@ -27,6 +27,9 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+
     return WillPopScope(
       onWillPop: () {
         return null;
@@ -114,8 +117,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                               } else if (values[index].type ==
                                   'Festas e Comemorações') {
                                 _imageAsset = 'type-party.png';
-                              } else if (values[index].type ==
-                                  'Online') {
+                              } else if (values[index].type == 'Online') {
                                 _imageAsset = 'type-online.png';
                               } else if (values[index].type ==
                                   'Arte e Cultura') {
@@ -186,17 +188,25 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          SizedBox(height: 40),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
-                            child: Image.asset(
-                              //Image:
-                              "assets/logo-ufprconvida.png",
-                              scale: 1.5,
-                              //color: Colors.white70,
-                            ),
-                          ),
-                          SizedBox(height: 20),
+                          (queryData.orientation == Orientation.portrait)
+                              ? Container(
+                                  height: queryData.size.height / 2.5,
+                                  width: queryData.size.width / 1.2,
+                                  child: Image.asset(
+                                    //Image:
+                                    "assets/logo-ufprconvida.png",
+                                    scale: 2,
+                                  ),
+                                )
+                              : Container(
+                                  height: queryData.size.height / 2.5,
+                                  width: queryData.size.width / 2,
+                                  child: Image.asset(
+                                    //Image:
+                                    "assets/logo-ufprconvida.png",
+                                    scale: 2,
+                                  ),
+                                ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: RaisedButton(

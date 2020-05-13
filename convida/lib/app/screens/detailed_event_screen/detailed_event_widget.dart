@@ -155,7 +155,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
             //It makes the page Fixed avoiding overflow when the keybord Appears
             resizeToAvoidBottomPadding: false,
 
-            backgroundColor: Colors.grey.shade200,
+            backgroundColor: Colors.white,
             body: Column(
               children: <Widget>[
                 Expanded(
@@ -488,19 +488,17 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                                       fontWeight:
                                                           FontWeight.bold)),
                                             ),
-                                            Center(
-                                              child: SizedBox(
-                                                width: 360,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          14, 14, 4, 4),
-                                                  child: Text(
-                                                      "Infelizmente o organizador não informou datas de inscrições",
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.grey)),
-                                                ),
+                                            SizedBox(
+                                              width: 360,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        14, 14, 4, 4),
+                                                child: Text(
+                                                    "Infelizmente o organizador não informou datas de inscrições",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey)),
                                               ),
                                             )
                                           ],
@@ -517,7 +515,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                 Expanded(
                   flex: (MediaQuery.of(context).orientation ==
                           Orientation.portrait)
-                      ? 1
+                      ? 1 //2 é bom no pequeno..
                       : 2,
                   child: Container(
                     color: Colors.white,

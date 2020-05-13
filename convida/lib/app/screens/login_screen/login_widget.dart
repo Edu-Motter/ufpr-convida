@@ -46,22 +46,18 @@ class _LoginWidgetState extends State<LoginWidget> {
           body: ListView(
             children: <Widget>[
               (queryData.orientation == Orientation.portrait)
-                  ? Padding(
-                      padding:
-                          const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
-                        child: Image.asset(
-                          //Image:
-                          "assets/logo-ufprconvida.png",
-                          scale: 2,
-                        ),
+                  ? Container(
+                      height: queryData.size.height / 6,
+                      width: queryData.size.width / 6,
+                      child: Image.asset(
+                        //Image:
+                        "assets/logo-ufprconvida.png",
+                        scale: 2,
                       ),
                     )
                   : Container(
-                      height: queryData.size.height / 2,
-                      width: queryData.size.width / 2,
+                      height: queryData.size.height / 4,
+                      width: queryData.size.width / 4,
                       child: Image.asset(
                         //Image:
                         "assets/logo-ufprconvida.png",
@@ -111,13 +107,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                 }),
               ),
               Center(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(62.0, 0,62.0,0),
-                        child: Observer(builder: (_) {
-                          return loginController.loading ? LinearProgressIndicator() : SizedBox();
-                        }),
-                      ),
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(62.0, 0, 62.0, 0),
+                  child: Observer(builder: (_) {
+                    return loginController.loading
+                        ? LinearProgressIndicator()
+                        : SizedBox();
+                  }),
+                ),
+              ),
 
               Center(
                 child: Row(

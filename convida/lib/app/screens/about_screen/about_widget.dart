@@ -13,6 +13,9 @@ class _AboutWidgetState extends State<AboutWidget> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+
     try {
       return Scaffold(
         backgroundColor: Colors.white,
@@ -21,14 +24,29 @@ class _AboutWidgetState extends State<AboutWidget> {
           centerTitle: true,
         ),
         body: ListView(
+          
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24.0,12.0,24.0,12.0),
-              child: Image.asset(
-                "assets/logo-ufprconvida.png",
-                scale: 2,
-              ),
-            ),
+            SizedBox(height: 20),
+            (queryData.orientation == Orientation.portrait)
+                  ? Container(
+                      height: queryData.size.height / 6,
+                      width: queryData.size.width / 6,
+                      child: Image.asset(
+                        //Image:
+                        "assets/logo-ufprconvida.png",
+                        scale: 2,
+                      ),
+                    )
+                  : Container(
+                      height: queryData.size.height / 4,
+                      width: queryData.size.width / 4,
+                      child: Image.asset(
+                        //Image:
+                        "assets/logo-ufprconvida.png",
+                        scale: 2,
+                      ),
+                    ),
+            SizedBox(height: 10),
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
