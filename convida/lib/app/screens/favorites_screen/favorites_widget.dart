@@ -46,7 +46,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                     future: getAllFavorites(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       List<Event> values = snapshot.data;
-                      if (snapshot.data == null) {
+                      if (snapshot.data == null && snapshot.connectionState != ConnectionState.done) {
                         return CircularProgressIndicator();
                       } else if (values.length == 0) {
                         //Caso nao haver eventos!
@@ -279,8 +279,13 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
       print("-------------------------------------------------------");
 
       if ((response.statusCode == 200) || (response.statusCode == 201)) {
-        final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-        return parsed.map<Event>((json) => Event.fromJson(json)).toList();
+        try {
+          final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+          return parsed.map<Event>((json) => Event.fromJson(json)).toList();
+        } catch (e) {
+          List<Event> noEvents = [];
+          return noEvents ;
+        }
       } else if (response.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
         return null;

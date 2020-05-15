@@ -12,6 +12,17 @@ class User {
 
   User({this.name, this.lastName, this.grr, this.email, this.password, this.birth, this.adm,this.fav});
 
+  //! Start to use this constructor:
+  User.fromJsonWithoutFavorites(Map<String, dynamic> json) {
+    name = json['name'];
+    lastName = json['lastName'];
+    grr = json['grr'];
+    email = json['email'];
+    birth = json['birth'];
+    adm = json['adm'];
+    password = json['password'];
+  }
+
   User.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     lastName = json['lastName'];
@@ -20,12 +31,16 @@ class User {
     birth = json['birth'];
     adm = json['adm'];
     password = json['password'];
-    if (json['fav'] != null) {
+    try {
       fav = new List<Event>();
       json['fav'].forEach((v) {
         fav.add(new Event.fromJson(v));
       });
+    } catch (e) {
+      print("User without favorites events!");
+      fav = [];
     }
+    
   }
 
   Map<String, dynamic> toJson() {

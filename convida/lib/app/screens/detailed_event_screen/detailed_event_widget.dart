@@ -3,6 +3,7 @@ import 'package:convida/app/shared/models/report.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
 import 'package:convida/app/shared/util/text_field_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +36,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   final DateFormat dateSub = new DateFormat.MMMMEEEEd("pt_BR");
   final DateFormat test = new DateFormat.MMMM("pt_BR");
   String address =
-      "R. Dr. Alcides Vieira Arcoverde, 1225 - Jardim das Américas, Curitiba - PR, 81520-260";
+      "";
 
   // bool fav;
   User eventAuthor;
@@ -47,6 +48,19 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
     final routeArgs =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     final eventId = routeArgs['id'];
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+
+    double containerHeight;
+    if (queryData.size.height < 500){
+      if (queryData.orientation == Orientation.portrait){
+        containerHeight = queryData.size.height / 7.5;
+      } else {
+        containerHeight = queryData.size.height / 4.5;
+      }
+    } else {
+      containerHeight = queryData.size.height / 10;
+    }
 
     return FutureBuilder(
       future: getEvent(eventId),
@@ -235,35 +249,38 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                       ),
 
                                       //Endereço:
-                                      snapshot.data.online ?
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            11, 8, 0, 0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Icon(Icons.wifi, size: 24),
-                                            SizedBox(width: 6),
-                                            Expanded(
-                                              child: Text(
-                                                  "Este evento é Online"),
+                                      snapshot.data.online
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      11, 8, 0, 0),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Icon(Icons.wifi, size: 24),
+                                                  SizedBox(width: 6),
+                                                  Expanded(
+                                                    child: Text(
+                                                        "Este evento é Online"),
+                                                  )
+                                                ],
+                                              ),
                                             )
-                                          ],
-                                        ),
-                                      ) : 
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 8, 0, 0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Icon(Icons.location_on, size: 28),
-                                            SizedBox(width: 5),
-                                            Expanded(
-                                              child: Text(
-                                                  "${snapshot.data.address} - ${snapshot.data.complement}"),
+                                          : Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8, 8, 0, 0),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Icon(Icons.location_on,
+                                                      size: 28),
+                                                  SizedBox(width: 5),
+                                                  Expanded(
+                                                    child: Text(
+                                                        "${snapshot.data.address} - ${snapshot.data.complement}"),
+                                                  )
+                                                ],
+                                              ),
                                             )
-                                          ],
-                                        ),
-                                      )
                                     ],
                                   ),
                                 ),
@@ -512,174 +529,175 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                     ],
                   ),
                 ),
-                Expanded(
-                  flex: (MediaQuery.of(context).orientation ==
-                          Orientation.portrait)
-                      ? 1 //2 é bom no pequeno..
-                      : 2,
-                  child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            //*Link Buttom
-                            // Expanded(
-                            //   child: InkWell(
-                            //     onTap: () async {
-                            //       openLink(snapshot.data.link);
-                            //     },
-                            //     child: Column(
-                            //       children: <Widget>[
-                            //         Icon(
-                            //           Icons.link,
-                            //           size: 26,
-                            //         ),
-                            //         Text(
-                            //           "Link",
-                            //           maxLines: 1,
-                            //         )
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  //Test:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => MapEventWidget(
-                                          lat: snapshot.data.lat,
-                                          lng: snapshot.data.lng,
-                                        ),
-                                      ));
-                                },
-                                child: Column(
-                                  children: <Widget>[
-                                    Icon(Icons.map, size: 26),
-                                    Text("Ver no mapa", maxLines: 1)
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  if (token != null) {
-                                    if (detailedEventController.favorite ==
-                                        true)
-                                      _deleteEventFav(snapshot.data.id);
-                                    else
-                                      _putEventFav(snapshot.data.id);
-                                  } else {
-                                    _showDialog("Necessário estar logado!",
-                                        "Somente se você estiver logado será possível favoritar eventos, para isso, crie uma conta ou entre com seu login!");
-                                  }
-                                },
-                                child:
-                                    Observer(builder: (BuildContext context) {
-                                  print(detailedEventController.favorite);
-                                  return Column(
-                                    children: <Widget>[
-                                      detailedEventController.favorite == true
-                                          ? Icon(
-                                              Icons.star,
-                                              size: 26,
-                                              color: Colors.amberAccent,
-                                            )
-                                          : Icon(Icons.star_border, size: 26),
-                                      Text(
-                                        "Favoritar",
-                                        maxLines: 1,
-                                      )
-                                    ],
-                                  );
-                                }),
-                              ),
-                            ),
-
-                            snapshot.data.active == true
-                                ? Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (token != null) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return Observer(builder:
-                                                  (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text("Justificativa:"),
-                                                  content: textFieldWithoutIcon(
-                                                      maxLines: 4,
-                                                      onChanged:
-                                                          detailedEventController
-                                                              .setReport,
-                                                      maxLength: 280,
-                                                      labelText:
-                                                          "Justifique sua Denúncia",
-                                                      errorText:
-                                                          detailedEventController
-                                                              .validateReport),
-                                                  actions: <Widget>[
-                                                    new FlatButton(
-                                                      child:
-                                                          new Text("Denúnciar"),
-                                                      onPressed: () {
-                                                        if (token != null) {
-                                                          _putRerport(
-                                                              snapshot.data.id,
-                                                              detailedEventController
-                                                                  .report);
-                                                          Navigator.pop(
-                                                              context);
-                                                        } else {
-                                                          _showDialog(
-                                                              "Necessário estar logado!",
-                                                              "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
-                                                        }
-                                                      },
-                                                    ),
-                                                    new FlatButton(
-                                                      child:
-                                                          new Text("Cancelar"),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                            },
-                                          );
-                                        } else {
-                                          _showDialog(
-                                              "Necessário estar logado!",
-                                              "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
-                                        }
-                                      },
-                                      child: Column(
-                                        children: <Widget>[
-                                          Icon(Icons.assignment_late, size: 26),
-                                          Text("Denúnciar", maxLines: 1)
-                                        ],
+                Container(
+                  height: containerHeight,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          //*Link Buttom
+                          // Expanded(
+                          //   child: InkWell(
+                          //     onTap: () async {
+                          //       openLink(snapshot.data.link);
+                          //     },
+                          //     child: Column(
+                          //       children: <Widget>[
+                          //         Icon(
+                          //           Icons.link,
+                          //           size: 26,
+                          //         ),
+                          //         Text(
+                          //           "Link",
+                          //           maxLines: 1,
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                //Test:
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MapEventWidget(
+                                        lat: snapshot.data.lat,
+                                        lng: snapshot.data.lng,
                                       ),
-                                    ),
-                                  )
-                                : Expanded(
+                                    ));
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(Icons.map, size: 26),
+                                  Text("Ver no mapa", maxLines: 1)
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                if (token != null) {
+                                  if (detailedEventController.favorite ==
+                                      true)
+                                    _deleteEventFav(snapshot.data.id);
+                                  else
+                                    _putEventFav(snapshot.data.id);
+                                } else {
+                                  _showDialog("Necessário estar logado!",
+                                      "Somente se você estiver logado será possível favoritar eventos, para isso, crie uma conta ou entre com seu login!");
+                                }
+                              },
+                              child:
+                                  Observer(builder: (BuildContext context) {
+                                print(detailedEventController.favorite);
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    detailedEventController.favorite == true
+                                        ? Icon(
+                                            Icons.star,
+                                            size: 26,
+                                            color: Colors.amberAccent,
+                                          )
+                                        : Icon(Icons.star_border, size: 26),
+                                    Text(
+                                      "Favoritar",
+                                      maxLines: 1,
+                                    )
+                                  ],
+                                );
+                              }),
+                            ),
+                          ),
+
+                          snapshot.data.active == true
+                              ? Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (token != null) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Observer(builder:
+                                                (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Justificativa:"),
+                                                content: textFieldWithoutIcon(
+                                                    maxLines: 4,
+                                                    onChanged:
+                                                        detailedEventController
+                                                            .setReport,
+                                                    maxLength: 280,
+                                                    labelText:
+                                                        "Justifique sua Denúncia",
+                                                    errorText:
+                                                        detailedEventController
+                                                            .validateReport),
+                                                actions: <Widget>[
+                                                  new FlatButton(
+                                                    child:
+                                                        new Text("Denúnciar"),
+                                                    onPressed: () {
+                                                      if (token != null) {
+                                                        _putRerport(
+                                                            snapshot.data.id,
+                                                            detailedEventController
+                                                                .report);
+                                                        Navigator.pop(
+                                                            context);
+                                                      } else {
+                                                        _showDialog(
+                                                            "Necessário estar logado!",
+                                                            "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
+                                                      }
+                                                    },
+                                                  ),
+                                                  new FlatButton(
+                                                    child:
+                                                        new Text("Cancelar"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                          },
+                                        );
+                                      } else {
+                                        _showDialog(
+                                            "Necessário estar logado!",
+                                            "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
+                                      }
+                                    },
                                     child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
-                                        Icon(Icons.block, size: 26),
-                                        Text("Desativado", maxLines: 1)
+                                        Icon(Icons.assignment_late, size: 26),
+                                        Text("Denúnciar", maxLines: 1)
                                       ],
                                     ),
-                                  )
-                          ]),
-                    ),
+                                  ),
+                                )
+                              : Expanded(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.block, size: 26),
+                                      Text("Desativado", maxLines: 1)
+                                    ],
+                                  ),
+                                )
+                        ]),
                   ),
                 ),
               ],
@@ -943,7 +961,6 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   }
 
   _putRerport(String idEvent, String report) async {
-
     final _id = await _save.read(key: "user");
     final _token = await _save.read(key: "token");
 

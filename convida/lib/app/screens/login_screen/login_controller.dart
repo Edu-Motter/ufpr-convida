@@ -18,7 +18,7 @@ abstract class _LoginControllerBase with Store {
   Login login = new Login();
   Login recovery = new Login();
   String _url = globals.URL;
-  
+
   @observable
   bool loading = false;
 
@@ -29,8 +29,6 @@ abstract class _LoginControllerBase with Store {
   String validatePassword() {
     return passwordValidation(login.password);
   }
-
-  
 
   bool validadeLogin(BuildContext context) {
     String ok = validateUser();
@@ -58,7 +56,7 @@ abstract class _LoginControllerBase with Store {
       username: login.user,
       password: login.password,
     );
-
+    int loginStatusCode;
     String loginJson = json.encode(l.toJson());
 
     Map<String, String> mapHeaders = {
@@ -96,6 +94,7 @@ abstract class _LoginControllerBase with Store {
 
     final token = await _save.read(key: "token");
     print("TOKEN: $token");
+    print("LOGIN: ${login.user}");
 
     Map<String, String> mapHeadersToken = {
       "Accept": "application/json",
@@ -107,7 +106,7 @@ abstract class _LoginControllerBase with Store {
       try {
         //Get user:
         String id = login.user;
-        User user = await http
+        bool ok = await http
             .get("$_url/users/$id", headers: mapHeadersToken)
             .then((http.Response response) {
           final int statusCode = response.statusCode;
@@ -119,27 +118,28 @@ abstract class _LoginControllerBase with Store {
           print("-------------------------------------------------------");
 
           if ((statusCode == 200) || (statusCode == 201)) {
-            return User.fromJson(jsonDecode(response.body));
+            User user = User.fromJson(jsonDecode(response.body));
+            if (user.name == null) {
+              loginStatusCode = 0;
+            } else {
+              _save.write(key: "name", value: user.name);
+              _save.write(key: "email", value: user.email);
+              _save.write(key: "lastName", value: user.lastName);
+              loginStatusCode = 200;
+            }
           } else {
+            loginStatusCode = 400;
             showError("Erro desconhecido", "Erro: $statusCode", context);
           }
         });
-
-        if (user.name == null){
-          return 0;
-        }
-        //_save.write(key: "adm", value: "${user.adm}");
-        _save.write(key: "name", value: "${user.name}");
-        _save.write(key: "email", value: "${user.email}");
-        _save.write(key: "lastName", value: "${user.lastName}");
       } catch (e) {
+        print("ERRO:");
+        loginStatusCode = 400;
         showError("Erro desconhecido", "Erro: $e", context);
       }
     }
 
     loading = false;
-    return s;
+    return loginStatusCode;
   }
-
-  
 }

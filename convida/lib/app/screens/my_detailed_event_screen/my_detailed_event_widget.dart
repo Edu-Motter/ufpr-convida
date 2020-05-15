@@ -35,6 +35,20 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     final eventId = routeArgs['id'];
 
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+
+    double containerHeight;
+    if (queryData.size.height < 500){
+      if (queryData.orientation == Orientation.portrait){
+        containerHeight = queryData.size.height / 7.5;
+      } else {
+        containerHeight = queryData.size.height / 4.5;
+      }
+    } else {
+      containerHeight = queryData.size.height / 10;
+    }
+
     return FutureBuilder(
         future: getMyEvent(eventId),
         builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
@@ -161,35 +175,39 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                           ),
 
                                           //Endereço:
-                                      snapshot.data.online ?
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            11, 8, 0, 0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Icon(Icons.wifi, size: 24),
-                                            SizedBox(width: 6),
-                                            Expanded(
-                                              child: Text(
-                                                  "Este evento é Online"),
-                                            )
-                                          ],
-                                        ),
-                                      ) : 
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 8, 0, 0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Icon(Icons.location_on, size: 28),
-                                            SizedBox(width: 5),
-                                            Expanded(
-                                              child: Text(
-                                                  "${snapshot.data.address} - ${snapshot.data.complement}"),
-                                            )
-                                          ],
-                                        ),
-                                      )
+                                          snapshot.data.online
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          11, 8, 0, 0),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Icon(Icons.wifi,
+                                                          size: 24),
+                                                      SizedBox(width: 6),
+                                                      Expanded(
+                                                        child: Text(
+                                                            "Este evento é Online"),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              : Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          8, 8, 0, 0),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Icon(Icons.location_on,
+                                                          size: 28),
+                                                      SizedBox(width: 5),
+                                                      Expanded(
+                                                        child: Text(
+                                                            "${snapshot.data.address} - ${snapshot.data.complement}"),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
                                         ],
                                       ),
                                     ),
@@ -544,88 +562,85 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      flex: (MediaQuery.of(context).orientation ==
-                              Orientation.portrait)
-                          ? 1
-                          : 2,
-                      child: Container(
-                        color: Colors.white,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      DateTime yesterday = DateTime.now()
-                                          .subtract(Duration(hours: 24));
+                    Container(
+                      height: containerHeight,
+                      color: Colors.white,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    DateTime yesterday = DateTime.now()
+                                        .subtract(Duration(hours: 24));
 
-                                      if ((yesterday.compareTo(dateEnd)) > 0) {
-                                        //If the event ended:
-                                        _showError("Evento Finalizado",
-                                            "Não é possível alterar mais esse evento, pois ele já foi encerrado!");
-                                      } else {
-                                        //If doesn't end, User can edit:
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AlterEventWidget(
-                                                event: snapshot.data,
-                                              ),
-                                            ));
-                                      }
-                                    },
-                                    child: Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 0.0),
-                                          child:
-                                              Icon(Icons.event_note, size: 26),
-                                        ),
-                                        Text("Alterar")
-                                      ],
-                                    ),
+                                    if ((yesterday.compareTo(dateEnd)) > 0) {
+                                      //If the event ended:
+                                      _showError("Evento Finalizado",
+                                          "Não é possível alterar mais esse evento, pois ele já foi encerrado!");
+                                    } else {
+                                      //If doesn't end, User can edit:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AlterEventWidget(
+                                              event: snapshot.data,
+                                            ),
+                                          ));
+                                    }
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 0.0),
+                                        child:
+                                            Icon(Icons.event_note, size: 26),
+                                      ),
+                                      Text("Alterar")
+                                    ],
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: InkWell(
-                                    onTap: () async {
-                                      int delete = _confirmDelete(
-                                          snapshot.data.id, snapshot.data.name);
-                                      if (delete == 1) {
-                                        int status = await deleteMyEvent(
-                                            snapshot.data.id);
-                                        if (status == 200) {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          // Navigator.popAndPushNamed(
-                                          //     context, '/main');
-                                        } else
-                                          _showWarning();
-                                      }
-                                    },
-                                    child: Column(
-                                      children: <Widget>[
-                                        Icon(Icons.delete_forever, size: 26),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 0.0),
-                                          child: Text("Deletar"),
-                                        )
-                                      ],
-                                    ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: InkWell(
+                                  onTap: () async {
+                                    int delete = _confirmDelete(
+                                        snapshot.data.id, snapshot.data.name);
+                                    if (delete == 1) {
+                                      int status = await deleteMyEvent(
+                                          snapshot.data.id);
+                                      if (status == 200) {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        // Navigator.popAndPushNamed(
+                                        //     context, '/main');
+                                      } else
+                                        _showWarning();
+                                    }
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.delete_forever, size: 26),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 0.0),
+                                        child: Text("Deletar"),
+                                      )
+                                    ],
                                   ),
                                 ),
                               ),
-                            ]),
-                      ),
+                            ),
+                          ]),
                     )
                   ],
                 ));
@@ -709,8 +724,12 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
         return null;
       }
     } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
-      return null;
+      if (e.toString().contains("at character 1")) {
+        return null;
+      } else {
+        showError("Erro desconhecido ao deletar!", "Erro: $e", context);
+        return null;
+      }
     }
   }
 

@@ -170,7 +170,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                                                     ),
                                                   ));
                                             } else {
-                                              print("AQUI : $statusCode");
                                               errorStatusCode(
                                                   statusCode,
                                                   context,
