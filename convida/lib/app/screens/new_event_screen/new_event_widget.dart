@@ -137,7 +137,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                           labelText: "Público alvo:",
                           icon: Icons.person_pin_circle,
                           onChanged: newEventController.newEvent.setTarget,
-                          maxLength: 25,
+                          maxLength: 50,
                           errorText: newEventController.validateTarget);
                     }),
                   ),
@@ -200,7 +200,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                           labelText: "Link ou Email:",
                           icon: Icons.link,
                           onChanged: newEventController.newEvent.setLink,
-                          maxLength: 50,
+                          maxLength: 100,
                           errorText: newEventController.validateLink);
                     }),
                   ),

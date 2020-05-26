@@ -189,7 +189,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     labelText: "Público alvo:",
                     icon: Icons.person_pin_circle,
                     onChanged: alterEventController.alterEvent.setTarget,
-                    maxLength: 25,
+                    maxLength: 50,
                     errorText: alterEventController.validateTarget);
               }),
             ),
@@ -249,7 +249,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     labelText: "Link ou Email:",
                     icon: Icons.location_city,
                     onChanged: alterEventController.alterEvent.setLink,
-                    maxLength: 50,
+                    maxLength: 100,
                     errorText: alterEventController.validateLink);
               }),
             ),

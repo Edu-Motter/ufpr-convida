@@ -6,7 +6,9 @@ import 'date_validation.dart';
 
 String nameValidation(value) {
   String expression =
-      r"^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.]{2,25}$";
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,25}$';
+
+      
   RegExp _nameValidator = RegExp(expression);
 
   if (value == null) {
@@ -30,7 +32,7 @@ String nameValidation(value) {
 
 String targetValidation(value) {
   String expression =
-      r"^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.]{2,25}$";
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,50}$';
   RegExp _targetValidator = RegExp(expression);
 
   if (value == null) {
@@ -43,8 +45,8 @@ String targetValidation(value) {
     return 'Contém espaços desnecessários';
   } else if (value.length < 2) {
     return 'Min. 2 caracteres';
-  } else if (value.length > 25) {
-    return 'Max. 25 caracteres';
+  } else if (value.length > 50) {
+    return 'Max. 50 caracteres';
   } else if (_targetValidator.hasMatch(value)) {
     return null;
   } else {
@@ -54,7 +56,7 @@ String targetValidation(value) {
 
 String descriptionValidation(value) {
   String expression =
-      r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,250})$";
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,250}$';
   RegExp _descValidator = RegExp(expression);
 
   if (value == null) {
@@ -78,7 +80,7 @@ String descriptionValidation(value) {
 
 String addressValidation(value) {
   String expression =
-      r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,50})$";
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,50}$';
   RegExp _addressValidator = RegExp(expression);
 
   if (value == null) {
@@ -102,7 +104,7 @@ String addressValidation(value) {
 
 String complementValidation(value) {
   String expression =
-      r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ,.]{0,50})$";
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{0,50}$';
   RegExp _complementValidator = RegExp(expression);
 
   if (value == null) {
@@ -127,7 +129,7 @@ String complementValidation(value) {
 
 String linkValidation(value) {
   String expression =
-      r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{2,50})$";
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,100}$';
   RegExp _eventLinkValidator = RegExp(expression);
 
   if (value == null) {
@@ -140,8 +142,8 @@ String linkValidation(value) {
     return 'Contém espaços desnecessários';
   } else if (value.length < 2) {
     return 'Min. 2 caracteres';
-  } else if (value.length > 50) {
-    return 'Max. 50 caracteres';
+  } else if (value.length > 100) {
+    return 'Max. 100 caracteres';
   } else if (_eventLinkValidator.hasMatch(value)) {
     return null;
   } else {
@@ -151,7 +153,7 @@ String linkValidation(value) {
 
 String reportValidation(value) {
   String expression =
-      r"^([a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !?,.@$%&]{3,280})$";
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{3,280}$';
   RegExp _reportValidator = RegExp(expression);
 
   if (value == null) {
