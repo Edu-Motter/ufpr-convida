@@ -57,6 +57,7 @@ class _MapWidgetState extends State<MapWidget> {
       this.faithType, this.studyType, this.othersType, this.dataType);
 
   MapType _mapType;
+  bool showingBar = false;
   // Completer<GoogleMapController> _controller = Completer();
   //GoogleMapController mapController;
   Map<MarkerId, Marker> markersMaps = <MarkerId, Marker>{};
@@ -68,6 +69,7 @@ class _MapWidgetState extends State<MapWidget> {
   void initState() {
     super.initState();
     _mapType = MapType.normal;
+    
     //print("Building Map");
   }
 
@@ -268,9 +270,13 @@ class _MapWidgetState extends State<MapWidget> {
     print("Executou!!");
     markersMaps = await getMarkers(context);
     try {
+      if (!showingBar){
+        showTutorialBar();
+      }
       LocationData userLocation = await Location().getLocation();
       LatLng data = new LatLng(userLocation.latitude, userLocation.longitude);
       return data;
+      
     } catch (e) {
       final String errorLocation =
           "Como não permitiu o acesso a sua localização, algumas funcionalidades do aplicativo serão comprometidas.";
@@ -278,9 +284,28 @@ class _MapWidgetState extends State<MapWidget> {
       //This need to be final and global
       final LatLng ufprLocation = new LatLng(-25.4269032, -49.2639545);
       return ufprLocation;
+     
     }
   }
-
+   void showTutorialBar() {
+    showingBar = true;
+    Flushbar(
+      flushbarPosition: FlushbarPosition.TOP,
+      margin: EdgeInsets.fromLTRB(10, 16, 10, 0),
+      borderRadius: 8,
+      backgroundColor: Colors.white,
+      boxShadows: [
+        BoxShadow(color: Colors.black45, offset: Offset(3, 3), blurRadius: 3)
+      ],
+      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+      messageText: Text("Pressione por alguns segundos no mapa para criar um evento!",
+          style: TextStyle(
+              color: Color(primaryColor),
+              fontSize: 16,
+              fontWeight: FontWeight.bold)),
+      duration: Duration(seconds: 5),
+    )..show(context);
+  }
   Future<Map<MarkerId, Marker>> getMarkers(BuildContext context) async {
     // print(
     //     "Type: |$healthType|\nType: |$sportType|\nType: |$partyType|\nType: |$artType|\nType: |$studyType|\nType: |$othersType|");

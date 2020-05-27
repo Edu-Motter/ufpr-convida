@@ -58,6 +58,18 @@ class _AboutWidgetState extends State<AboutWidget> {
                 ),
               ),
             ),
+            SizedBox(height: 10),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: const Text(
+                  "Agradecemos em especial aos professores: Alexander Robert Kutzke, Andreia de Jesus, Lis Andrea Pereira Soboll e Razer Anthom Nizer Rojas Montaño, os quais permitiram o devensolvimento e nos auxiliaram dando suporte para a criação deste aplicativo.", style: TextStyle(
+                    fontSize: 16,
+                    
+                  ),
+                ),
+              ),
+            ),
             SizedBox(height: 20),
             SingleChildScrollView(
               child: Padding(
@@ -100,7 +112,8 @@ class _AboutWidgetState extends State<AboutWidget> {
                         color: Colors.black,
                         ))
               ],
-            )
+            ),
+            SizedBox(height: 10),
             
           ],
         ),

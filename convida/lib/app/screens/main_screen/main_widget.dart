@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:convida/app/shared/DAO/util_requisitions.dart';
 import 'package:convida/app/shared/util/dialogs_widget.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -49,6 +50,7 @@ class _MainWidgetState extends State<MainWidget> {
     switch (index) {
       case 0:
         currentIndex = 0;
+        
         return new Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -410,7 +412,6 @@ class _MainWidgetState extends State<MainWidget> {
       print("isAdmin: $admin");
       admin = user.adm;
       return "Success";
-
     } catch (e) {
       showError("Erro desconhecido", "Erro: $e", context);
       return null;
@@ -430,6 +431,8 @@ class _MainWidgetState extends State<MainWidget> {
       return true;
     }
   }
+
+ 
 }
 
 class DrawerLogout extends StatelessWidget {

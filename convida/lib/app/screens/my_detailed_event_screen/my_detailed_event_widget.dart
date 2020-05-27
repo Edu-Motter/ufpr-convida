@@ -103,7 +103,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                               pinned: true,
                               floating: true),
                           SliverFixedExtentList(
-                            itemExtent: 150.0,
+                            itemExtent: 165.0,
                             delegate: SliverChildListDelegate(
                               [
                                 Padding(
@@ -271,10 +271,11 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
+                                            SizedBox(height: 12),
                                             Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
-                                                        14, 4, 4, 4),
+                                                        8, 4, 4, 4),
                                                 child: SingleChildScrollView(
                                                   scrollDirection:
                                                       Axis.horizontal,
@@ -300,7 +301,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                             Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
-                                                        14, 4, 4, 4),
+                                                        8, 4, 4, 4),
                                                 child: SingleChildScrollView(
                                                   scrollDirection:
                                                       Axis.horizontal,
@@ -324,7 +325,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                             Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
-                                                        14, 4, 4, 4),
+                                                        8, 4, 4, 4),
                                                 child: SingleChildScrollView(
                                                   scrollDirection:
                                                       Axis.horizontal,
@@ -446,7 +447,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                                 ),
                                                 Padding(
                                                     padding: const EdgeInsets
-                                                        .fromLTRB(14, 4, 4, 4),
+                                                        .fromLTRB(8, 4, 4, 4),
                                                     child: Row(
                                                       children: <Widget>[
                                                         Padding(
@@ -477,7 +478,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                                     )),
                                                 Padding(
                                                     padding: const EdgeInsets
-                                                        .fromLTRB(14, 4, 4, 4),
+                                                        .fromLTRB(8, 4, 4, 4),
                                                     child: Row(
                                                       children: <Widget>[
                                                         Padding(
@@ -541,7 +542,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                                     child: Padding(
                                                       padding: const EdgeInsets
                                                               .fromLTRB(
-                                                          14, 14, 4, 4),
+                                                          8, 14, 4, 4),
                                                       child: Text(
                                                           "Infelizmente o organizador não informou datas de inscrições",
                                                           style: TextStyle(

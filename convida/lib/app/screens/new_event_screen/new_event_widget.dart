@@ -164,11 +164,12 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                       child: eventSwitchOnline()),
                   
                   //Event Address:
+                  isOnline ? SizedBox() :
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
                       return textFieldInitialValue(
-                          initialValue: newEventController.newEvent.address,
+                          initialValue: isOnline ? "Fique em casa!" : newEventController.newEvent.address,
                           labelText: "Endereço:",
                           icon: Icons.location_on,
                           onChanged: newEventController.newEvent.setAddress,
@@ -178,7 +179,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                   ),
 
                   //Event Address Complement:
-                  Padding(
+                  isOnline ? SizedBox() : Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Observer(builder: (_) {
                       return textFieldInitialValue(
@@ -711,7 +712,20 @@ class _NewEventWidgetState extends State<NewEventWidget> {
               onChanged: (value) {
                 setState(() {
                   print("Executou um setState");
+                  
+
                   isOnline = value;
+                  if (isOnline){
+                    newEventController.newEvent.address = "Fique em casa";
+                    newEventController.newEvent.complement = "Fique seguro";
+                  } else {
+                    newEventController.newEvent.address = "";
+                    newEventController.newEvent.complement = "";
+                  }
+
+                  print(newEventController.newEvent.address);
+                  print(newEventController.newEvent.complement);
+
                 });
               }),
         ],
