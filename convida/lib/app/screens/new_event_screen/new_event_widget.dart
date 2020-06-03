@@ -201,7 +201,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                           labelText: "Link ou Email:",
                           icon: Icons.link,
                           onChanged: newEventController.newEvent.setLink,
-                          maxLength: 100,
+                          maxLength: 200,
                           errorText: newEventController.validateLink);
                     }),
                   ),

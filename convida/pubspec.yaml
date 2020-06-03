@@ -46,7 +46,7 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: true
+  ios: false
   image_path: "dev_assets/convida.png"
   adaptive_icon_background: "#ffffff"
   adaptive_icon_foreground: "dev_assets/adaptive-convida.png"

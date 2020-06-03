@@ -249,7 +249,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     labelText: "Link ou Email:",
                     icon: Icons.location_city,
                     onChanged: alterEventController.alterEvent.setLink,
-                    maxLength: 100,
+                    maxLength: 200,
                     errorText: alterEventController.validateLink);
               }),
             ),

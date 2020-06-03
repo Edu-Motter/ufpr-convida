@@ -1,5 +1,5 @@
 library my_prj.globals;
-const String appVersion = "1.4.0"; 
+const String appVersion = "1.4.1"; 
 //String URL = "http://192.168.0.6:8080";
 //String URL = "http://10.0.2.2:8080";
 

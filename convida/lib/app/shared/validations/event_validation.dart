@@ -142,8 +142,8 @@ String linkValidation(value) {
     return 'Contém espaços desnecessários';
   } else if (value.length < 2) {
     return 'Min. 2 caracteres';
-  } else if (value.length > 100) {
-    return 'Max. 100 caracteres';
+  } else if (value.length > 200) {
+    return 'Max. 200 caracteres';
   } else if (_eventLinkValidator.hasMatch(value)) {
     return null;
   } else {

@@ -35,8 +35,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   final DateFormat date = new DateFormat("EEE, d MMM", "pt_BR");
   final DateFormat dateSub = new DateFormat.MMMMEEEEd("pt_BR");
   final DateFormat test = new DateFormat.MMMM("pt_BR");
-  String address =
-      "";
+  String address = "";
 
   // bool fav;
   User eventAuthor;
@@ -52,8 +51,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
     queryData = MediaQuery.of(context);
 
     double containerHeight;
-    if (queryData.size.height < 500){
-      if (queryData.orientation == Orientation.portrait){
+    if (queryData.size.height < 500) {
+      if (queryData.orientation == Orientation.portrait) {
         containerHeight = queryData.size.height / 7.5;
       } else {
         containerHeight = queryData.size.height / 4.5;
@@ -200,89 +199,97 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 6),
                               child: Container(
-                                alignment: Alignment.topLeft,
+                                alignment: Alignment.center,
                                 color: Colors.white,
                                 child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 3, 8, 3),
-                                        child: Text("${snapshot.data.name}",
-                                            style: TextStyle(
-                                                fontSize: 23,
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 0, 0, 0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      3, 3, 3, 3),
-                                              child: Icon(Icons.access_time,
-                                                  size: 24),
-                                            ),
-                                            SizedBox(width: 3),
-                                            Expanded(
-                                              child: Text(
-                                                "${date.format(dateStart)} - ${date.format(dateEnd)}",
-                                                style:
-                                                    TextStyle(fontSize: 16.0),
-                                              ),
-                                            ),
-                                          ],
+                                  child: SizedBox(
+                                    width: 360,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 3, 8, 3),
+                                          child: Text("${snapshot.data.name}",
+                                              style: TextStyle(
+                                                  fontSize: 23,
+                                                  fontWeight: FontWeight.bold)),
                                         ),
-                                      ),
 
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            42, 0, 0, 0),
-                                        child: Text(
-                                            "${hour.format(hourStart)} - ${hour.format(hourEnd)}",
-                                            style: TextStyle(fontSize: 14)),
-                                      ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 0, 0, 0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        3, 3, 3, 3),
+                                                child: Icon(Icons.access_time,
+                                                    size: 24),
+                                              ),
+                                              SizedBox(width: 3),
+                                              Expanded(
+                                                child: Text(
+                                                  "${date.format(dateStart)} - ${date.format(dateEnd)}",
+                                                  style:
+                                                      TextStyle(fontSize: 16.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
 
-                                      //Endereço:
-                                      snapshot.data.online
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      11, 8, 0, 0),
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Icon(Icons.wifi, size: 24),
-                                                  SizedBox(width: 6),
-                                                  Expanded(
-                                                    child: Text(
-                                                        "Este evento é Online"),
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      8, 8, 0, 0),
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Icon(Icons.location_on,
-                                                      size: 28),
-                                                  SizedBox(width: 5),
-                                                  Expanded(
-                                                    child: Text(
-                                                        "${snapshot.data.address} - ${snapshot.data.complement}"),
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                    ],
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              42,0, 0, 0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                  "${hour.format(hourStart)} - ${hour.format(hourEnd)}",
+                                                  style: TextStyle(fontSize: 14)),
+                                            ],
+                                          ),
+                                        ),
+
+                                        //Endereço:
+                                        snapshot.data.online
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        11, 8, 0, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Icon(Icons.wifi, size: 24),
+                                                    SizedBox(width: 6),
+                                                    Expanded(
+                                                      child: Text(
+                                                          "Este evento é Online"),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            : Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        8, 8, 0, 0),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.location_on,
+                                                        size: 28),
+                                                    SizedBox(width: 5),
+                                                    Expanded(
+                                                      child: Text(
+                                                          "${snapshot.data.address} - ${snapshot.data.complement}"),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -292,9 +299,65 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                               child: Container(
-                                alignment: Alignment.topLeft,
+                                alignment: Alignment.topCenter,
                                 color: Colors.white,
                                 child: SingleChildScrollView(
+                                  child: SizedBox(
+                                    width: 360,
+                                                                      child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 0, 8, 0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text("Descrição do evento",
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold)),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 0, 0, 0),
+                                          child: Text(
+                                            "${snapshot.data.desc}",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 6),
+                              child: Container(
+                                alignment: Alignment.center,
+                                color: Colors.white,
+                                child: SingleChildScrollView(
+                                    scrollDirection: Axis.vertical,
+                                    child: SizedBox(width: 360, child: column)),
+                              ),
+                            ),
+
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+                              alignment: Alignment.center,
+                              color: Colors.white,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width: 360,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -302,8 +365,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                     children: <Widget>[
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            8, 8, 8, 0),
-                                        child: Text("Descrição do evento",
+                                            8, 6, 8, 2),
+                                        child: Text("Contato",
                                             style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold)),
@@ -313,83 +376,36 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            10, 0, 0, 0),
-                                        child: SizedBox(
-                                            width: 360,
-                                            child: Text(
-                                              "${snapshot.data.desc}",
+                                            8, 0, 0, 0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(Icons.person, size: 28),
+                                            SizedBox(width: 7),
+                                            Text(
+                                                "${eventAuthor.name} ${eventAuthor.lastName}",
+                                                maxLines: 1,
+                                                style: TextStyle(fontSize: 15))
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8, 0, 0, 0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(Icons.email, size: 28),
+                                            SizedBox(width: 7),
+                                            Text(
+                                              "${eventAuthor.email}",
+                                              maxLines: 1,
                                               style: TextStyle(fontSize: 15),
-                                            )),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 6),
-                              child: Container(
-                                alignment: Alignment.topLeft,
-                                color: Colors.white,
-                                child: SingleChildScrollView(
-                                    scrollDirection: Axis.vertical,
-                                    child: column),
-                              ),
-                            ),
-
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
-                              alignment: Alignment.topLeft,
-                              color: Colors.white,
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(8, 6, 8, 2),
-                                      child: Text("Contato",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Icon(Icons.person, size: 28),
-                                          SizedBox(width: 7),
-                                          Text(
-                                              "${eventAuthor.name} ${eventAuthor.lastName}",
-                                              maxLines: 1,
-                                              style: TextStyle(fontSize: 15))
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Icon(Icons.email, size: 28),
-                                          SizedBox(width: 7),
-                                          Text(
-                                            "${eventAuthor.email}",
-                                            maxLines: 1,
-                                            style: TextStyle(fontSize: 15),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ),
                             ),
@@ -400,85 +416,94 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                         const EdgeInsets.fromLTRB(0, 0, 0, 6),
                                     child: SingleChildScrollView(
                                       child: Container(
-                                        alignment: Alignment.topLeft,
+                                        alignment: Alignment.center,
                                         color: Colors.white,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      8, 8, 8, 0),
-                                              child: Text("Inscrições:",
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Padding(
+                                        child: SizedBox(
+                                          width: 360,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
-                                                        8, 4, 4, 4),
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .fromLTRB(3, 3, 3, 3),
-                                                      child: Icon(Icons.timer,
-                                                          size: 24),
-                                                    ),
-                                                    SizedBox(width: 3),
-                                                    Text("Início: ",
-                                                        style: TextStyle(
-                                                            fontSize: 15.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    SizedBox(width: 3),
-                                                    Expanded(
-                                                      child: Text(
-                                                          "${dateSub.format(subStart)}",
+                                                        8, 8, 8, 0),
+                                                child: Text("Inscrições:",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          8, 4, 4, 4),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                3, 3, 3, 3),
+                                                        child: Icon(Icons.timer,
+                                                            size: 24),
+                                                      ),
+                                                      SizedBox(width: 3),
+                                                      Text("Início: ",
                                                           style: TextStyle(
-                                                              fontSize: 16.0)),
-                                                    ),
-                                                  ],
-                                                )),
-                                            Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        8, 4, 4, 4),
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .fromLTRB(3, 3, 3, 3),
-                                                      child: Icon(
-                                                          Icons.timer_off,
-                                                          size: 24),
-                                                    ),
-                                                    SizedBox(width: 3),
-                                                    Text("Fim: ",
-                                                        style: TextStyle(
-                                                            fontSize: 15.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    SizedBox(width: 3),
-                                                    Expanded(
-                                                      child: Text(
-                                                          "${dateSub.format(subEnd)}",
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                      SizedBox(width: 3),
+                                                      Expanded(
+                                                        child: Text(
+                                                            "${dateSub.format(subStart)}",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    16.0)),
+                                                      ),
+                                                    ],
+                                                  )),
+                                              Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          8, 4, 4, 4),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                3, 3, 3, 3),
+                                                        child: Icon(
+                                                            Icons.timer_off,
+                                                            size: 24),
+                                                      ),
+                                                      SizedBox(width: 3),
+                                                      Text("Fim: ",
                                                           style: TextStyle(
-                                                              fontSize: 16.0)),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ],
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                      SizedBox(width: 3),
+                                                      Expanded(
+                                                        child: Text(
+                                                            "${dateSub.format(subEnd)}",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    16.0)),
+                                                      ),
+                                                    ],
+                                                  )),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -488,38 +513,41 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                         const EdgeInsets.fromLTRB(0, 0, 0, 6),
                                     child: SingleChildScrollView(
                                       child: Container(
-                                        alignment: Alignment.topLeft,
+                                        alignment: Alignment.center,
                                         color: Colors.white,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      8, 8, 8, 0),
-                                              child: Text("Não há inscrições",
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                            ),
-                                            SizedBox(
-                                              width: 360,
-                                              child: Padding(
+                                        child: SizedBox(
+                                          width: 360,
+                                                                                  child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
-                                                        8, 14, 4, 4),
-                                                child: Text(
-                                                    "Infelizmente o organizador não informou datas de inscrições",
+                                                        8, 8, 8, 0),
+                                                child: Text("Não há inscrições",
                                                     style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.grey)),
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
                                               ),
-                                            )
-                                          ],
+                                              SizedBox(
+                                                width: 360,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          8, 14, 4, 4),
+                                                  child: Text(
+                                                      "Infelizmente o organizador não informou datas de inscrições",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.grey)),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -585,8 +613,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                             child: InkWell(
                               onTap: () {
                                 if (token != null) {
-                                  if (detailedEventController.favorite ==
-                                      true)
+                                  if (detailedEventController.favorite == true)
                                     _deleteEventFav(snapshot.data.id);
                                   else
                                     _putEventFav(snapshot.data.id);
@@ -595,8 +622,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                       "Somente se você estiver logado será possível favoritar eventos, para isso, crie uma conta ou entre com seu login!");
                                 }
                               },
-                              child:
-                                  Observer(builder: (BuildContext context) {
+                              child: Observer(builder: (BuildContext context) {
                                 print(detailedEventController.favorite);
                                 return Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -651,8 +677,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                                             snapshot.data.id,
                                                             detailedEventController
                                                                 .report);
-                                                        Navigator.pop(
-                                                            context);
+                                                        Navigator.pop(context);
                                                       } else {
                                                         _showDialog(
                                                             "Necessário estar logado!",
@@ -661,8 +686,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                                     },
                                                   ),
                                                   new FlatButton(
-                                                    child:
-                                                        new Text("Cancelar"),
+                                                    child: new Text("Cancelar"),
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
@@ -673,8 +697,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                           },
                                         );
                                       } else {
-                                        _showDialog(
-                                            "Necessário estar logado!",
+                                        _showDialog("Necessário estar logado!",
                                             "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
                                       }
                                     },
@@ -690,8 +713,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                 )
                               : Expanded(
                                   child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(Icons.block, size: 26),
                                       Text("Desativado", maxLines: 1)
