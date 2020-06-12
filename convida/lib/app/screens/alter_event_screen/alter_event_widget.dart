@@ -175,7 +175,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     labelText: "Nome do Evento:",
                     icon: Icons.event_note,
                     onChanged: alterEventController.alterEvent.setName,
-                    maxLength: 25,
+                    maxLength: 50,
                     errorText: alterEventController.validateName);
               }),
             ),
@@ -204,7 +204,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     labelText: "Descrição:",
                     icon: Icons.note,
                     onChanged: alterEventController.alterEvent.setDesc,
-                    maxLength: 250,
+                    maxLength: 300,
                     errorText: alterEventController.validateDesc);
               }),
             ),
@@ -249,7 +249,7 @@ class _AlterEventWidgetState extends State<AlterEventWidget> {
                     labelText: "Link ou Email:",
                     icon: Icons.location_city,
                     onChanged: alterEventController.alterEvent.setLink,
-                    maxLength: 200,
+                    maxLength: 300,
                     errorText: alterEventController.validateLink);
               }),
             ),

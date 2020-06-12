@@ -98,7 +98,7 @@ String emailValidation(value) {
 }
 
 String passwordValidation(value, password) {
-  String expression = r"^[a-zA-Z0-9_@$!%&-]{4,18}$";
+  String expression =  r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,50}$';
   RegExp _userPasswordValidator = RegExp(expression);
 
   if (value == null) {
@@ -107,25 +107,17 @@ String passwordValidation(value, password) {
     return 'Favor entre com sua Senha';
   } else if (value.startsWith(' ')) {
     return 'Inicia com espaço';
-  } else if (value.contains('  ')) {
-    return 'Contém espaços desnecessários';
+  } else if (value.contains(' ')) {
+    return 'Contém espaço';
   } else if (value.length < 4) {
     return 'Min. 4 caracteres';
-  } else if (value.length > 18) {
-    return 'Max. 18 caracteres';
-  } else if (_userPasswordValidator.hasMatch(value)) {
-    if (password != null) {
-      if (password.isNotEmpty) {
-        if (password == value) {
-          return null;
-        } else {
-          return 'Senhas estão diferentes';
-        }
-      } else {
-        return null;
-      }
-    } else
-      return null;
-  } else
-    return 'Possuí caracter inválido';
+  } else if (value.length > 30) {
+    return 'Max. 30 caracteres';
+  }
+  // } else if (_userPasswordValidator.hasMatch(value)) {
+  //     return null;
+  // } 
+  
+  else
+    return null;
 }

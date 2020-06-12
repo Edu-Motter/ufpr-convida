@@ -6,7 +6,7 @@ import 'date_validation.dart';
 
 String nameValidation(value) {
   String expression =
-      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,25}$';
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,50}$';
 
       
   RegExp _nameValidator = RegExp(expression);
@@ -21,8 +21,8 @@ String nameValidation(value) {
     return 'Contém espaços desnecessários';
   } else if (value.length < 2) {
     return 'Min. 2 caracteres';
-  } else if (value.length > 25) {
-    return 'Max. 25 caracteres';
+  } else if (value.length > 50) {
+    return 'Max. 50 caracteres';
   } else if (_nameValidator.hasMatch(value)) {
     return null;
   } else {
@@ -56,7 +56,7 @@ String targetValidation(value) {
 
 String descriptionValidation(value) {
   String expression =
-      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,250}$';
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,300}$';
   RegExp _descValidator = RegExp(expression);
 
   if (value == null) {
@@ -69,8 +69,8 @@ String descriptionValidation(value) {
     return 'Contém espaços desnecessários';
   } else if (value.length < 2) {
     return 'Min. 2 caracteres';
-  } else if (value.length > 250) {
-    return 'Max. 250 caracteres';
+  } else if (value.length > 300) {
+    return 'Max. 300 caracteres';
   } else if (_descValidator.hasMatch(value)) {
     return null;
   } else {
@@ -129,7 +129,7 @@ String complementValidation(value) {
 
 String linkValidation(value) {
   String expression =
-      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,100}$';
+      r'^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ !@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,300}$';
   RegExp _eventLinkValidator = RegExp(expression);
 
   if (value == null) {
@@ -142,8 +142,8 @@ String linkValidation(value) {
     return 'Contém espaços desnecessários';
   } else if (value.length < 2) {
     return 'Min. 2 caracteres';
-  } else if (value.length > 200) {
-    return 'Max. 200 caracteres';
+  } else if (value.length > 300) {
+    return 'Max. 300 caracteres';
   } else if (_eventLinkValidator.hasMatch(value)) {
     return null;
   } else {

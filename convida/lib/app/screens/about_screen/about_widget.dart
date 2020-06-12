@@ -9,7 +9,8 @@ class AboutWidget extends StatefulWidget {
 }
 
 class _AboutWidgetState extends State<AboutWidget> {
-  final String linkUfpr = "www.ufpr.br";
+  final String linkUfpr = "www.ufpr.br/portalufpr/";
+  final String linkConvida = "convida.ufpr.br/portal/";
 
   @override
   Widget build(BuildContext context) {
@@ -24,37 +25,102 @@ class _AboutWidgetState extends State<AboutWidget> {
           centerTitle: true,
         ),
         body: ListView(
-          
           children: <Widget>[
             SizedBox(height: 20),
             (queryData.orientation == Orientation.portrait)
-                  ? Container(
-                      height: queryData.size.height / 6,
-                      width: queryData.size.width / 6,
-                      child: Image.asset(
-                        //Image:
-                        "assets/logo-ufprconvida.png",
-                        scale: 2,
-                      ),
-                    )
-                  : Container(
-                      height: queryData.size.height / 4,
-                      width: queryData.size.width / 4,
-                      child: Image.asset(
-                        //Image:
-                        "assets/logo-ufprconvida.png",
-                        scale: 2,
-                      ),
+                ? Container(
+                    height: queryData.size.height / 6,
+                    width: queryData.size.width / 6,
+                    child: Image.asset(
+                      //Image:
+                      "assets/logo-ufprconvida.png",
+                      scale: 2,
                     ),
+                  )
+                : Container(
+                    height: queryData.size.height / 4,
+                    width: queryData.size.width / 4,
+                    child: Image.asset(
+                      //Image:
+                      "assets/logo-ufprconvida.png",
+                      scale: 2,
+                    ),
+                  ),
             SizedBox(height: 10),
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: const Text(
-                  "O Aplicativo UFPRConVIDA foi desenvolvido por Eduardo Zen Motter e Erick Rampim Garcia, ambos estudantes de Tecnologia em Análise e Desenvolvimento de Sistemas - SEPT - UFPR.", style: TextStyle(
-                    fontSize: 16,
-                    
-                  ),
+                    "As informações contidas neste aplicativo são de exclusiva responsabilidade dos usuários, tendo em vista que a alimentação dos dados é colaborativa e autorregulada.",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.justify),
+              ),
+            ),
+            SizedBox(height: 10),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: const Text(
+                    //
+                    "Equipe de Desenvolvimento:\n              - Eduardo Zen Motter\n              - Erick Rampim Garcia",
+                    //O Aplicativo UFPRConVIDA foi desenvolvido por Eduardo Zen Motter e Erick Rampim Garcia, ambos estudantes de Tecnologia em Análise e Desenvolvimento de Sistemas - SEPT - UFPR
+                    style: TextStyle(
+                      fontSize: 16, 
+                    ),
+                    textAlign: TextAlign.justify),
+              ),
+            ),
+            SizedBox(height: 10),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      //"Agradecemos em especial aos professores: Alexander Robert Kutzke, Andreia de Jesus, Lis Andrea Pereira Soboll, Razer Anthom Nizer Rojas Montaño, os quais permitiram o devensolvimento e nos auxiliaram dando suporte para a criação deste aplicativo."
+                      "Equipe Técnica:",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                    const Text(
+                      //"Agradecemos em especial aos professores: Alexander Robert Kutzke, Andreia de Jesus, Lis Andrea Pereira Soboll, Razer Anthom Nizer Rojas Montaño, os quais permitiram o devensolvimento e nos auxiliaram dando suporte para a criação deste aplicativo."
+                      "              - Alexander Robert Kutzke",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                    const Text(
+                      //"Agradecemos em especial aos professores: Alexander Robert Kutzke, Andreia de Jesus, Lis Andrea Pereira Soboll, Razer Anthom Nizer Rojas Montaño, os quais permitiram o devensolvimento e nos auxiliaram dando suporte para a criação deste aplicativo."
+                      "              - Andreia de Jesus",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                    const Text(
+                      //"Agradecemos em especial aos professores: Alexander Robert Kutzke, Andreia de Jesus, Lis Andrea Pereira Soboll, Razer Anthom Nizer Rojas Montaño, os quais permitiram o devensolvimento e nos auxiliaram dando suporte para a criação deste aplicativo."
+                      "              - Lis Andrea Pereira Soboll",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                    const Text(
+                      //"Agradecemos em especial aos professores: Alexander Robert Kutzke, Andreia de Jesus, Lis Andrea Pereira Soboll, Razer Anthom Nizer Rojas Montaño, os quais permitiram o devensolvimento e nos auxiliaram dando suporte para a criação deste aplicativo."
+                      "              - Razer Anthom N. R. Montaño ",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                    //
+                  ],
                 ),
               ),
             ),
@@ -63,27 +129,27 @@ class _AboutWidgetState extends State<AboutWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: const Text(
-                  "Agradecemos em especial aos professores: Alexander Robert Kutzke, Andreia de Jesus, Lis Andrea Pereira Soboll e Razer Anthom Nizer Rojas Montaño, os quais permitiram o devensolvimento e nos auxiliaram dando suporte para a criação deste aplicativo.", style: TextStyle(
-                    fontSize: 16,
-                    
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: const Text(
-                  "Todas as imagens utilizadas foram produzidas pelos seguintes autores, \"Freepik\", \"Nikita Golubev\", \"Eucalyp\" e \"pongsakornRed\". Todos eles podem ser encontrados no site \"www.flaticon.com\"",
+                  "Apoio Técnico: \n              - AGTIC",
                   style: TextStyle(
                     fontSize: 16,
                   ),
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: const Text(
+                    "Todas as imagens utilizadas foram produzidas pelos seguintes autores, \"Freepik\", \"Nikita Golubev\", \"Eucalyp\" e \"pongsakornRed\". Todos eles podem ser encontrados no site \"www.flaticon.com\"",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.justify),
+              ),
+            ),
             SizedBox(height: 50),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
@@ -96,9 +162,17 @@ class _AboutWidgetState extends State<AboutWidget> {
                             fontSize: 16,
                             color: Colors.blueAccent,
                             decoration: TextDecoration.underline)),
-                    onTap: () => openLink(linkUfpr))
+                    onTap: () => openLink(linkUfpr)),
+                InkWell(
+                    child: Text("$linkConvida",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.blueAccent,
+                            decoration: TextDecoration.underline)),
+                    onTap: () => openLink(linkConvida))
               ],
             ),
+            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -108,13 +182,12 @@ class _AboutWidgetState extends State<AboutWidget> {
                 ),
                 Text("$appVersion",
                     style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        ))
+                      fontSize: 16,
+                      color: Colors.black,
+                    ))
               ],
             ),
             SizedBox(height: 10),
-            
           ],
         ),
       );
@@ -126,7 +199,13 @@ class _AboutWidgetState extends State<AboutWidget> {
   }
 
   openLink(String link) async {
-    String url = "https://link";
+    String url;
+    if (link.contains("convida")){
+      url = "http://$link";
+    } else {
+      url = "https://$link";
+    }
+
     if (await canLaunch(url)) {
       await launch(url);
     } else {

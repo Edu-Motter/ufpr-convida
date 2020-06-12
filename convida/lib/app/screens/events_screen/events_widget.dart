@@ -863,10 +863,10 @@ class _EventsWidgetState extends State<EventsWidget> {
                                     child: ListTile(
                                       title: Text(
                                         values[index].name,
-                                        maxLines: 1,
+                                        maxLines: 3,
                                         style: TextStyle(
                                             color: Colors.black87,
-                                            fontSize: 21.0,
+                                            fontSize: 20.0,
                                             fontWeight: FontWeight.w500),
                                       ),
                                       subtitle: Text(
@@ -878,7 +878,7 @@ class _EventsWidgetState extends State<EventsWidget> {
                                             fontWeight: FontWeight.w300),
                                       ),
                                       leading: CircleAvatar(
-                                        radius: 42.0,
+                                        radius: 28.0,
                                         backgroundColor: Colors.white,
                                         child:
                                             Image.asset("assets/$_imageAsset"),

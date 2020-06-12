@@ -137,6 +137,8 @@ abstract class _LoginControllerBase with Store {
         loginStatusCode = 400;
         showError("Erro desconhecido", "Erro: $e", context);
       }
+    } else { 
+      loginStatusCode = s;
     }
 
     loading = false;

@@ -84,7 +84,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 child: Observer(builder: (_) {
                   return textFieldInitialValue(
                       initialValue: loginController.login.user,
-                      labelText: "GRR ou Email:",
+                      labelText: "GRR ou E-mail (@ufpr):",
                       icon: Icons.person,
                       onChanged: loginController.login.setUser,
                       maxLength: 50,

@@ -876,9 +876,9 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
   }
 
   openLink(String link) async {
-    String url = 'http://$link';
-    if (await canLaunch(url)) {
-      await launch(url);
+    
+    if (await canLaunch(link)) {
+      await launch(link);
     } else {
       showError("Impossível abrir o link",
           "Não foi possível abrir esse link: $link", context);

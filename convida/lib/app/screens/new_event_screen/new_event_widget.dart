@@ -123,7 +123,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                           labelText: "Nome do Evento:",
                           icon: Icons.event_note,
                           onChanged: newEventController.newEvent.setName,
-                          maxLength: 25,
+                          maxLength: 50,
                           errorText: newEventController.validateName);
                     }),
                   ),
@@ -152,7 +152,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                           labelText: "Descrição:",
                           icon: Icons.person_pin_circle,
                           onChanged: newEventController.newEvent.setDesc,
-                          maxLength: 250,
+                          maxLength: 300,
                           errorText: newEventController.validateDesc);
                     }),
                   ),
@@ -201,7 +201,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                           labelText: "Link ou Email:",
                           icon: Icons.link,
                           onChanged: newEventController.newEvent.setLink,
-                          maxLength: 200,
+                          maxLength: 300,
                           errorText: newEventController.validateLink);
                     }),
                   ),

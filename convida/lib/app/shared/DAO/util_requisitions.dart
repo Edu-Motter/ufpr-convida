@@ -25,9 +25,13 @@ void errorStatusCode(int statusCode, BuildContext context, String error) {
         context);
   } else if (statusCode == 405) {
     showError(
-        "Erro servidor UFPR - LDAP",
-        "Infelizmente o servidor da UFPR está fora do ar, favor tente novamente mais tarde",
+        "Infelizmente não foi possível logar",
+        "Sua senha ou seu email @ufpr estão incorretos, ou o servidor da UFPR está fora do ar.",
         context);
+        // showError(
+        // "Erro servidor UFPR - LDAP",
+        // "Infelizmente o servidor da UFPR está fora do ar, favor tente novamente mais tarde",
+        // context);
   } else if (statusCode == 502) {
     showError(
         "Servidor UFPRConVIDA desligado ",

@@ -36,7 +36,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
 
   //Controllers:
   final TextEditingController _userGrrController = new TextEditingController();
-
+  bool isUFPR = false; //Email @ufpr 
   bool isSwitchedPassword = false;
   DateTime parsedBirth;
 
@@ -48,6 +48,12 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
     if (user.birth != null) {
       parsedBirth = DateTime.parse(user.birth);
       initialBirth = formatter.format(parsedBirth);
+    }
+    if (user.grr.contains("@ufpr.br")){
+      isUFPR = true;
+      user.email = user.grr;
+    } else {
+      isUFPR = false;
     }
 
     super.initState();
@@ -131,7 +137,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                         ),
 
                         //*User GRR:
-                        userGrr(),
+                        userGrr(isUFPR),
 
                         //*User Birthday
                         Padding(
@@ -151,7 +157,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                         ),
 
                         //*User email:
-                        Padding(
+                        isUFPR ? SizedBox() : Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Observer(builder: (_) {
                             return textField(
@@ -259,7 +265,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Observer(builder: (_) {
                                     return textFieldObscure(
-                                        labelText: "Senha:",
+                                        labelText: user.name == null ? "Senha do e-mail @ufpr:" : "Senha:",
                                         icon: Icons.lock,
                                         onChanged: profileController
                                             .profile.changePassword,
@@ -439,7 +445,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
     );
   }
 
-  Padding userGrr() {
+  Padding userGrr(bool isUFPR) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
@@ -449,7 +455,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
         autovalidate: true,
         maxLength: 50,
         decoration: InputDecoration(
-          hintText: "Seu GRR:",
+          hintText: isUFPR ? "Seu e-mail @ufpr" : "Seu GRR:",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
           icon: Icon(
             Icons.navigate_next,

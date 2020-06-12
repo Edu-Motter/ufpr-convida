@@ -74,7 +74,7 @@ abstract class _RecoveryControllerBase with Store {
       builder: (BuildContext context) {
         return AlertDialog(
           title: new Text(s),
-          content: new Text("Prescione 'Ok' para continar"),
+          content: new Text("Pressione 'Ok' para continuar"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
