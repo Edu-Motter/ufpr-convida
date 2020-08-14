@@ -30,7 +30,7 @@ dependencies:
   http: any
   intl: ^0.16.0
   uuid: 2.0.1
-  flushbar: ^1.5.0
+  flushbar: ^1.9.1
   location: ^2.3.5
   url_launcher: any
   flutter_secure_storage: ^3.3.1+1
