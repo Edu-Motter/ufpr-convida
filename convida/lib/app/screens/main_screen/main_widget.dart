@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:convida/app/shared/DAO/util_requisitions.dart';
+import 'package:convida/app/shared/util/dialogs_widget.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -10,6 +13,7 @@ import 'package:convida/app/screens/map_screen/map_widget.dart';
 import 'package:convida/app/screens/my_events_screen/my_events_widget.dart';
 import 'package:convida/app/shared/global/globals.dart' as globals;
 import 'package:convida/app/shared/models/user.dart';
+import 'package:convida/app/shared/global/globals.dart';
 
 class MainWidget extends StatefulWidget {
   @override
@@ -24,10 +28,14 @@ class _MainWidgetState extends State<MainWidget> {
   String healthType;
   String sportType;
   String partyType;
+  String onlineType;
   String artType;
+  String faithType;
   String studyType;
   String othersType;
   String dataType;
+
+  bool admin;
 
   User user;
   String _url = globals.URL;
@@ -42,6 +50,7 @@ class _MainWidgetState extends State<MainWidget> {
     switch (index) {
       case 0:
         currentIndex = 0;
+        
         return new Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -50,7 +59,9 @@ class _MainWidgetState extends State<MainWidget> {
                 healthType: healthType,
                 sportType: sportType,
                 partyType: partyType,
+                //onlineType: onlineType,
                 artType: artType,
+                faithType: faithType,
                 studyType: studyType,
                 othersType: othersType,
                 dataType: dataType),
@@ -95,7 +106,9 @@ class _MainWidgetState extends State<MainWidget> {
             healthType: healthType,
             sportType: sportType,
             partyType: partyType,
+            //onlineType: onlineType,
             artType: artType,
+            faithType: faithType,
             studyType: studyType,
             othersType: othersType,
             dataType: dataType);
@@ -105,7 +118,7 @@ class _MainWidgetState extends State<MainWidget> {
   FloatingActionButton getDrawer() {
     return FloatingActionButton(
       heroTag: 0,
-      backgroundColor: Color(0xFF295492),
+      backgroundColor: Color(primaryColor),
       mini: true,
       onPressed: () async {
         final save = FlutterSecureStorage();
@@ -157,7 +170,9 @@ class _MainWidgetState extends State<MainWidget> {
       healthType = "Saúde e Bem-estar";
       sportType = "Esporte e Lazer";
       partyType = "Festas e Comemorações";
-      artType =  "Cultura e Religião";
+      onlineType = "Online";
+      artType = "Arte e Cultura";
+      faithType = "Fé e Espiritualidade";
       studyType = "Acadêmico e Profissional";
       othersType = "Outros";
       dataType = "all";
@@ -165,7 +180,9 @@ class _MainWidgetState extends State<MainWidget> {
       healthType = types['healthType'];
       sportType = types['sportType'];
       partyType = types['partyType'];
+      onlineType = types['onlineType'];
       artType = types['artType'];
+      faithType = types['faithType'];
       studyType = types['studyType'];
       othersType = types['othersType'];
       dataType = types['dataType'];
@@ -183,7 +200,9 @@ class _MainWidgetState extends State<MainWidget> {
             healthType = "";
             sportType = "";
             partyType = "";
-            artType =  "";
+            onlineType = "";
+            artType = "";
+            faithType = "";
             studyType = "";
             othersType = "";
             dataType = "all";
@@ -197,10 +216,13 @@ class _MainWidgetState extends State<MainWidget> {
           if (snapshot.data == null) {
             return Scaffold(
               backgroundColor: Colors.white,
-              body: Center(child: CircularProgressIndicator(),),
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
             );
-          } else if (snapshot.data != null) { 
+          } else if (snapshot.data != null) {
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Colors.white,
               key: _scaffoldKey,
               drawer: _token == null
@@ -263,6 +285,18 @@ class _MainWidgetState extends State<MainWidget> {
     );
   }
 
+  ListTile drawerReport() {
+    return ListTile(
+        title: Text("Denúncias"),
+        trailing: Icon(Icons.assignment_late),
+        onTap: () {
+          //Pop Drawer:
+          Navigator.of(context).pop();
+          //Push Login Screen:
+          Navigator.of(context).pushNamed("/report");
+        });
+  }
+
   ListTile drawerAbout() {
     return ListTile(
         title: Text("Sobre"),
@@ -271,7 +305,8 @@ class _MainWidgetState extends State<MainWidget> {
           //Pop Drawer:
           Navigator.of(context).pop();
           //Push Login Screen:
-          Navigator.of(context).pushReplacementNamed("/about");
+          Navigator.of(context).pushNamed("/about");
+          //Navigator.of(context).pushReplacementNamed("/about");
         });
   }
 
@@ -298,7 +333,7 @@ class _MainWidgetState extends State<MainWidget> {
               }
               //Pop Drawer:
               Navigator.of(context).pop();
-              
+
               //Push Alter Profile Screen
               Navigator.pushReplacement(
                   context,
@@ -312,6 +347,9 @@ class _MainWidgetState extends State<MainWidget> {
           //new DrawerSettings(),
           new DrawerLogout(),
           new Divider(),
+          //!Falta implementar algumas coisas
+
+          admin == true ? drawerReport() : SizedBox(),
           drawerAbout(),
 
           //O Fechar somente fecha a barra de ferramentas
@@ -335,7 +373,8 @@ class _MainWidgetState extends State<MainWidget> {
           Navigator.of(context).pop();
 
           //Push Login Screen:
-          Navigator.of(context).pushReplacementNamed("/login", arguments: "map");
+          Navigator.of(context)
+              .pushReplacementNamed("/login", arguments: "map");
         });
   }
 
@@ -347,39 +386,41 @@ class _MainWidgetState extends State<MainWidget> {
           //Pop Drawer:
           Navigator.of(context).pop();
           //Push SignUp Screen:
-          Navigator.of(context).pushReplacementNamed("/signup", arguments: "map");
+          Navigator.of(context)
+              .pushReplacementNamed("/signup", arguments: "map");
         });
   }
 
   Future<String> getUserProfile() async {
-    String id = await _save.read(key: "user");
+    dynamic response;
+    String request;
+    try {
+      String id = await _save.read(key: "user");
 
-    Map<String, String> mapHeaders = {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $_token"
-    };
+      request = "$_url/users/$id";
+      var mapHeaders = getHeaderToken(_token);
 
-    user = await http
-        .get("$_url/users/$id", headers: mapHeaders)
-        .then((http.Response response) {
-      final int statusCode = response.statusCode;
-      if ((statusCode == 200) || (statusCode == 201)) {
-        print("Success loading user profile!");
-        return User.fromJson(jsonDecode(response.body));
+      response = await http.get(request, headers: mapHeaders);
+      printRequisition(request, response.statusCode, "Get User Profile");
+      if ((response.statusCode == 200) || (response.statusCode == 201)) {
+        user = User.fromJson(jsonDecode(response.body));
       } else {
-        throw new Exception(
-            "Error while fetching data, status code: $statusCode");
+        errorStatusCode(
+            response.statusCode, context, "Erro ao Carregar Perfil");
       }
-    });
 
-    return "Success";
+      print("isAdmin: $admin");
+      admin = user.adm;
+      return "Success";
+    } catch (e) {
+      showError("Erro desconhecido", "Erro: $e", context);
+      return null;
+    }
   }
 
   Future<bool> checkToken() async {
     _token = await _save.read(key: "token");
-    
-    
+
     if (_token == null) {
       return false;
     } else {
@@ -390,6 +431,8 @@ class _MainWidgetState extends State<MainWidget> {
       return true;
     }
   }
+
+ 
 }
 
 class DrawerLogout extends StatelessWidget {

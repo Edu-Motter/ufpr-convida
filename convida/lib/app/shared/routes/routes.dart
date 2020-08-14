@@ -1,3 +1,5 @@
+import 'package:convida/app/screens/recovery_screen/recovery_widget.dart';
+import 'package:convida/app/screens/report_screen/report_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:convida/app/screens/main_screen/main_widget.dart';
 import 'package:convida/app/screens/signup_screen/signup_widget.dart';
@@ -24,6 +26,8 @@ var routes = <String, WidgetBuilder>{
   '/my-detailed-event': (context) => MyDetailedEventWidget(),
   '/search': (context) => SearchWidget(),
   '/about': (context) => AboutWidget(),
+  '/report': (context) => ReportWidget(),
+  '/recovery': (context) => RecoveryWidget()
   //'/organization' : (context) => OrganizationWidget()
   //'/alter-event' : (context) => AlterEventWidget(),
 };

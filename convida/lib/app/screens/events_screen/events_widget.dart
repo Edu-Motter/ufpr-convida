@@ -1,21 +1,15 @@
-import 'dart:convert';
-
-import 'package:convida/app/shared/util/dialogs_widget.dart';
+import 'package:convida/app/shared/DAO/event_requisitions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/global/globals.dart' as globals;
-import 'package:http/http.dart' as http;
-
-enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
-
+import 'package:convida/app/shared/global/globals.dart';
 class EventsWidget extends StatefulWidget {
   @override
   _EventsWidgetState createState() => _EventsWidgetState();
 }
 
 class _EventsWidgetState extends State<EventsWidget> {
-  String _url = globals.URL;
   var jsonData;
   String _imageAsset = "";
   DateFormat date = new DateFormat.yMMMMd("pt_BR");
@@ -23,18 +17,23 @@ class _EventsWidgetState extends State<EventsWidget> {
 
   String search = "";
   String type = "";
+  bool checked = false;
 
   Color healthColor = Colors.white;
   Color sportColor = Colors.white;
   Color partyColor = Colors.white;
+  //Color onlineColor = Colors.white;
   Color artColor = Colors.white;
+  Color faithColor = Colors.white;
   Color studyColor = Colors.white;
   Color othersColor = Colors.white;
 
   Color healthLine = Colors.black;
   Color sportLine = Colors.black;
   Color partyLine = Colors.black;
+  //Color onlineLine = Colors.black;
   Color artLine = Colors.black;
+  Color faithLine = Colors.black;
   Color studyLine = Colors.black;
   Color othersLine = Colors.black;
 
@@ -46,9 +45,10 @@ class _EventsWidgetState extends State<EventsWidget> {
         alignment: Alignment.center,
         child: FutureBuilder(
             //initialData: "Loading..",
-            future: getEvents(search, type),
+            future: getEvents(search, type, checked, context),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               List<Event> values = snapshot.data;
+
               if (snapshot.data == null) {
                 return CircularProgressIndicator();
               } else {
@@ -57,17 +57,20 @@ class _EventsWidgetState extends State<EventsWidget> {
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                          flex: 2,
+                          flex: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait)
+                              ? 2
+                              : 4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: Container(
                                     color: Colors.white,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.fromLTRB(8.0,0.0,8.0,0.0),
                                       child: Row(
                                         children: <Widget>[
                                           Expanded(
@@ -94,7 +97,7 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               4.5),
-                                                      color: Color(0xFF295492),
+                                                      color: Color(primaryColor),
                                                     ),
                                                     width: 50,
                                                     height: 50,
@@ -132,11 +135,11 @@ class _EventsWidgetState extends State<EventsWidget> {
                                             //     style: BorderStyle.solid),
                                             boxShadow: [
                                               new BoxShadow(
-                                                color: Colors.redAccent,
-                                                blurRadius: 1,
-                                                spreadRadius: 1
-                                                //offset: new Offset(1.0, 1.0,1,1),
-                                              )
+                                                  color: Colors.redAccent,
+                                                  blurRadius: 1,
+                                                  spreadRadius: 1
+                                                  //offset: new Offset(1.0, 1.0,1,1),
+                                                  )
                                             ],
                                           ),
                                           child: InkWell(
@@ -158,8 +161,14 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
+
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
+
+                                                  faithColor = Colors.white;
+                                                  faithLine = Colors.black;
 
                                                   studyColor = Colors.white;
                                                   studyLine = Colors.black;
@@ -209,11 +218,11 @@ class _EventsWidgetState extends State<EventsWidget> {
                                             //     style: BorderStyle.solid),
                                             boxShadow: [
                                               new BoxShadow(
-                                                color: Colors.green,
-                                                blurRadius: 1,
-                                                spreadRadius: 1
-                                                //offset: new Offset(1.0, 1.0,1,1),
-                                              )
+                                                  color: Colors.green,
+                                                  blurRadius: 1,
+                                                  spreadRadius: 1
+                                                  //offset: new Offset(1.0, 1.0,1,1),
+                                                  )
                                             ],
                                           ),
                                           child: InkWell(
@@ -236,8 +245,14 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
+
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
+
+                                                  faithColor = Colors.white;
+                                                  faithLine = Colors.black;
 
                                                   studyColor = Colors.white;
                                                   studyLine = Colors.black;
@@ -286,11 +301,12 @@ class _EventsWidgetState extends State<EventsWidget> {
                                             //     style: BorderStyle.solid),
                                             boxShadow: [
                                               new BoxShadow(
-                                                color: Colors.deepPurpleAccent,
-                                                blurRadius: 1,
-                                                spreadRadius: 1
-                                                //offset: new Offset(1.0, 1.0,1,1),
-                                              )
+                                                  color:
+                                                      Colors.deepPurpleAccent,
+                                                  blurRadius: 1,
+                                                  spreadRadius: 1
+                                                  //offset: new Offset(1.0, 1.0,1,1),
+                                                  )
                                             ],
                                           ),
                                           child: InkWell(
@@ -317,6 +333,9 @@ class _EventsWidgetState extends State<EventsWidget> {
 
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
+
+                                                  faithColor = Colors.white;
+                                                  faithLine = Colors.black;
 
                                                   studyColor = Colors.white;
                                                   studyLine = Colors.black;
@@ -356,6 +375,90 @@ class _EventsWidgetState extends State<EventsWidget> {
                                         ),
                                       ),
 
+                                      // //? ONLINE
+                                      // Padding(
+                                      //   padding: const EdgeInsets.all(8.0),
+                                      //   child: Container(
+                                      //     decoration: BoxDecoration(
+                                      //       // border: new Border.all(
+                                      //       //     color: Colors.grey,
+                                      //       //     width: 1.0,
+                                      //       //     style: BorderStyle.solid),
+                                      //       boxShadow: [
+                                      //         new BoxShadow(
+                                      //             color: Colors.cyan,
+                                      //             blurRadius: 1,
+                                      //             spreadRadius: 1
+                                      //             //offset: new Offset(1.0, 1.0,1,1),
+                                      //             )
+                                      //       ],
+                                      //     ),
+                                      //     child: InkWell(
+                                      //       onTap: () {
+                                      //         setState(() {
+                                      //           print(type);
+                                      //           if ((type != "") &&
+                                      //               (onlineColor ==
+                                      //                   Colors.white)) {
+                                      //             search =
+                                      //                 _searchController.text;
+                                      //             type = "Online";
+
+                                      //             healthColor = Colors.white;
+                                      //             healthLine = Colors.black;
+
+                                      //             sportColor = Colors.white;
+                                      //             sportLine = Colors.black;
+
+                                      //             partyColor = Colors.white;
+                                      //             partyLine = Colors.black;
+
+                                      //             onlineColor = Colors.cyan;
+                                      //             onlineLine = Colors.white;
+
+                                      //             artColor = Colors.white;
+                                      //             artLine = Colors.black;
+
+                                      //             faithColor = Colors.white;
+                                      //             Colors.cyanAccent;
+                                      //             faithLine = Colors.black;
+
+                                      //             studyColor = Colors.white;
+                                      //             studyLine = Colors.black;
+
+                                      //             othersColor = Colors.white;
+                                      //             othersLine = Colors.black;
+                                      //           } else if (type == "Online") {
+                                      //             type = "";
+                                      //             onlineColor = Colors.white;
+                                      //             onlineLine = Colors.black;
+                                      //           } else {
+                                      //             type = "Online";
+                                      //             onlineColor = Colors.cyan;
+                                      //             onlineLine = Colors.white;
+                                      //           }
+                                      //         });
+                                      //       },
+                                      //       child: Container(
+                                      //         decoration: BoxDecoration(
+                                      //             color: onlineColor,
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(
+                                      //                     4.5)),
+                                      //         width: 47,
+                                      //         height: 47,
+                                      //         child: Padding(
+                                      //           padding:
+                                      //               const EdgeInsets.all(2.0),
+                                      //           child: Image.asset(
+                                      //               "assets/type-mini-online.png",
+                                      //               color: onlineLine),
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
+
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
@@ -366,11 +469,11 @@ class _EventsWidgetState extends State<EventsWidget> {
                                             //     style: BorderStyle.solid),
                                             boxShadow: [
                                               new BoxShadow(
-                                                color: Colors.pink,
-                                                blurRadius: 1,
-                                                spreadRadius: 1
-                                                //offset: new Offset(1.0, 1.0,1,1),
-                                              )
+                                                  color: Colors.pink,
+                                                  blurRadius: 1,
+                                                  spreadRadius: 1
+                                                  //offset: new Offset(1.0, 1.0,1,1),
+                                                  )
                                             ],
                                           ),
                                           child: InkWell(
@@ -382,7 +485,7 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                         Colors.white)) {
                                                   search =
                                                       _searchController.text;
-                                                  type = "Cultura e Religião";
+                                                  type = "Arte e Cultura";
 
                                                   healthColor = Colors.white;
                                                   healthLine = Colors.black;
@@ -393,8 +496,14 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
+
                                                   artColor = Colors.pink;
                                                   artLine = Colors.white;
+
+                                                  faithColor = Colors.white;
+                                                  faithLine = Colors.black;
 
                                                   studyColor = Colors.white;
                                                   studyLine = Colors.black;
@@ -402,12 +511,12 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   othersColor = Colors.white;
                                                   othersLine = Colors.black;
                                                 } else if (type ==
-                                                    "Cultura e Religião") {
+                                                    "Arte e Cultura") {
                                                   type = "";
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
                                                 } else {
-                                                  type = "Cultura e Religião";
+                                                  type = "Arte e Cultura";
                                                   artColor = Colors.pink;
                                                   artLine = Colors.white;
                                                 }
@@ -433,6 +542,7 @@ class _EventsWidgetState extends State<EventsWidget> {
                                         ),
                                       ),
 
+                                      //!NEW
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
@@ -443,11 +553,94 @@ class _EventsWidgetState extends State<EventsWidget> {
                                             //     style: BorderStyle.solid),
                                             boxShadow: [
                                               new BoxShadow(
-                                                color: Colors.blueAccent,
-                                                blurRadius: 1,
-                                                spreadRadius: 1
-                                                //offset: new Offset(1.0, 1.0,1,1),
-                                              )
+                                                  color: Colors.yellow,
+                                                  blurRadius: 1,
+                                                  spreadRadius: 1
+                                                  //offset: new Offset(1.0, 1.0,1,1),
+                                                  )
+                                            ],
+                                          ),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                print(type);
+                                                if ((type != "") &&
+                                                    (faithColor ==
+                                                        Colors.white)) {
+                                                  search =
+                                                      _searchController.text;
+                                                  type = "Fé e Espiritualidade";
+
+                                                  healthColor = Colors.white;
+                                                  healthLine = Colors.black;
+
+                                                  sportColor = Colors.white;
+                                                  sportLine = Colors.black;
+
+                                                  partyColor = Colors.white;
+                                                  partyLine = Colors.black;
+
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
+
+                                                  artColor = Colors.white;
+                                                  artLine = Colors.black;
+
+                                                  faithColor = Colors.yellow;
+                                                  faithLine = Colors.white;
+
+                                                  studyColor = Colors.white;
+                                                  studyLine = Colors.black;
+
+                                                  othersColor = Colors.white;
+                                                  othersLine = Colors.black;
+                                                } else if (type ==
+                                                    "Fé e Espiritualidade") {
+                                                  type = "";
+                                                  faithColor = Colors.white;
+                                                  faithLine = Colors.black;
+                                                } else {
+                                                  type = "Fé e Espiritualidade";
+                                                  faithColor = Colors.yellow;
+                                                  faithLine = Colors.white;
+                                                }
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: faithColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.5)),
+                                              width: 47,
+                                              height: 47,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2.0),
+                                                child: Image.asset(
+                                                    "assets/type-mini-faith.png",
+                                                    color: faithLine),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            // border: new Border.all(
+                                            //     color: Colors.grey,
+                                            //     width: 1.0,
+                                            //     style: BorderStyle.solid),
+                                            boxShadow: [
+                                              new BoxShadow(
+                                                  color: Colors.blueAccent,
+                                                  blurRadius: 1,
+                                                  spreadRadius: 1
+                                                  //offset: new Offset(1.0, 1.0,1,1),
+                                                  )
                                             ],
                                           ),
                                           child: InkWell(
@@ -471,8 +664,14 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
+
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
+
+                                                  faithColor = Colors.white;
+                                                  faithLine = Colors.black;
 
                                                   studyColor =
                                                       Colors.blueAccent;
@@ -524,11 +723,11 @@ class _EventsWidgetState extends State<EventsWidget> {
                                             //     style: BorderStyle.solid),
                                             boxShadow: [
                                               new BoxShadow(
-                                                color: Colors.orange,
-                                                blurRadius: 1,
-                                                spreadRadius: 1
-                                                //offset: new Offset(1.0, 1.0,1,1),
-                                              )
+                                                  color: Colors.orange,
+                                                  blurRadius: 1,
+                                                  spreadRadius: 1
+                                                  //offset: new Offset(1.0, 1.0,1,1),
+                                                  )
                                             ],
                                           ),
                                           child: InkWell(
@@ -551,8 +750,14 @@ class _EventsWidgetState extends State<EventsWidget> {
                                                   partyColor = Colors.white;
                                                   partyLine = Colors.black;
 
+                                                  // onlineColor = Colors.white;
+                                                  // onlineLine = Colors.black;
+
                                                   artColor = Colors.white;
                                                   artLine = Colors.black;
+
+                                                  faithColor = Colors.white;
+                                                  faithLine = Colors.black;
 
                                                   studyColor = Colors.white;
                                                   studyLine = Colors.black;
@@ -594,6 +799,28 @@ class _EventsWidgetState extends State<EventsWidget> {
                                   ),
                                 ),
                               ),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: ActionChip(
+                                    padding: const EdgeInsets.all(0.0),
+                                    avatar: checked ? Icon(Icons.check) : null,
+                                    label: Text("Somente eventos Online"),
+                                    onPressed: () {
+                                      setState(() {
+                                        if (checked)
+                                          checked = false;
+                                        else
+                                          checked = true;
+                                      });
+                                    },
+                                    
+                                    shadowColor: Colors.white,
+                                  ),
+                                ),
+                              ))
                             ],
                           )),
                       Expanded(
@@ -609,9 +836,14 @@ class _EventsWidgetState extends State<EventsWidget> {
                                 } else if (values[index].type ==
                                     'Festas e Comemorações') {
                                   _imageAsset = 'type-party.png';
+                                } else if (values[index].type == 'Online') {
+                                  _imageAsset = 'type-online.png';
                                 } else if (values[index].type ==
-                                    'Cultura e Religião') {
+                                    'Arte e Cultura') {
                                   _imageAsset = 'type-art.png';
+                                } else if (values[index].type ==
+                                    'Fé e Espiritualidade') {
+                                  _imageAsset = 'type-faith.png';
                                 } else if (values[index].type ==
                                     'Acadêmico e Profissional') {
                                   _imageAsset = 'type-graduation.png';
@@ -631,10 +863,10 @@ class _EventsWidgetState extends State<EventsWidget> {
                                     child: ListTile(
                                       title: Text(
                                         values[index].name,
-                                        maxLines: 1,
+                                        maxLines: 3,
                                         style: TextStyle(
                                             color: Colors.black87,
-                                            fontSize: 21.0,
+                                            fontSize: 20.0,
                                             fontWeight: FontWeight.w500),
                                       ),
                                       subtitle: Text(
@@ -646,17 +878,17 @@ class _EventsWidgetState extends State<EventsWidget> {
                                             fontWeight: FontWeight.w300),
                                       ),
                                       leading: CircleAvatar(
-                                        radius: 42.0,
+                                        radius: 28.0,
                                         backgroundColor: Colors.white,
-                                        child: Image.asset(
-                                            "assets/$_imageAsset"),
+                                        child:
+                                            Image.asset("assets/$_imageAsset"),
                                       ),
                                       isThreeLine: true,
                                       onTap: () {
-                                        Navigator.pushNamed(
-                                            context, '/event', arguments: {
-                                          'id': values[index].id
-                                        });
+                                        Navigator.pushNamed(context, '/event',
+                                            arguments: {
+                                              'id': values[index].id
+                                            });
                                       },
                                     ),
                                   ),
@@ -667,42 +899,5 @@ class _EventsWidgetState extends State<EventsWidget> {
                 );
               }
             }));
-  }
-
-  Future<List> getEvents(String search, String type) async {
-    String parsedSearch = Uri.encodeFull(search);
-    String parsedType = Uri.encodeFull(type);
-    var response;
-    try {
-      response = await http
-        .get("$_url/events/nametypesearch?text=$parsedSearch&type=$parsedType");
-    print("-------------------------------------------------------");
-    print("Request on: $_url/events/nametypesearch?text=$parsedSearch&type=$parsedType");
-    print("Status Code: ${response.statusCode}");
-    print("Loading All Events... ");
-    print("-------------------------------------------------------");
-
-      if ((response.statusCode == 200) || (response.statusCode == 201)) {
-        final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-        return parsed.map<Event>((json) => Event.fromJson(json)).toList();
-      } 
-      
-      else if (response.statusCode == 401) {
-        showError("Erro 401", "Não autorizado, favor logar novamente", context);
-        return null;
-      } else if (response.statusCode == 404) {
-        showError("Erro 404", "Autor não foi encontrado", context);
-        return null;
-      } else if (response.statusCode == 500) {
-        showError("Erro 500",  "Erro no servidor, favor tente novamente mais tarde", context);
-        return null;
-      } else {
-        showError("Erro Desconhecido", "StatusCode: ${response.statusCode}", context);
-        return null;
-      }
-    } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
-      return null;
-    }
   }
 }

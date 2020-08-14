@@ -20,7 +20,7 @@ class AppWidget extends StatelessWidget {
                   routes: routes);
             }
             else {
-              return Container(color: Colors.redAccent);
+              return Container(color: Colors.blue);
             }
           } else
             return Container(color: Colors.blue);

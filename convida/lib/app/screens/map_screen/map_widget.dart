@@ -11,12 +11,15 @@ import 'package:convida/app/shared/global/globals.dart' as globals;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
+import 'package:convida/app/shared/global/globals.dart';
 
 class MapWidget extends StatefulWidget {
   final String healthType;
   final String sportType;
   final String partyType;
+  //final String onlineType;
   final String artType;
+  final String faithType;
   final String studyType;
   final String othersType;
   final String dataType;
@@ -26,7 +29,9 @@ class MapWidget extends StatefulWidget {
       this.healthType,
       this.sportType,
       this.partyType,
+      //this.onlineType,
       this.artType,
+      this.faithType,
       this.studyType,
       this.othersType,
       this.dataType})
@@ -34,22 +39,25 @@ class MapWidget extends StatefulWidget {
 
   @override
   _MapWidgetState createState() => _MapWidgetState(healthType, sportType,
-      partyType, artType, studyType, othersType, dataType);
+      partyType, /*onlineType,*/ artType, faithType, studyType, othersType, dataType);
 }
 
 class _MapWidgetState extends State<MapWidget> {
   String healthType;
   String sportType;
   String partyType;
+  //String onlineType;
   String artType;
+  String faithType;
   String studyType;
   String othersType;
   String dataType;
 
-  _MapWidgetState(this.healthType, this.sportType, this.partyType, this.artType,
-      this.studyType, this.othersType, this.dataType);
+  _MapWidgetState(this.healthType, this.sportType, this.partyType, /*this.onlineType,*/ this.artType,
+      this.faithType, this.studyType, this.othersType, this.dataType);
 
   MapType _mapType;
+  bool showingBar = false;
   // Completer<GoogleMapController> _controller = Completer();
   //GoogleMapController mapController;
   Map<MarkerId, Marker> markersMaps = <MarkerId, Marker>{};
@@ -61,32 +69,26 @@ class _MapWidgetState extends State<MapWidget> {
   void initState() {
     super.initState();
     _mapType = MapType.normal;
+    
     //print("Building Map");
   }
 
   @override
   Widget build(BuildContext context) {
-    
     //setState(() {});
     return FutureBuilder(
         future: _getCurrentUserLocation(),
-        builder: (BuildContext context, AsyncSnapshot<LocationData> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<LatLng> snapshot) {
           if (snapshot.data == null) {
             return CircularProgressIndicator();
-          }
-          // if ((snapshot.connectionState == ConnectionState.waiting) ||
-          //     (snapshot.connectionState == ConnectionState.none)) {
-          //   return Center(child: CircularProgressIndicator());
-          // }
-          //Tratar erro:
-          else {
-            final _userLocation = snapshot.data;
+          } else {
+            //*Snapshot.Data == User Location --> Future Builder
             return Stack(
               alignment: Alignment.center,
               children: <Widget>[
                 //Google's Map:
                 _googleMap(
-                    context, _userLocation.latitude, _userLocation.longitude),
+                    context, snapshot.data.latitude, snapshot.data.longitude),
 
                 //Search Text Field:
                 // Align(
@@ -127,7 +129,7 @@ class _MapWidgetState extends State<MapWidget> {
                 //                     );
                 //                   });
                 //             },
-                //             color: Color(0xFF295492),
+                //             color: Color(primaryColor),
                 //             shape: RoundedRectangleBorder(
                 //               borderRadius: BorderRadius.circular(8),
                 //             ),
@@ -142,7 +144,7 @@ class _MapWidgetState extends State<MapWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: RaisedButton(
-                      color: Color(0xFF8A275D),
+                      color: Color(secondaryColor),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -154,7 +156,9 @@ class _MapWidgetState extends State<MapWidget> {
                                 healthType: healthType,
                                 sportType: sportType,
                                 partyType: partyType,
+                                //onlineType: onlineType,
                                 artType: artType,
+                                faithType: faithType,
                                 studyType: studyType,
                                 othersType: othersType,
                                 dataType: dataType,
@@ -164,7 +168,7 @@ class _MapWidgetState extends State<MapWidget> {
                       padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
                       child: Text('Filtrar e Organizar',
                           maxLines: 1,
-                          //Color(0xFF295492),(0xFF8A275D)
+                          //Color(primaryColor),(secondaryColor)
                           style: TextStyle(color: Colors.white, fontSize: 18)),
                     ),
                   ),
@@ -176,8 +180,6 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   Widget _googleMap(BuildContext context, double lat, double lng) {
-    
-
     return Stack(
       children: <Widget>[
         GoogleMap(
@@ -197,7 +199,7 @@ class _MapWidgetState extends State<MapWidget> {
             String _token = await _save.read(key: "token");
             if (_token == null) {
               _showDialog("Necessário estar logado!",
-                                        "Somente se você estiver logado será possível criar eventos, para isso, crie uma conta ou entre com seu login!");
+                  "Somente se você estiver logado será possível criar eventos, para isso, crie uma conta ou entre com seu login!");
             } else {
               mapController = await _controller.future;
               mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -230,6 +232,8 @@ class _MapWidgetState extends State<MapWidget> {
                   currentLocation = null;
                 }
 
+                print(currentLocation);
+
                 if (currentLocation != null) {
                   mapController.animateCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
@@ -239,11 +243,22 @@ class _MapWidgetState extends State<MapWidget> {
                       zoom: 16.0,
                     ),
                   ));
+                } else {
+                  LatLng ufprLocation = new LatLng(-25.4269032, -49.2639545);
+
+                  mapController.animateCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      bearing: 0,
+                      target:
+                          LatLng(ufprLocation.latitude, ufprLocation.longitude),
+                      zoom: 16.0,
+                    ),
+                  ));
                 }
               },
               mini: true,
               child: Icon(Icons.my_location),
-              backgroundColor: Color(0xFF295492),
+              backgroundColor: Color(primaryColor),
             ),
           ),
         ),
@@ -251,19 +266,46 @@ class _MapWidgetState extends State<MapWidget> {
     );
   }
 
-  Future<LocationData> _getCurrentUserLocation() async {
-    var locData;
-    try {
-      locData = await Location().getLocation();
-    } catch (e) {
-      showError("Erro ao carregar sua localização", "Erro: $e", context);
-    }
-
+  Future<LatLng> _getCurrentUserLocation() async {
+    print("Executou!!");
     markersMaps = await getMarkers(context);
-
-    return locData;
+    try {
+      if (!showingBar){
+        showTutorialBar();
+      }
+      LocationData userLocation = await Location().getLocation();
+      LatLng data = new LatLng(userLocation.latitude, userLocation.longitude);
+      return data;
+      
+    } catch (e) {
+      final String errorLocation =
+          "Como não permitiu o acesso a sua localização, algumas funcionalidades do aplicativo serão comprometidas.";
+      showError("Localização indisponível.", "$errorLocation", context);
+      //This need to be final and global
+      final LatLng ufprLocation = new LatLng(-25.4269032, -49.2639545);
+      return ufprLocation;
+     
+    }
   }
-
+   void showTutorialBar() {
+    showingBar = true;
+    Flushbar(
+      flushbarPosition: FlushbarPosition.TOP,
+      margin: EdgeInsets.fromLTRB(10, 16, 10, 0),
+      borderRadius: 8,
+      backgroundColor: Colors.white,
+      boxShadows: [
+        BoxShadow(color: Colors.black45, offset: Offset(3, 3), blurRadius: 3)
+      ],
+      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+      messageText: Text("Pressione por alguns segundos no mapa para criar um evento!",
+          style: TextStyle(
+              color: Color(primaryColor),
+              fontSize: 16,
+              fontWeight: FontWeight.bold)),
+      duration: Duration(seconds: 5),
+    )..show(context);
+  }
   Future<Map<MarkerId, Marker>> getMarkers(BuildContext context) async {
     // print(
     //     "Type: |$healthType|\nType: |$sportType|\nType: |$partyType|\nType: |$artType|\nType: |$studyType|\nType: |$othersType|");
@@ -271,24 +313,39 @@ class _MapWidgetState extends State<MapWidget> {
     String parsedHealthType = Uri.encodeFull(healthType);
     String parsedSportType = Uri.encodeFull(sportType);
     String parsedPartyType = Uri.encodeFull(partyType);
+    //String parsedOnlineType = Uri.encodeFull(onlineType);
     String parsedArtType = Uri.encodeFull(artType);
+    String parsedFaithType = Uri.encodeFull(faithType);
     String parsedStudyType = Uri.encodeFull(studyType);
     String parsedOthersType = Uri.encodeFull(othersType);
 
     String requisition;
 
+    //!Arrumar as requisições:
+    //"$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType&text7=$parsedOnlineType";
     if (dataType == 'week') {
       requisition =
-          "$_url/events/weektype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedStudyType&text5=$parsedOthersType";
+          "$_url/events/weektype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType";
     } else if (dataType == 'day') {
       requisition =
-          "$_url/events/todaytype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedStudyType&text5=$parsedOthersType";
+          "$_url/events/todaytype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType";
     } else
       requisition =
-          "$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedStudyType&text5=$parsedOthersType";
+          "$_url/events/multtype?text=$parsedHealthType&text1=$parsedSportType&text2=$parsedPartyType&text3=$parsedArtType&text4=$parsedFaithType&text5=$parsedStudyType&text6=$parsedOthersType";
 
     var response;
     Map<MarkerId, Marker> mrks = <MarkerId, Marker>{};
+
+    //*Create a marker because if something went wrong this marker returns
+    var idZero = randID.v1();
+    MarkerId markerZeroId = MarkerId("$idZero");
+    Marker markerZero = Marker(
+              markerId: markerZeroId,
+              draggable: false,
+              position: LatLng(-25.4202491,-49.2645976),
+              infoWindow: InfoWindow(title: "UFPR Convida", snippet: "Não existem eventos"),
+              icon: BitmapDescriptor.defaultMarker, 
+      );
 
     try {
       response = await http.get(requisition);
@@ -318,17 +375,21 @@ class _MapWidgetState extends State<MapWidget> {
 
           //Marker color:
           if (type == "Saúde e Bem-estar") {
-            color = 0.0;
+            color = 0.0; //Vermelho
           } else if (type == "Esporte e Lazer") {
-            color = 120.0;
+            color = 120.0; //Verde
           } else if (type == "Festas e Comemorações") {
-            color = 270.0;
-          } else if (type == "Cultura e Religião") {
-            color = 300.0;
+            color = 270.0; //Roxo
+          } else if (type == "Online") {
+            color = 170.0; //Ciano
+          } else if (type == "Arte e Cultura") {
+            color = 300.0; //Rosa
+          } else if (type == "Fé e Espiritualidade") {
+            color = 60.0; //Amarelo
           } else if (type == "Acadêmico e Profissional") {
-            color = 225.0;
+            color = 225.0; //Azul
           } else {
-            color = 60.0;
+            color = 30.0; //Laranja
           }
 
           Marker marker = Marker(
@@ -345,20 +406,24 @@ class _MapWidgetState extends State<MapWidget> {
         }
       } else if (response.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
-        mrks = null;
+        mrks[markerZeroId] = markerZero;
       } else if (response.statusCode == 404) {
         showError("Erro 404", "Evento não foi encontrado", context);
-        mrks = null;
+        mrks[markerZeroId] = markerZero;
       } else if (response.statusCode == 500) {
-        showError("Erro 500", "Erro no servidor, favor tente novamente mais tarde (map)", context);
-        mrks = null;
+        showError(
+            "Erro 500",
+            "Erro no servidor, favor tente novamente mais tarde (Map)",
+            context);
+        mrks[markerZeroId] = markerZero;
       } else {
-        showError("Erro Desconhecido", "StatusCode: ${response.statusCode}", context);
-        mrks = null;
+        showError(
+            "Erro Desconhecido", "StatusCode: ${response.statusCode}", context);
+        mrks[markerZeroId] = markerZero;
       }
     } catch (e) {
-       showError("Erro desconhecido", "Erro: $e", context);
-       mrks = null;
+      showError("Erro desconhecido", "Erro: $e", context);
+      mrks[markerZeroId] = markerZero;
     }
     return mrks;
   }
@@ -376,7 +441,7 @@ class _MapWidgetState extends State<MapWidget> {
       dismissDirection: FlushbarDismissDirection.HORIZONTAL,
       messageText: Text("Evento: $eventName",
           style: TextStyle(
-              color: Color(0xFF295492),
+              color: Color(primaryColor),
               fontSize: 18,
               fontWeight: FontWeight.bold)),
       //message: "E",
@@ -397,14 +462,13 @@ class _MapWidgetState extends State<MapWidget> {
       margin: EdgeInsets.fromLTRB(10, 16, 10, 0),
       borderRadius: 8,
       backgroundColor: Colors.white,
-
       boxShadows: [
         BoxShadow(color: Colors.black45, offset: Offset(3, 3), blurRadius: 3)
       ],
       dismissDirection: FlushbarDismissDirection.HORIZONTAL,
       messageText: Text("Deseja criar um evento aqui?",
           style: TextStyle(
-              color: Color(0xFF295492),
+              color: Color(primaryColor),
               fontSize: 18,
               fontWeight: FontWeight.bold)),
       mainButton: FlatButton(
@@ -421,7 +485,7 @@ class _MapWidgetState extends State<MapWidget> {
     )..show(context);
   }
 
-   void _showDialog(String title, String content) {
+  void _showDialog(String title, String content) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

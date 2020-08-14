@@ -11,7 +11,7 @@ description: UFPRConVIDA Applicantion
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: "1.4.1"
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -23,6 +23,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  mobx: ^1.0.2
+  flutter_mobx: ^1.0.1
   google_maps_flutter: ^0.5.21+7
   flutter_masked_text: ^0.8.0
   http: any
@@ -32,16 +34,19 @@ dependencies:
   location: ^2.3.5
   url_launcher: any
   flutter_secure_storage: ^3.3.1+1
+  mask_text_input_formatter: ^1.0.6
 
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.7.4
+  build_runner: ^1.7.4
+  mobx_codegen: ^1.0.2
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.7.4
 
 flutter_icons:
   android: true
-  ios: true
+  ios: false
   image_path: "dev_assets/convida.png"
   adaptive_icon_background: "#ffffff"
   adaptive_icon_foreground: "dev_assets/adaptive-convida.png"
@@ -62,19 +67,23 @@ flutter:
     - assets/logo-ufpr.png
     - assets/logo-ufprconvida.tiff
     - assets/logo-ufprconvida.png
-    - assets/logo-ufprconvida-sembordas.png
+    - assets/logo-ufprconvida.png
     - assets/type-art.png
+    - assets/type-faith.png
     - assets/type-graduation.png
     - assets/type-health.png
     - assets/type-others.png
     - assets/type-party.png
     - assets/type-sport.png
     - assets/type-mini-art.png
+    - assets/type-mini-faith.png
     - assets/type-mini-graduation.png
     - assets/type-mini-health.png
     - assets/type-mini-others.png
     - assets/type-mini-party.png
     - assets/type-mini-sport.png
+    - assets/type-mini-online.png
+    - assets/type-online.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

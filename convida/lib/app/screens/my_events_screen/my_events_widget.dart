@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:convida/app/shared/models/event.dart';
 import 'package:convida/app/shared/global/globals.dart' as globals;
 import 'package:http/http.dart' as http;
-
+import 'package:convida/app/shared/global/globals.dart';
 class MyEventsWidget extends StatefulWidget {
   @override
   _MyEventsWidgetState createState() => _MyEventsWidgetState();
@@ -24,6 +24,10 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
 
   @override
   Widget build(BuildContext context) {
+
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+
     return WillPopScope(
       onWillPop: () {
         return null;
@@ -54,7 +58,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                 child: Text(
                                   "Ainda não existem eventos criados por você",
                                   style: TextStyle(
-                                      color: Color(0xFF8A275D),
+                                      color: Color(secondaryColor),
                                       fontSize: 28,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -67,7 +71,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                 child: Text(
                                   "Para criar um evento, basta ir ao Mapa pressionar exatamente no local que deseja criar seu evento e esperar alguns segundos",
                                   style: TextStyle(
-                                      color: Color(0xFF295492),
+                                      color: Color(primaryColor),
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -77,7 +81,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
-                                color: Color(0xFF295492),
+                                color: Color(primaryColor),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -88,7 +92,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                 },
                                 padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                                 child: Text('Ir ao Mapa',
-                                    //Color(0xFF295492),(0xFF8A275D)
+                                    //Color(primaryColor),(secondaryColor)
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18)),
                               ),
@@ -112,9 +116,13 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                             } else if (values[index].type ==
                                 'Festas e Comemorações') {
                               _imageAsset = 'type-party.png';
-                            } else if (values[index].type ==
-                                'Cultura e Religião') {
+                            } else if (values[index].type == 'Online') {
+                              _imageAsset = 'type-online.png';
+                            } else if (values[index].type == 'Arte e Cultura') {
                               _imageAsset = 'type-art.png';
+                            } else if (values[index].type ==
+                                'Fé e Espiritualidade') {
+                              _imageAsset = 'type-faith.png';
                             } else if (values[index].type ==
                                 'Acadêmico e Profissional') {
                               _imageAsset = 'type-graduation.png';
@@ -134,10 +142,10 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                 child: ListTile(
                                   title: Text(
                                     values[index].name,
-                                    maxLines: 1,
+                                    maxLines: 3,
                                     style: TextStyle(
                                         color: Colors.black87,
-                                        fontSize: 21.0,
+                                        fontSize: 20.0,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   subtitle: Text(
@@ -149,7 +157,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                         fontWeight: FontWeight.w300),
                                   ),
                                   leading: CircleAvatar(
-                                    radius: 42.0,
+                                    radius: 28.0,
                                     backgroundColor: Colors.white,
                                     child: Image.asset("assets/$_imageAsset"),
                                   ),
@@ -180,17 +188,30 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Image.asset(
-                          //Image:
-                          "assets/logo-ufprconvida-sembordas.png",
-                          scale: 1.5,
-                          //color: Colors.white70,
-                        ),
-                        SizedBox(height: 20),
+                        (queryData.orientation == Orientation.portrait)
+                              ? Container(
+                                  height: queryData.size.height / 2.5,
+                                  width: queryData.size.width / 1.2,
+                                  child: Image.asset(
+                                    //Image:
+                                    "assets/logo-ufprconvida.png",
+                                    scale: 2,
+                                  ),
+                                )
+                              : Container(
+                                  height: queryData.size.height / 2.5,
+                                  width: queryData.size.width / 2,
+                                  child: Image.asset(
+                                    //Image:
+                                    "assets/logo-ufprconvida.png",
+                                    scale: 2,
+                                  ),
+                                ),
+
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton(
-                            color: Color(0xFF295492),
+                            color: Color(primaryColor),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24),
                             ),
@@ -208,7 +229,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton(
-                            color: Color(0xFF8A275D),
+                            color: Color(secondaryColor),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24),
                             ),
@@ -219,7 +240,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                             },
                             padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                             child: Text('Fazer Cadastro',
-                                //Color(0xFF295492),(0xFF8A275D)
+                                //Color(primaryColor),(secondaryColor)
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18)),
                           ),
@@ -268,8 +289,10 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
         showError("Erro 404", "Evento não foi encontrado", context);
         return null;
       } else if (response.statusCode == 500) {
-        showError("Erro 500",
-            "Erro no servidor, favor tente novamente mais tarde (Meus Eventos)", context);
+        showError(
+            "Erro 500",
+            "Erro no servidor, favor tente novamente mais tarde (Meus Eventos)",
+            context);
         return null;
       } else {
         showError(
