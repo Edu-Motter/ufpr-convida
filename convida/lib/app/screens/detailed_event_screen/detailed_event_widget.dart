@@ -733,7 +733,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
 
   Future<Event> getEvent(String eventId) async {
     token = await _save.read(key: "token");
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
 
     Map<String, String> mapHeaders = {
       "Accept": "application/json",
@@ -775,8 +775,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       eventAuthor = await getAuthor(e.author);
       if (eventAuthor != null) {
         var idEvent = e.id;
-        String idUser = _id;
-        Bfav fv = new Bfav(grr: idUser, id: idEvent);
+        
+        Bfav fv = new Bfav(grr: userId, id: idEvent);
 
         String body = json.encode(fv.toJson());
 
@@ -876,7 +876,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
 
   Future _putEventFav(String eventId) async {
     final _save = FlutterSecureStorage();
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -885,8 +885,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Bfav fv = new Bfav(grr: idUser, id: eventId);
+    Bfav fv = new Bfav(grr: userId, id: eventId);
     String body = json.encode(fv.toJson());
 
     var r;
@@ -911,7 +910,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   }
 
   Future _deleteEventFav(String eventId) async {
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -920,8 +919,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Bfav fv = new Bfav(grr: idUser, id: eventId);
+
+    Bfav fv = new Bfav(grr: userId, id: eventId);
     String body = json.encode(fv.toJson());
     var r;
 
@@ -968,14 +967,14 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                     .pushReplacementNamed("/login", arguments: "fav");
               },
             ),
-            new FlatButton(
+            /* new FlatButton(
               child: new Text("Criar conta"),
               onPressed: () {
                 //Push sign up screen
                 Navigator.of(context)
                     .pushReplacementNamed("/signup", arguments: "fav");
               },
-            ),
+            ), */
           ],
         );
       },
@@ -983,7 +982,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   }
 
   _putRerport(String idEvent, String report) async {
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -992,8 +991,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Report newReport = new Report(grr: idUser, report: report, ignored: false);
+    
+    Report newReport = new Report(grr: userId, report: report, ignored: false);
     String body = json.encode(newReport.toJson());
     var r;
 
@@ -1001,7 +1000,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       r = await http.put("$_url/events/report/$idEvent",
           body: body, headers: mapHeaders);
       if (r.statusCode == 200) {
-        showSuccess("Evento Denúnciado com Sucesso!", "null", context);
+        showSuccess("Evento Denúnciado com Sucesso!", "nothing", context);
       } else if (r.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
       } else if (r.statusCode == 404) {

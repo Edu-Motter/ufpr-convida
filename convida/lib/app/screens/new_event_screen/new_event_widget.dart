@@ -517,7 +517,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                                   TextStyle(color: Colors.white, fontSize: 18)),
                         ),
                       ),
-                      Padding(
+                      /* Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: RaisedButton(
                           color: Color(secondaryColor),
@@ -534,7 +534,7 @@ class _NewEventWidgetState extends State<NewEventWidget> {
                               style:
                                   TextStyle(color: Colors.white, fontSize: 18)),
                         ),
-                      ),
+                      ), */
                       SizedBox(height: 50),
                       RaisedButton(
                         shape: RoundedRectangleBorder(

@@ -506,13 +506,13 @@ class _MapWidgetState extends State<MapWidget> {
                 Navigator.pushReplacementNamed(context, "/login");
               },
             ),
-            new FlatButton(
+            /* new FlatButton(
               child: new Text("Criar conta"),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pushReplacementNamed(context, "/signup");
               },
-            ),
+            ), */
           ],
         );
       },

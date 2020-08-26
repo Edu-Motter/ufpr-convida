@@ -127,7 +127,7 @@ class _MainWidgetState extends State<MainWidget> {
         print("New Token: $t");
         if (t != null) {
           String success = await getUserProfile();
-          print(success);
+          print("Carregou perfil do usuario!");
         }
         _scaffoldKey.currentState.openDrawer();
       },
@@ -272,7 +272,7 @@ class _MainWidgetState extends State<MainWidget> {
             ),
           ),
           drawerLogin(),
-          drawerSignup(),
+          //drawerSignup(),
           Divider(),
           drawerAbout(),
           ListTile(
@@ -395,26 +395,26 @@ class _MainWidgetState extends State<MainWidget> {
     dynamic response;
     String request;
     try {
-      String id = await _save.read(key: "user");
+      final userId = await _save.read(key: "userId");
 
-      request = "$_url/users/$id";
+      request = "$_url/users/$userId";
       var mapHeaders = getHeaderToken(_token);
 
       response = await http.get(request, headers: mapHeaders);
       printRequisition(request, response.statusCode, "Get User Profile");
       if ((response.statusCode == 200) || (response.statusCode == 201)) {
         user = User.fromJson(jsonDecode(response.body));
+        admin = user.adm;
+        print("isAdmin: ${user.adm}");
       } else {
         errorStatusCode(
             response.statusCode, context, "Erro ao Carregar Perfil");
       }
 
-      print("isAdmin: $admin");
-      admin = user.adm;
       return "Success";
     } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
-      return null;
+      showError("Erro desconhecido ao carregar Usuario", "Erro: $e", context);
+      return "Failed";
     }
   }
 

@@ -22,7 +22,7 @@ abstract class _ReportControllerBase with Store {
   getReportedEvents(BuildContext context) async {
     final _save = FlutterSecureStorage();
     var _token = await _save.read(key: "token");
-    String _id = await _save.read(key: "user");
+    final String userId = await _save.read(key: "userId");
 
     String _url = globals.URL;
 
@@ -38,7 +38,7 @@ abstract class _ReportControllerBase with Store {
           await http.get("$_url/events/reported", headers: mapHeaders);
 
       print("-------------------------------------------------------");
-      print("Request on: $_url/users/myevents?text=$_id");
+      print("Request on: $_url/users/myevents?text=$userId");
       print("Status Code: ${response.statusCode}");
       print("Loading Reported Events...");
       print("-------------------------------------------------------");

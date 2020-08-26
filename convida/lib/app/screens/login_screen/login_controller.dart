@@ -75,13 +75,16 @@ abstract class _LoginControllerBase with Store {
         print("Request on: $_url/login");
         print("Status Code: ${response.statusCode}");
         print("Posting User Login...");
+        s = statusCode;
 
         if ((statusCode == 200) || (statusCode == 201)) {
           var j = json.decode(response.body);
 
           _save.write(key: "token", value: j["token"]);
           _save.write(key: "user", value: login.user);
+          _save.write(key: "userId", value: j["userId"]);
           return statusCode;
+
         } else {
           print("Error Token");
           print("-------------------------------------------------------");
@@ -93,26 +96,29 @@ abstract class _LoginControllerBase with Store {
     }
 
     final token = await _save.read(key: "token");
+    final userId = await _save.read(key: "userId");
+
     print("TOKEN: $token");
     print("LOGIN: ${login.user}");
+    print("ID: $userId");
 
     Map<String, String> mapHeadersToken = {
       "Accept": "application/json",
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-
+    print("Buscando usuário! S = $s");
     if (s == 200 || s == 201) {
+      
       try {
         //Get user:
-        String id = login.user;
         bool ok = await http
-            .get("$_url/users/$id", headers: mapHeadersToken)
+            .get("$_url/users/$userId", headers: mapHeadersToken)
             .then((http.Response response) {
           final int statusCode = response.statusCode;
 
           print("-------------------------------------------------------");
-          print("Request on: $_url/users/$id");
+          print("Request on: $_url/users/$userId");
           print("Status Code: ${response.statusCode}");
           print("Loading User Profile...");
           print("-------------------------------------------------------");
@@ -120,6 +126,7 @@ abstract class _LoginControllerBase with Store {
           if ((statusCode == 200) || (statusCode == 201)) {
             User user = User.fromJson(jsonDecode(response.body));
             if (user.name == null) {
+              //print("---> Primeiro Login! <---");
               loginStatusCode = 0;
             } else {
               _save.write(key: "name", value: user.name);
@@ -133,14 +140,12 @@ abstract class _LoginControllerBase with Store {
           }
         });
       } catch (e) {
-        print("ERRO:");
         loginStatusCode = 400;
         showError("Erro desconhecido", "Erro: $e", context);
       }
     } else { 
       loginStatusCode = s;
     }
-
     loading = false;
     return loginStatusCode;
   }

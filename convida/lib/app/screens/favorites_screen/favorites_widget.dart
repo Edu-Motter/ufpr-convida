@@ -225,7 +225,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                                       color: Colors.white, fontSize: 18)),
                             ),
                           ),
-                          Padding(
+                          /* Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: RaisedButton(
                               color: Color(secondaryColor),
@@ -245,7 +245,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 18)),
                             ),
-                          ),
+                          ), */
                           SizedBox(height: 30),
                         ],
                       )),
@@ -259,7 +259,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
   }
 
   Future<List> getAllFavorites() async {
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -270,10 +270,10 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
     var response;
 
     try {
-      response = await http.get("$_url/users/fav/$_id", headers: mapHeaders);
+      response = await http.get("$_url/users/fav/$userId", headers: mapHeaders);
 
       print("-------------------------------------------------------");
-      print("Request on: $_url/users/fav/$_id");
+      print("Request on: $_url/users/fav/$userId");
       print("Status Code: ${response.statusCode}");
       print("Loading Favorites Events...");
       print("-------------------------------------------------------");
