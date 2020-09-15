@@ -121,6 +121,9 @@ class _MainWidgetState extends State<MainWidget> {
       backgroundColor: Color(primaryColor),
       mini: true,
       onPressed: () async {
+        
+        _scaffoldKey.currentState.openDrawer();
+
         final save = FlutterSecureStorage();
         final t = await save.read(key: "token");
 
@@ -129,7 +132,7 @@ class _MainWidgetState extends State<MainWidget> {
           String success = await getUserProfile();
           print("Carregou perfil do usuario!");
         }
-        _scaffoldKey.currentState.openDrawer();
+        
       },
       child: Icon(Icons.format_list_bulleted),
     );
@@ -276,9 +279,16 @@ class _MainWidgetState extends State<MainWidget> {
           Divider(),
           drawerAbout(),
           ListTile(
-            title: Text("Fechar"),
+            title: Text("Fechar menu"),
             trailing: Icon(Icons.close),
             onTap: () => Navigator.of(context).pop(),
+          ),
+          ListTile(
+            title: Text("Sair do app"),
+            trailing: Icon(Icons.close),
+            onTap: () {
+              _showDialog("Saindo", "Deseja realmente sair do UFPR ConVIDA?");
+            }
           )
         ],
       ),
@@ -354,9 +364,16 @@ class _MainWidgetState extends State<MainWidget> {
 
           //O Fechar somente fecha a barra de ferramentas
           new ListTile(
-            title: Text("Fechar"),
+            title: Text("Fechar menu"),
             trailing: Icon(Icons.close),
             onTap: () => Navigator.of(context).pop(),
+          ),
+          ListTile(
+            title: Text("Sair do app"),
+            trailing: Icon(Icons.close),
+            onTap: () {
+              _showDialog("Saindo", "Deseja realmente sair do UFPR ConVIDA?");
+            }
           )
         ],
       ),

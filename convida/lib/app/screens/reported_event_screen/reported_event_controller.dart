@@ -34,7 +34,7 @@ abstract class _ReportedEventControllerBase with Store {
         for (var r in reports) {
           if (r.ignored == false) {
             ReportModel reportModel = ReportModel(
-                description: r.report, author: r.grr, ignored: false, id: r.id);
+                description: r.report, author: "${r.userName} ${r.userLastName}", ignored: false, id: r.id);
             listReports.add(reportModel);
           }
         }

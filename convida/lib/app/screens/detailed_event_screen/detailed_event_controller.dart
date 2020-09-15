@@ -314,7 +314,7 @@ abstract class _DetailedEventControllerBase with Store {
   //   );
   // }
 
-  putRerport(String idEvent, String report, BuildContext context) async {
+  putReport(String idEvent, String report, BuildContext context) async {
     final _save = FlutterSecureStorage();
     final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
@@ -325,7 +325,9 @@ abstract class _DetailedEventControllerBase with Store {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    Report newReport = new Report(grr: userId, report: report);
+    User user = await getAuthor(userId, context);
+
+    Report newReport = new Report(userId: userId, userName: user.name, userLastName: user.lastName, report: report, ignored: false);
     String body = json.encode(newReport.toJson());
     var r;
 

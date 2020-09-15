@@ -44,7 +44,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
   void initState() {
     //Future Builder!
     print("USER: ${user.id}, ${user.login}, ${user.name}");
-    _userGrrController.text = user.id;
+    _userGrrController.text = user.login;
 
     if (user.birth != null) {
       parsedBirth = DateTime.parse(user.birth);

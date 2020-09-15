@@ -647,7 +647,7 @@ class _MyDetailedEventWidgetState extends State<MyDetailedEventWidget> {
                                           await deleteMyEvent(snapshot.data.id);
                                       if (status == 200) {
                                         Navigator.pop(context);
-                                        Navigator.pop(context);
+                                        //Navigator.pop(context);
                                         // Navigator.popAndPushNamed(
                                         //     context, '/main');
                                       } else

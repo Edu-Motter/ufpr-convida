@@ -1,24 +1,32 @@
-class Report {
-  String grr;
-  String report;
-  bool ignored;
-  String id;
+import 'package:convida/app/shared/models/user.dart';
 
-  Report({this.grr, this.report, this.ignored});
+class Report {
+  String id;
+  String report;
+  String userId;
+  String userName;
+  String userLastName;
+  bool ignored;
+
+
+  Report({this.userId, this.userLastName, this.userName, this.report, this.ignored});
 
   Report.fromJson(Map<String, dynamic> json) {
-    grr = json['grr'];
-    report = json['report'];
-    ignored = json['ignored'];
     id = json['id'];
+    report = json['report'];
+    userId = json['userId'];
+    userName = json['userName'];
+    userLastName = json['userLastName'];
+    ignored = json['ignored'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['grr'] = this.grr;
+    data['userId'] = this.userId;
+    data['userName']= this.userName;
+    data['userLastName'] = this.userLastName;
     data['report'] = this.report;
     data['ignored'] = this.ignored;
-    data['id'] = this.id;
     return data;
   }
 }
