@@ -226,7 +226,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                     color: Colors.white, fontSize: 18)),
                           ),
                         ),
-                        Padding(
+                        /* Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton(
                             color: Color(secondaryColor),
@@ -244,7 +244,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18)),
                           ),
-                        ),
+                        ), */
                         SizedBox(height: 30),
                       ],
                     )),
@@ -259,8 +259,8 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
   }
 
   Future<List> getMyEvents() async {
-    _token = await _save.read(key: "token");
-    String _id = await _save.read(key: "user");
+    final _token = await _save.read(key: "token");
+    final userId = await _save.read(key: "userId");
 
     Map<String, String> mapHeaders = {
       "Accept": "application/json",
@@ -271,10 +271,10 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
     var response;
     try {
       response =
-          await http.get("$_url/users/myevents?text=$_id", headers: mapHeaders);
+          await http.get("$_url/users/myevents?text=$userId", headers: mapHeaders);
 
       print("-------------------------------------------------------");
-      print("Request on: $_url/users/myevents?text=$_id");
+      print("Request on: $_url/users/myevents?text=$userId");
       print("Status Code: ${response.statusCode}");
       print("Loading My Events...");
       print("-------------------------------------------------------");

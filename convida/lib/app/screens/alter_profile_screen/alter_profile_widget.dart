@@ -36,22 +36,23 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
 
   //Controllers:
   final TextEditingController _userGrrController = new TextEditingController();
-  bool isUFPR = false; //Email @ufpr 
+  bool isUFPR = false; //Email @ufpr
   bool isSwitchedPassword = false;
   DateTime parsedBirth;
 
   @override
   void initState() {
     //Future Builder!
-    _userGrrController.text = user.grr;
+    print("USER: ${user.id}, ${user.login}, ${user.name}");
+    _userGrrController.text = user.login;
 
     if (user.birth != null) {
       parsedBirth = DateTime.parse(user.birth);
       initialBirth = formatter.format(parsedBirth);
     }
-    if (user.grr.contains("@ufpr.br")){
+    if (user.login.contains("@ufpr.br")) {
       isUFPR = true;
-      user.email = user.grr;
+      user.email = user.login;
     } else {
       isUFPR = false;
     }
@@ -97,7 +98,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                           child: Container(
                             alignment: Alignment.center,
                             child: Text(
-                              "Perfil",
+                              user.name == null ? "Criando Perfil" : "Perfil",
                               style: TextStyle(
                                   color: Color(
                                       primaryColor), //Color(secondaryColor),
@@ -157,23 +158,26 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                         ),
 
                         //*User email:
-                        isUFPR ? SizedBox() : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Observer(builder: (_) {
-                            return textField(
-                                labelText: "E-mail:",
-                                icon: Icons.email,
-                                initialValue: user.email,
-                                onChanged:
-                                    profileController.profile.changeEmail,
-                                maxLength: 50,
-                                errorText: profileController.validadeEmail);
-                          }),
-                        ),
+                        isUFPR
+                            ? SizedBox()
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Observer(builder: (_) {
+                                  return textField(
+                                      labelText: "E-mail:",
+                                      icon: Icons.email,
+                                      initialValue: user.email,
+                                      onChanged:
+                                          profileController.profile.changeEmail,
+                                      maxLength: 50,
+                                      errorText:
+                                          profileController.validadeEmail);
+                                }),
+                              ),
 
                         //!Revisar as senhas:
                         //*Switch passwords:
-                        user.grr.endsWith("@ufpr.br") == true
+                        /* user.login.endsWith("@ufpr.br") == true
                             ? SizedBox(
                                 width: 0,
                                 height: 0,
@@ -201,11 +205,27 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                     ],
                                   ),
                                 ),
-                              ),
+                              ), */
 
-                        Container(
-                          child: isSwitchedPassword == true
-                              //Switch on:
+                        
+                        //Without Saving Password
+                        /* Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Observer(builder: (_) {
+                              return textFieldObscure(
+                                  labelText: "Senha do SIGA ou @ufpr",
+                                  icon: Icons.lock,
+                                  onChanged:
+                                      profileController.profile.changePassword,
+                                  maxLength: 18,
+                                  errorText:
+                                      profileController.validadePassword);
+                            }),
+                          ),
+
+                          //New Passwaord Implementation:
+                          /*//Switch on:
                               ? Container(
                                   child: Column(
                                     children: <Widget>[
@@ -261,21 +281,9 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
 
                               //Switch off:
                               //Just the Password:
-                              : Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Observer(builder: (_) {
-                                    return textFieldObscure(
-                                        labelText: user.name == null ? "Senha do e-mail @ufpr:" : "Senha:",
-                                        icon: Icons.lock,
-                                        onChanged: profileController
-                                            .profile.changePassword,
-                                        maxLength: 18,
-                                        errorText:
-                                            profileController.validadePassword);
-                                  }),
-                                ),
-                        ),
-
+                              :  */
+                        ), */
+                        
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: SingleChildScrollView(
@@ -347,26 +355,11 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                               }
 
                                               //!Corrigir
-                                              else if (profileController
-                                                      .profile.password ==
-                                                  profileController
-                                                      .profile.newPassword) {
-                                                String error = "Senhas iguais";
-                                                String desc =
-                                                    "A senha nova é igual a antiga";
-                                                showError(error, desc, context);
-                                              } else if (created == false) {
+                                              else if (created == false) {
                                                 bool ok = profileController
                                                     .checkAll(context);
                                                 if (ok) {
-                                                  bool correct =
-                                                      await profileController
-                                                          .passCheck(
-                                                              user: user,
-                                                              context: context);
-
-                                                  if (correct) {
-                                                    int statusCode =
+                                                  int statusCode =
                                                         await profileController
                                                             .putUser(
                                                                 isSwitch:
@@ -382,21 +375,14 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                                           "Usuário Alterado com sucesso!",
                                                           "/main",
                                                           context);
+                                                          created = true;
                                                     } else {
                                                       errorStatusCode(
                                                           statusCode,
                                                           context,
                                                           "Erro ao alterar Usuário");
                                                     }
-                                                    created = true;
-                                                  } else {
-                                                    String error =
-                                                        "Senha incorreta";
-                                                    String desc =
-                                                        "Pressione 'Ok' e tente novamente";
-                                                    showError(
-                                                        error, desc, context);
-                                                  }
+                                                    
                                                 } else {
                                                   //!Corrigir!
                                                 }
@@ -404,7 +390,7 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
                                             },
                                       padding:
                                           EdgeInsets.fromLTRB(43, 12, 43, 12),
-                                      child: Text('Alterar',
+                                      child: Text(user.name == null ? "Cadastrar" : "Alterar",
                                           //Color(primaryColor),(secondaryColor)
                                           style: TextStyle(
                                               color: Colors.white,
@@ -449,13 +435,14 @@ class _AlterProfileWidgetState extends State<AlterProfileWidget> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
+        
         readOnly: true,
         enabled: false,
         controller: _userGrrController,
         autovalidate: true,
         maxLength: 50,
         decoration: InputDecoration(
-          hintText: isUFPR ? "Seu e-mail @ufpr" : "Seu GRR:",
+          labelText: isUFPR ? "Seu e-mail @ufpr" : "Seu CPF:",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.5)),
           icon: Icon(
             Icons.navigate_next,

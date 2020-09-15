@@ -16,6 +16,8 @@ class _LoginWidgetState extends State<LoginWidget> {
   final loginController = new LoginController();
   String msg = '';
 
+  
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
@@ -84,7 +86,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 child: Observer(builder: (_) {
                   return textFieldInitialValue(
                       initialValue: loginController.login.user,
-                      labelText: "GRR ou E-mail (@ufpr):",
+                      labelText: "CPF ou Passaporte (@ufpr caso servidor):",
                       icon: Icons.person,
                       onChanged: loginController.login.setUser,
                       maxLength: 50,
@@ -163,7 +165,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                                       user: User(
                                                           name: null,
                                                           lastName: null,
-                                                          grr: loginController
+                                                          login: loginController
                                                               .login.user,
                                                           birth: null,
                                                           email: null),
@@ -173,7 +175,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                               errorStatusCode(
                                                   statusCode,
                                                   context,
-                                                  "GRR ou Senha incorreto");
+                                                  "Login ou Senha incorreto");
                                             }
                                           }
                                         },
@@ -184,7 +186,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 ),
                               );
                             }),
-                            Padding(
+                            /* Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
                                 color: Color(secondaryColor),
@@ -192,9 +194,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                                 onPressed: () {
-                                  //When press Signup:
-                                  Navigator.of(context)
-                                      .pushNamed("/signup", arguments: "login");
+                                  
                                 },
                                 padding: EdgeInsets.fromLTRB(43, 12, 43, 12),
                                 child: Text('Cadastrar',
@@ -211,7 +211,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, "/recovery");
+                                  //Navigator.pushNamed(context, "/recovery");
                                 },
                                 padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
                                 child: Text('Recuperar Senha',
@@ -219,7 +219,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18)),
                               ),
-                            ),
+                            ), */
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(

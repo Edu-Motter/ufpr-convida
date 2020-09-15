@@ -48,7 +48,7 @@ abstract class _DetailedEventControllerBase with Store {
   Future<Event> getEvent(String eventId, BuildContext context) async {
     final _save = FlutterSecureStorage();
     String token = await _save.read(key: "token");
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
 
     Map<String, String> mapHeaders = {
       "Accept": "application/json",
@@ -90,8 +90,8 @@ abstract class _DetailedEventControllerBase with Store {
       author = await getAuthor(e.author, context);
       if (author != null) {
         var idEvent = e.id;
-        String idUser = _id;
-        Bfav fv = new Bfav(grr: idUser, id: idEvent);
+        
+        Bfav fv = new Bfav(grr: userId, id: idEvent);
 
         String body = json.encode(fv.toJson());
 
@@ -195,7 +195,7 @@ abstract class _DetailedEventControllerBase with Store {
     favorite = true;
 
     final _save = FlutterSecureStorage();
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -204,8 +204,8 @@ abstract class _DetailedEventControllerBase with Store {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Bfav fv = new Bfav(grr: idUser, id: eventId);
+   
+    Bfav fv = new Bfav(grr: userId, id: eventId);
     String body = json.encode(fv.toJson());
 
     var r;
@@ -239,7 +239,7 @@ abstract class _DetailedEventControllerBase with Store {
     favorite = false;
 
     final _save = FlutterSecureStorage();
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -248,8 +248,7 @@ abstract class _DetailedEventControllerBase with Store {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Bfav fv = new Bfav(grr: idUser, id: eventId);
+    Bfav fv = new Bfav(grr: userId, id: eventId);
     String body = json.encode(fv.toJson());
     var r;
 
@@ -315,9 +314,9 @@ abstract class _DetailedEventControllerBase with Store {
   //   );
   // }
 
-  putRerport(String idEvent, String report, BuildContext context) async {
+  putReport(String idEvent, String report, BuildContext context) async {
     final _save = FlutterSecureStorage();
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -326,8 +325,9 @@ abstract class _DetailedEventControllerBase with Store {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Report newReport = new Report(grr: idUser, report: report);
+    User user = await getAuthor(userId, context);
+
+    Report newReport = new Report(userId: userId, userName: user.name, userLastName: user.lastName, report: report, ignored: false);
     String body = json.encode(newReport.toJson());
     var r;
 

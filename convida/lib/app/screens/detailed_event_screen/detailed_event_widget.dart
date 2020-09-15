@@ -205,8 +205,10 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                   child: SizedBox(
                                     width: 360,
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
@@ -243,12 +245,13 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
 
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
-                                              42,0, 0, 0),
+                                              42, 0, 0, 0),
                                           child: Row(
                                             children: <Widget>[
                                               Text(
                                                   "${hour.format(hourStart)} - ${hour.format(hourEnd)}",
-                                                  style: TextStyle(fontSize: 14)),
+                                                  style:
+                                                      TextStyle(fontSize: 14)),
                                             ],
                                           ),
                                         ),
@@ -304,8 +307,9 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                 child: SingleChildScrollView(
                                   child: SizedBox(
                                     width: 360,
-                                                                      child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: <Widget>[
@@ -317,7 +321,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                               Text("Descrição do evento",
                                                   style: TextStyle(
                                                       fontSize: 20,
-                                                      fontWeight: FontWeight.bold)),
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                             ],
                                           ),
                                         ),
@@ -517,7 +522,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                         color: Colors.white,
                                         child: SizedBox(
                                           width: 360,
-                                                                                  child: Column(
+                                          child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             crossAxisAlignment:
@@ -668,23 +673,32 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                                                         detailedEventController
                                                             .validateReport),
                                                 actions: <Widget>[
-                                                  new FlatButton(
-                                                    child:
-                                                        new Text("Denúnciar"),
-                                                    onPressed: () {
-                                                      if (token != null) {
-                                                        _putRerport(
-                                                            snapshot.data.id,
-                                                            detailedEventController
-                                                                .report);
-                                                        Navigator.pop(context);
-                                                      } else {
-                                                        _showDialog(
-                                                            "Necessário estar logado!",
-                                                            "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
-                                                      }
-                                                    },
-                                                  ),
+                                                  detailedEventController
+                                                              .validateReport() ==
+                                                          null
+                                                      ? FlatButton(
+                                                          child: new Text(
+                                                              "Denúnciar"),
+                                                          onPressed: () {
+                                                            if (token != null) {
+                                                              _putRerport(
+                                                                  eventId,
+                                                                  detailedEventController
+                                                                      .report);
+                                                              Navigator.pop(
+                                                                  context);
+                                                            } else {
+                                                              _showDialog(
+                                                                  "Favor logar novamente!",
+                                                                  "Somente se você estiver logado será possível Denúnciar eventos, para isso, crie uma conta ou entre com seu login!");
+                                                            }
+                                                          },
+                                                        )
+                                                      : FlatButton(
+                                                          child:
+                                                              Text("Denúnciar"),
+                                                          onPressed: null,
+                                                        ),
                                                   new FlatButton(
                                                     child: new Text("Cancelar"),
                                                     onPressed: () {
@@ -732,8 +746,9 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   }
 
   Future<Event> getEvent(String eventId) async {
+    print("EventID: $eventId");
     token = await _save.read(key: "token");
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
 
     Map<String, String> mapHeaders = {
       "Accept": "application/json",
@@ -775,8 +790,8 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       eventAuthor = await getAuthor(e.author);
       if (eventAuthor != null) {
         var idEvent = e.id;
-        String idUser = _id;
-        Bfav fv = new Bfav(grr: idUser, id: idEvent);
+
+        Bfav fv = new Bfav(grr: userId, id: idEvent);
 
         String body = json.encode(fv.toJson());
 
@@ -876,7 +891,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
 
   Future _putEventFav(String eventId) async {
     final _save = FlutterSecureStorage();
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -885,8 +900,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Bfav fv = new Bfav(grr: idUser, id: eventId);
+    Bfav fv = new Bfav(grr: userId, id: eventId);
     String body = json.encode(fv.toJson());
 
     var r;
@@ -911,7 +925,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   }
 
   Future _deleteEventFav(String eventId) async {
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -920,8 +934,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Bfav fv = new Bfav(grr: idUser, id: eventId);
+    Bfav fv = new Bfav(grr: userId, id: eventId);
     String body = json.encode(fv.toJson());
     var r;
 
@@ -968,14 +981,14 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
                     .pushReplacementNamed("/login", arguments: "fav");
               },
             ),
-            new FlatButton(
+            /* new FlatButton(
               child: new Text("Criar conta"),
               onPressed: () {
                 //Push sign up screen
                 Navigator.of(context)
                     .pushReplacementNamed("/signup", arguments: "fav");
               },
-            ),
+            ), */
           ],
         );
       },
@@ -983,7 +996,7 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
   }
 
   _putRerport(String idEvent, String report) async {
-    final _id = await _save.read(key: "user");
+    final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -992,16 +1005,22 @@ class _DetailedEventWidgetState extends State<DetailedEventWidget> {
       HttpHeaders.authorizationHeader: "Bearer $_token"
     };
 
-    String idUser = _id;
-    Report newReport = new Report(grr: idUser, report: report, ignored: false);
+    User user = await getAuthor(userId);
+    Report newReport = new Report(
+        userId: userId,
+        userName: user.name,
+        userLastName: user.lastName,
+        report: report,
+        ignored: false);
     String body = json.encode(newReport.toJson());
+    print(body);
     var r;
 
     try {
       r = await http.put("$_url/events/report/$idEvent",
           body: body, headers: mapHeaders);
       if (r.statusCode == 200) {
-        showSuccess("Evento Denúnciado com Sucesso!", "null", context);
+        showSuccess("Evento Denúnciado com Sucesso!", "nothing", context);
       } else if (r.statusCode == 401) {
         showError("Erro 401", "Não autorizado, favor logar novamente", context);
       } else if (r.statusCode == 404) {

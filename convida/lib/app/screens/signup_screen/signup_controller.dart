@@ -163,7 +163,7 @@ abstract class _SignupControllerBase with Store {
 
   Future<int> postNewUser({String dateUser, BuildContext context}) async {
     User u = new User(
-        grr: signup.grr,
+        login: signup.grr,
         name: signup.name, //_userFirstNameController.text,
         lastName: signup.lastName,
         password: signup.password,

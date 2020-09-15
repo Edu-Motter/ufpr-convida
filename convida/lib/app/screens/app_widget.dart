@@ -30,7 +30,13 @@ class AppWidget extends StatelessWidget {
   Future<int> function() async {
     try {
       final _save = FlutterSecureStorage();
-      _save.deleteAll();
+      final String userLogin = await _save.read(key: "user"); 
+      final String userId  = await _save.read(key: "userId");
+      final String userToken = await _save.read(key: "token");
+      print("userLogin: $userLogin");
+      print("userId: $userId");
+      print("userToken $userToken");
+
     } catch (e) {
       return 1;
     }

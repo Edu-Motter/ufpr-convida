@@ -5,22 +5,14 @@ String userValidation(value) {
   //RegExp _grrValidator = RegExp(expression);
 
   if (value == null) {
-    return 'Favor entre com seu GRR ou Email';
+    return 'Favor entre com seu CPF ou Email';
   } else if (value.isEmpty) {
-    return 'Favor entre com seu GRR ou Email';
+    return 'Favor entre com seu CPF ou Email';
   } else if (value.startsWith(' ')) {
     return 'Inicia com espaço';
   } else if (value.contains(' ')) {
     return 'Contém espaço';
   } 
-  
-  // else if (value.length < 50) {
-  //   return "Favor entre com seu GRR";
-  // } 
-  
-  // else if (_grrValidator.hasMatch(value)) {
-  //   return null;
-  // } 
   
   else {
     return null;

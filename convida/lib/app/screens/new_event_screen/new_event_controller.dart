@@ -138,15 +138,16 @@ abstract class _NewEventControllerBase with Store {
         loading = true;
     final _save = FlutterSecureStorage();
     String _token = await _save.read(key: "token");
-    String _id = await _save.read(key: "user");
-    User user;
+    final String userId = await _save.read(key: "userId");
+    
 
     var mapHeaders = getHeaderToken(_token);
 
     //!GET USER
-    try {
+    //User user;
+    /* try {
       user = await http
-          .get("$_url/users/$_id", headers: mapHeaders)
+          .get("$_url/users/$userId", headers: mapHeaders)
           .then((http.Response response) {
         final int statusCode = response.statusCode;
         if ((statusCode == 200) || (statusCode == 201)) {
@@ -157,7 +158,7 @@ abstract class _NewEventControllerBase with Store {
       });
     } catch (e) {
       showError("Erro desconhecido", "Erro: $e", context);
-    }
+    } */
 
     if (isSwitchedSubs == false) {
       newEvent.setSubStart("");
@@ -203,7 +204,7 @@ abstract class _NewEventControllerBase with Store {
         type: type,
         startSub: postSubStart,
         endSub: postSubEnd,
-        author: user.grr,
+        author: userId,
         lat: coords.latitude,
         lng: coords.longitude,
         active: true,

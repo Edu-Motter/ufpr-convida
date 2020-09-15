@@ -34,7 +34,7 @@ abstract class _ReportedEventControllerBase with Store {
         for (var r in reports) {
           if (r.ignored == false) {
             ReportModel reportModel = ReportModel(
-                description: r.report, author: r.grr, ignored: false, id: r.id);
+                description: r.report, author: "${r.userName} ${r.userLastName}", ignored: false, id: r.id);
             listReports.add(reportModel);
           }
         }
@@ -173,7 +173,7 @@ abstract class _ReportedEventControllerBase with Store {
 
   ignoreReport(BuildContext context, String reportId) async {
     loading = true;
-    final _id = await _save.read(key: "user");
+    //final userId = await _save.read(key: "userId");
     final _token = await _save.read(key: "token");
 
     Map<String, String> mapHeaders = {
@@ -184,6 +184,7 @@ abstract class _ReportedEventControllerBase with Store {
 
     var r;
     print("Request on: /events/ignore/$reportId");
+    
     try {
       r = await http.get("$_url/events/ignore/$reportId", headers: mapHeaders);
       if (r.statusCode == 200) {

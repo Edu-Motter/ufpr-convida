@@ -15,7 +15,7 @@ void showSuccess(String s, String route, BuildContext context) {
             child: new Text("Ok"),
             onPressed: () {
               Navigator.pop(context);
-              if (route == null){
+              if (route == "nothing"){
 
               }
               else if (route == "pop") {

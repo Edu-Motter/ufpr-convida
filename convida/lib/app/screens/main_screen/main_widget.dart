@@ -121,15 +121,18 @@ class _MainWidgetState extends State<MainWidget> {
       backgroundColor: Color(primaryColor),
       mini: true,
       onPressed: () async {
+        
+        _scaffoldKey.currentState.openDrawer();
+
         final save = FlutterSecureStorage();
         final t = await save.read(key: "token");
 
         print("New Token: $t");
         if (t != null) {
           String success = await getUserProfile();
-          print(success);
+          print("Carregou perfil do usuario!");
         }
-        _scaffoldKey.currentState.openDrawer();
+        
       },
       child: Icon(Icons.format_list_bulleted),
     );
@@ -272,13 +275,20 @@ class _MainWidgetState extends State<MainWidget> {
             ),
           ),
           drawerLogin(),
-          drawerSignup(),
+          //drawerSignup(),
           Divider(),
           drawerAbout(),
           ListTile(
-            title: Text("Fechar"),
+            title: Text("Fechar menu"),
             trailing: Icon(Icons.close),
             onTap: () => Navigator.of(context).pop(),
+          ),
+          ListTile(
+            title: Text("Sair do app"),
+            trailing: Icon(Icons.close),
+            onTap: () {
+              _showDialog("Saindo", "Deseja realmente sair do UFPR ConVIDA?");
+            }
           )
         ],
       ),
@@ -354,9 +364,16 @@ class _MainWidgetState extends State<MainWidget> {
 
           //O Fechar somente fecha a barra de ferramentas
           new ListTile(
-            title: Text("Fechar"),
+            title: Text("Fechar menu"),
             trailing: Icon(Icons.close),
             onTap: () => Navigator.of(context).pop(),
+          ),
+          ListTile(
+            title: Text("Sair do app"),
+            trailing: Icon(Icons.close),
+            onTap: () {
+              _showDialog("Saindo", "Deseja realmente sair do UFPR ConVIDA?");
+            }
           )
         ],
       ),
@@ -395,26 +412,26 @@ class _MainWidgetState extends State<MainWidget> {
     dynamic response;
     String request;
     try {
-      String id = await _save.read(key: "user");
+      final userId = await _save.read(key: "userId");
 
-      request = "$_url/users/$id";
+      request = "$_url/users/$userId";
       var mapHeaders = getHeaderToken(_token);
 
       response = await http.get(request, headers: mapHeaders);
       printRequisition(request, response.statusCode, "Get User Profile");
       if ((response.statusCode == 200) || (response.statusCode == 201)) {
         user = User.fromJson(jsonDecode(response.body));
+        admin = user.adm;
+        print("isAdmin: ${user.adm}");
       } else {
         errorStatusCode(
             response.statusCode, context, "Erro ao Carregar Perfil");
       }
 
-      print("isAdmin: $admin");
-      admin = user.adm;
       return "Success";
     } catch (e) {
-      showError("Erro desconhecido", "Erro: $e", context);
-      return null;
+      showError("Erro desconhecido ao carregar Usuario", "Erro: $e", context);
+      return "Failed";
     }
   }
 
